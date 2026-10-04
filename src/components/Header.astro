@@ -4,38 +4,30 @@ import { LOCALES, LOCALE_LABEL, LOCALE_NAME, type Locale } from '../lib/site';
 
 interface Props {
   lang: Locale;
-  nav: Record<string, string>;
-  ui: { menu: string; close: string; language: string };
+  nav: Record<'home' | 'shop' | 'location' | 'news' | 'reviews' | 'gallery', string>;
+  ui: { menu: string; close: string; language: string; to_top: string };
   /** path after the locale for the language switcher, e.g. "" or "news/welcome/" */
   path?: string;
   /** anchors point to the home page when rendered on a sub-page */
   home?: boolean;
 }
 const { lang, nav, ui, path = '', home = true } = Astro.props;
-const items = ['concept', 'shop', 'gallery', 'reviews', 'news', 'location', 'contact'] as const;
+const items = ['home', 'shop', 'location', 'news', 'reviews', 'gallery'] as const;
 const href = (id: string) => (home ? `#${id}` : `/${lang}/#${id}`);
 ---
 <header class="site-header">
-  <div class="wrap bar">
-    <a class="logo" href={`/${lang}/`} aria-label="Aum Aurum">
-      <span class="badge"><Mark size={26} /></span>
-    </a>
+  <div class="bar">
+    <a class="brand" href={href('home')} aria-label={ui.to_top}><Mark size={30} /></a>
 
     <nav class="nav" id="site-nav" aria-label="Main">
-      <ul>
+      <ul class="links">
         {items.map((id) => <li><a href={href(id)}>{nav[id]}</a></li>)}
       </ul>
       <ul class="langs" aria-label={ui.language}>
         {LOCALES.map((l) => (
           <li>
-            <a
-              href={`/${l}/${path}`}
-              hreflang={l}
-              lang={l}
-              aria-current={l === lang ? 'true' : undefined}
-              title={LOCALE_NAME[l]}
-              data-lang={l}
-            >{LOCALE_LABEL[l]}</a>
+            <a href={`/${l}/${path}`} hreflang={l} lang={l} title={LOCALE_NAME[l]} data-lang={l}
+               aria-current={l === lang ? 'true' : undefined}>{LOCALE_LABEL[l]}</a>
           </li>
         ))}
       </ul>
@@ -73,44 +65,35 @@ const href = (id: string) => (home ? `#${id}` : `/${lang}/#${id}`);
   .site-header {
     position: sticky;
     top: 0;
-    z-index: 30;
-    background: var(--blush);
-    border-bottom: 1px solid var(--rule);
+    z-index: 20;
+    background: rgb(20 17 14 / 0.96);
+    border-bottom: 1px solid rgb(231 182 73 / 0.18);
   }
   .bar {
     display: flex;
     align-items: center;
     gap: 2rem;
     height: var(--header-h);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--gutter);
   }
-  .logo { flex: none; display: block; border-radius: 50%; }
-  .badge {
-    display: grid;
-    place-items: center;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: var(--ink);
-    transition: transform 0.5s var(--ease-out);
-  }
-  .logo:hover .badge { transform: rotate(-8deg); }
-
+  .brand { flex: none; display: block; line-height: 0; }
   .nav { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
-  .nav ul { display: flex; flex-wrap: wrap; gap: 0.25rem 1.6rem; margin: 0; padding: 0; list-style: none; }
-  .nav a {
-    display: inline-block;
-    padding-block: 0.4rem;
-    font-size: 1.0625rem;
+  .nav ul { display: flex; flex-wrap: wrap; gap: 0.25rem 1.7rem; margin: 0; padding: 0; list-style: none; }
+  .links a {
+    font: 400 16px var(--display);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     text-decoration: none;
-    background: linear-gradient(var(--plum), var(--plum)) left bottom / 0 1px no-repeat;
-    transition: background-size 0.35s var(--ease-out), color 0.2s;
+    color: var(--cream-soft);
+    transition: color 0.3s;
   }
-  .nav a:hover { color: var(--plum); background-size: 100% 1px; }
-
-  .langs { gap: 0.25rem !important; }
-  .langs a { padding: 0.35rem 0.55rem; font-size: 0.9375rem; color: var(--ink-soft); background: none; }
-  .langs a:hover { color: var(--plum); }
-  .langs a[aria-current='true'] { color: var(--plum); box-shadow: inset 0 -1.5px 0 var(--plum); }
+  :lang(ka) .links a { text-transform: none; letter-spacing: 0.02em; }
+  .links a:hover { color: var(--gold); }
+  .langs { gap: 0.9rem !important; }
+  .langs a { font-size: 15px; color: var(--cream-soft); }
+  .langs a[aria-current='true'] { color: var(--gold); text-decoration: none; }
 
   .menu-btn {
     display: none;
@@ -121,25 +104,17 @@ const href = (id: string) => (home ? `#${id}` : `/${lang}/#${id}`);
     padding: 0 0.25rem;
     border: 0;
     background: none;
-    color: var(--ink);
-    font: inherit;
+    color: var(--cream);
+    font: 400 16px var(--display);
+    letter-spacing: 0.08em;
     cursor: pointer;
   }
-  .menu-icon, .menu-icon::before {
-    display: block;
-    width: 22px;
-    height: 1.5px;
-    background: currentColor;
-    transition: transform 0.3s var(--ease-out);
-  }
+  .menu-icon, .menu-icon::before { display: block; width: 22px; height: 1.5px; background: currentColor; transition: transform 0.3s var(--ease); }
   .menu-icon { position: relative; box-shadow: 0 -6px 0 currentColor; transform: translateY(3px); }
   .menu-icon::before { content: ''; position: absolute; top: 6px; }
   .menu-btn[aria-expanded='true'] .menu-icon { box-shadow: none; transform: rotate(45deg); }
   .menu-btn[aria-expanded='true'] .menu-icon::before { top: 0; transform: rotate(-90deg); }
 
-  @media (max-width: 1080px) {
-    .nav ul { gap: 0.25rem 1.1rem; }
-  }
   @media (max-width: 960px) {
     .menu-btn { display: inline-flex; }
     .nav {
@@ -148,17 +123,13 @@ const href = (id: string) => (home ? `#${id}` : `/${lang}/#${id}`);
       display: none;
       flex-direction: column;
       align-items: stretch;
-      gap: 2rem;
-      padding: 1.5rem var(--gutter) 2rem;
-      background: var(--blush);
-      border-bottom: 1px solid var(--rule);
-      max-height: calc(100svh - var(--header-h));
-      overflow-y: auto;
+      gap: 1.5rem;
+      padding: 1.25rem var(--gutter) 2rem;
+      background: var(--soot);
+      border-bottom: 1px solid rgb(231 182 73 / 0.18);
     }
     .nav.is-open { display: flex; }
-    .nav ul { flex-direction: column; gap: 0; }
-    .nav a { padding-block: 0.7rem; font-size: 1.375rem; font-weight: 300; }
-    .langs { flex-direction: row !important; gap: 0.5rem !important; }
-    .langs a { font-size: 1rem; font-weight: 400; padding: 0.5rem 0.8rem; }
+    .links { flex-direction: column; gap: 0 !important; }
+    .links a { display: block; padding: 0.7rem 0; font-size: 20px; }
   }
 </style>

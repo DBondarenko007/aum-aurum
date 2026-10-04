@@ -1,7 +1,7 @@
 # Aum Aurum — design system (v2, approved 2026-10-04)
 
-**Reference implementation:** [`demos/d-combined.html`](demos/d-combined.html) — the approved
-style. The Astro site in `src/` still has the old v1 look and must be rebuilt to match it.
+**Implemented in the Astro site** (`src/`, since 2026-10-04). The original approved demo stays in
+[`demos/d-combined.html`](demos/d-combined.html) as the visual reference.
 
 **Idea:** the world of the logo — soot black, honey gold, comb cream — carried through a family
 apiary on the road to Kazbegi. Built from what the family liked in demos A–C:

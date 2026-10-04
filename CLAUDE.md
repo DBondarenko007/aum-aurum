@@ -19,8 +19,8 @@ decisions; **DESIGN.md is the source of truth for the look** (approved style). R
   pottery1.com layout are **retired**. Demos A–C stay in `demos/` as history.
 - Sections: **Home, Shop, Location, News, Reviews, Gallery** (in that order); the family story
   ("5 500 years") lives in Home, contacts in the footer.
-- **The Astro site in `src/` still has the old v1 look** — next step is rebuilding it in the
-  approved style.
+- **The Astro site in `src/` is built in style D** (2026-10-04). Demos A–C were deleted (they
+  remain in git history); only `demos/d-combined.html` is kept as the visual reference.
 - Georgian texts are machine drafts — a native speaker must proofread before publishing.
 - Every suggestion of Claude's that changes scope must be agreed with the user first.
 
@@ -35,11 +35,13 @@ decisions; **DESIGN.md is the source of truth for the look** (approved style). R
 - Package versions are pinned (`--save-exact`); ask before installing or upgrading anything.
 
 ## Structure
-- `src/content/home/{ka,ru,en}.yaml` — all page texts (CMS: "Главная страница")
+- `src/content/home/{ka,ru,en}.yaml` — all page texts by section: meta, nav, ui, hero, story,
+  shop, location, news, reviews, gallery (8 polaroid captions + photos), footer (CMS: "Тексты сайта")
 - `src/content/products/<slug>.<locale>.yaml` — products; `src/content/news/<slug>.<locale>.md` — news
-- `src/content/settings/{site,reviews,gallery}.yaml` — contacts/map, reviews, gallery (not translated)
+- `src/content/settings/{site,reviews}.yaml` — contacts/map and reviews (not translated)
 - `src/content.config.ts` — schemas; `src/lib/site.ts` — locale helpers, contact links
-- `src/components/*` — one component per page section; `src/styles/global.css` — tokens (v1, to replace)
+- `src/components/` — Header, BeeRail, Home + Apiary, Shop, Location, News, Reviews, Gallery,
+  Footer, Mark (logo); `src/styles/global.css` — design tokens (DESIGN.md)
 - `public/admin/config.yml` — Sveltia CMS config (backend repo is a TODO placeholder)
 - `public/uploads/` — images uploaded through the admin
 - `demos/` — style demos; `d-combined.html` is the approved reference
@@ -50,11 +52,8 @@ decisions; **DESIGN.md is the source of truth for the look** (approved style). R
 - Demos are standalone HTML: open by double click (fonts load from Google Fonts).
 
 ## Next steps
-1. Rebuild the Astro site in the approved style (DESIGN.md): new tokens/fonts, new section order,
-   apiary + bee rail + frames + night road + polaroids as components; content schemas and admin
-   updated for the new sections (Home story, Location, Gallery captions).
-2. Test the admin locally in Chrome/Edge via "Work with Local Repository".
-3. Real content: photos, contacts, prices, family story, Georgian proofreading.
-4. Shop sub-pages (`/shop/honey`, `/shop/bee-colonies`, `/shop/hives`), order forms.
-5. GitHub repo + Cloudflare Pages + domain + GitHub login for the admin; Telegram bot.
-6. Logo wordmark to outlines (paths) for print.
+1. Test the admin locally in Chrome/Edge via "Work with Local Repository".
+2. Real content: photos, contacts, prices, family story, Georgian proofreading.
+3. Shop sub-pages (`/shop/honey`, `/shop/bee-colonies`, `/shop/hives`), order forms.
+4. GitHub repo + Cloudflare Pages + domain + GitHub login for the admin; Telegram bot.
+5. Logo wordmark to outlines (paths) for print.

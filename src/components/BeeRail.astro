@@ -1,0 +1,65 @@
+---
+// Scroll rail: a dotted line on the left filled with honey up to the bee.
+// The bee faces the scroll direction and flaps while the page moves.
+---
+<div class="rail" aria-hidden="true">
+  <i></i>
+  <svg class="bee" viewBox="-17 -17 34 34">
+    <g transform="rotate(-25 -6 -2)"><ellipse class="wing l" cx="-6" cy="-7" rx="5" ry="8" /></g>
+    <g transform="rotate(25 6 -2)"><ellipse class="wing r" cx="6" cy="-7" rx="5" ry="8" /></g>
+    <ellipse cx="0" cy="3" rx="6.5" ry="10" fill="#E7B649" />
+    <path d="M-6.2 0h12.4M-6.4 5h12.8M-5 9.5h10" stroke="#14110E" stroke-width="2.4" stroke-linecap="round" />
+    <circle cx="0" cy="-8.5" r="4" fill="#14110E" />
+  </svg>
+</div>
+
+<script>
+  const rail = document.querySelector<HTMLElement>('.rail');
+  if (rail) {
+    let lastY = scrollY;
+    let stop: number | undefined;
+    const update = () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      rail.style.setProperty('--p', `${max > 0 ? (scrollY / max) * 100 : 0}%`);
+      if (scrollY !== lastY) rail.classList.toggle('up', scrollY < lastY);
+      lastY = scrollY;
+      rail.classList.add('flying');
+      clearTimeout(stop);
+      stop = window.setTimeout(() => rail.classList.remove('flying'), 180);
+    };
+    addEventListener('scroll', update, { passive: true });
+    update();
+  }
+</script>
+
+<style>
+  .rail {
+    position: fixed;
+    left: calc(var(--gutter) / 2 + 14px);
+    top: calc(var(--header-h) + 32px);
+    bottom: 36px;
+    z-index: 15;
+    width: 2px;
+    background: repeating-linear-gradient(180deg, rgb(201 190 166 / 0.4) 0 6px, transparent 6px 12px);
+    pointer-events: none;
+  }
+  .rail i { position: absolute; inset: 0 0 auto; height: var(--p, 0%); background: var(--gold); }
+  .bee {
+    position: absolute;
+    left: 50%;
+    top: var(--p, 0%);
+    width: 34px;
+    height: 34px;
+    translate: -50% -50%;
+    rotate: 180deg;
+    transition: rotate 0.35s var(--ease);
+    filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.5));
+  }
+  .rail.up .bee { rotate: 0deg; }
+  .wing { fill: #ede1c7; opacity: 0.85; transform-box: fill-box; transform-origin: 50% 100%; }
+  .rail.flying .wing.l { animation: flap 0.08s linear infinite alternate; }
+  .rail.flying .wing.r { animation: flap 0.08s linear infinite alternate-reverse; }
+  @keyframes flap { from { transform: scaleY(1); } to { transform: scaleY(0.35); } }
+  @media (max-width: 900px) { .rail { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .rail.flying .wing { animation: none; } }
+</style>

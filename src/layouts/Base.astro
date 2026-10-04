@@ -1,6 +1,10 @@
 ---
-import '@fontsource-variable/inter';
-import '@fontsource-variable/noto-sans-georgian';
+import '@fontsource/forum';
+import '@fontsource/pt-serif/400.css';
+import '@fontsource/pt-serif/400-italic.css';
+import '@fontsource/pt-serif/700.css';
+import '@fontsource/cinzel/500.css';
+import '@fontsource-variable/noto-serif-georgian';
 import '../styles/global.css';
 import { LOCALES, HTML_LANG, type Locale } from '../lib/site';
 
@@ -31,7 +35,7 @@ const url = (l: Locale) => new URL(`/${l}/${path}`, site).href;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={url(lang)} />
-    <meta name="theme-color" content="#626B2F" />
+    <meta name="theme-color" content="#14110E" />
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body>

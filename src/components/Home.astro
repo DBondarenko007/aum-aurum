@@ -1,0 +1,65 @@
+---
+import Mark from './Mark.astro';
+import Apiary from './Apiary.astro';
+
+interface Props {
+  hero: { title: string; lead: string; cta_primary: string; cta_secondary: string; apiary_label: string; open_hive: string };
+  story: { number: string; text: string };
+  orderHref: string;
+}
+const { hero, story, orderHref } = Astro.props;
+// "Aurum" in the story is set in italics.
+const parts = story.text.split(/(Aurum)/);
+---
+<section id="home" class="home dark">
+  <div class="wrap">
+    <Mark size={72} class="mark" />
+    <h1>{hero.title}</h1>
+    <p class="lead">{hero.lead}</p>
+    <div class="actions">
+      <a class="btn btn--gold" href={orderHref}>{hero.cta_primary}</a>
+      <a class="btn btn--ghost" href="#location">{hero.cta_secondary}</a>
+    </div>
+  </div>
+
+  <Apiary label={hero.apiary_label} openLabel={hero.open_hive} />
+
+  <div class="wrap">
+    <div class="story">
+      <strong>{story.number}</strong>
+      <p>{parts.map((p) => (p === 'Aurum' ? <em>{p}</em> : p))}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .home { padding-top: clamp(1.25rem, 0.8rem + 1.4vw, 2.25rem); text-align: center; overflow: hidden; }
+  .home :global(.mark) { width: clamp(54px, 4.6vw, 72px); height: auto; margin: 0 auto; display: block; }
+  h1 {
+    margin-top: 0.7rem;
+    font: 500 clamp(2.1rem, 1.1rem + 3.4vw, 4.1rem)/1 var(--mark);
+    letter-spacing: 0.14em;
+    padding-left: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .lead { margin: 0.6rem auto 1.2rem; max-width: 40ch; font-size: clamp(1rem, 0.95rem + 0.3vw, 1.2rem); }
+  .actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; }
+  .actions .btn { min-height: 46px; padding: 0 1.4rem; font-size: 15px; }
+  .story {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.5rem;
+    align-items: center;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 1rem 0 clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
+    text-align: left;
+  }
+  .story strong { font: 400 clamp(2.2rem, 1.6rem + 2vw, 3.4rem)/1 var(--display); color: var(--gold); white-space: nowrap; }
+  .story p { color: var(--cream-soft); font-size: 16px; line-height: 1.55; }
+  .story em { color: var(--cream); }
+  @media (max-width: 900px) {
+    .story { grid-template-columns: 1fr; gap: 0.5rem; }
+  }
+</style>

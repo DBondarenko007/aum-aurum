@@ -30,8 +30,9 @@ npm run dev
 
 ## Админка
 
-http://localhost:4321/admin/ — кнопка «Work with Local Repository» (только Chrome / Edge).
-Для неё в папке должен быть git-репозиторий (`git init`) — подключим на следующем шаге.
+http://localhost:4321/admin/ — кнопка «Work with Local Repository» (только Chrome / Edge),
+затем выберите папку проекта `aum-aurum`. Изменения сохраняются прямо в файлы проекта;
+после правок закоммитьте их в git (или попросите Claude).
 
 ## Перенос на другой компьютер
 

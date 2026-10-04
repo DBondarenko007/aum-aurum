@@ -1,131 +1,104 @@
 ---
+// Location: night mountain with a crescent moon; the road Tbilisi → Navazi → Kazbegi runs along
+// the meadow and a gold line draws up to Navazi when the scene scrolls into view.
 interface Props {
-  location: {
-    title: string; text: string; address: string; hours: string; visit_note: string;
-    route_cta: string; stops: string[]; here: string;
-  };
+  location: { title: string; address: string; text: string; visit_note: string; route_cta: string; stops: string[]; here: string };
   lat?: number;
   lng?: number;
-  call?: { href: string; label: string } | null;
 }
-const { location, lat = 41.9818, lng = 44.741, call } = Astro.props;
+const { location, lat = 41.9818, lng = 44.741 } = Astro.props;
 const route = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-const HERE = 2; // index of Navazi in `stops`
+const HERE = 2; // Navazi is the third stop
 ---
-<section id="location" class="section olive" aria-labelledby="location-title">
+<section id="location" class="section dark loc">
   <div class="wrap">
     <div class="top">
-      <h2 id="location-title" class="h2 title">{location.title}</h2>
+      <h2>{location.title}</h2>
       <div class="info">
-        <p class="lead">{location.text}</p>
-        <address>
-          <span>{location.address}</span>
-          <span>{location.hours}</span>
-          <span>{location.visit_note}</span>
-        </address>
-        <div class="actions">
-          <a class="btn btn--honey" href={route} target="_blank" rel="noopener">{location.route_cta}</a>
-          {call && <a class="btn" href={call.href}>{call.label}</a>}
-        </div>
+        <p><b>{location.address}</b> {location.text} {location.visit_note}</p>
+        <div><a class="btn btn--gold" href={route} target="_blank" rel="noopener">{location.route_cta}</a></div>
       </div>
     </div>
+  </div>
 
-    <ol class="route" style={`--here:${HERE};--count:${location.stops.length}`}>
-      {location.stops.map((stop, i) => (
-        <li class:list={{ here: i === HERE, passed: i < HERE }} aria-current={i === HERE ? 'location' : undefined}>
-          <span class="dot" aria-hidden="true">
-            {i === HERE && (
-              <svg width="34" height="46" viewBox="-14 -12 28 40"><polygon points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39" /><path transform="translate(0 13)" d="M0,0 C3,5 6,8 6,11 A6,6 0 1 1 -6,11 C-6,8 -3,5 0,0Z" /></svg>
-            )}
-          </span>
-          <span class="name">{stop}</span>
-          {i === HERE && <span class="label you">{location.here}</span>}
-        </li>
-      ))}
-    </ol>
+  <div class="scene">
+    <svg class="landscape" viewBox="0 0 1440 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <g fill="#EDE1C7">
+        <circle cx="180" cy="60" r="1.6" opacity=".7" /><circle cx="420" cy="34" r="1.2" opacity=".5" />
+        <circle cx="700" cy="80" r="1.4" opacity=".6" /><circle cx="880" cy="28" r="1.2" opacity=".5" />
+        <circle cx="1180" cy="40" r="1.6" opacity=".7" /><circle cx="1010" cy="140" r="1" opacity=".4" />
+        <circle cx="300" cy="130" r="1" opacity=".4" />
+      </g>
+      <circle cx="1290" cy="96" r="40" fill="#EDE1C7" />
+      <circle cx="1307" cy="84" r="36" fill="#14110E" />
+      <polygon points="0,290 160,220 330,250 480,150 640,220 760,190 900,240 1080,170 1250,230 1440,180 1440,420 0,420" fill="#2F2821" />
+      <polygon points="0,330 220,230 360,280 600,170 760,230 860,160 1040,40 1240,210 1440,140 1440,420 0,420" fill="#4D4436" />
+      <polygon points="980,100 1040,40 1100,108 1076,100 1060,120 1040,98 1018,120 1004,104" fill="#EDE1C7" />
+      <polygon points="568,186 600,170 626,190 612,186 600,196 588,186" fill="#EDE1C7" />
+      <polygon points="0,360 240,300 520,340 760,280 1040,330 1280,280 1440,310 1440,420 0,420" fill="#55693A" />
+      <rect x="0" y="372" width="1440" height="48" fill="#3F4F2B" />
+    </svg>
+
+    <div class="road">
+      <div class="wrap">
+        <ol style={`--count:${location.stops.length};--here:${HERE}`}>
+          {location.stops.map((stop, i) => (
+            <li class:list={{ passed: i < HERE, here: i === HERE }} aria-current={i === HERE ? 'location' : undefined}>
+              <span class="dot">
+                {i === HERE && (
+                  <svg width="34" height="46" viewBox="-14 -12 28 40" aria-hidden="true"><polygon points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39" /><path transform="translate(0 13)" d="M0,0 C3,5 6,8 6,11 A6,6 0 1 1 -6,11 C-6,8 -3,5 0,0Z" /></svg>
+                )}
+              </span>
+              <span class="name">{stop}</span>
+              {i === HERE && <span class="you">{location.here}</span>}
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
   </div>
 </section>
 
 <script>
-  // The honey dot drives up the road once, when the route scrolls into view.
-  const route = document.querySelector('.route');
-  if (route && 'IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      if (entries.some((e) => e.isIntersecting)) { route.classList.add('go'); io.disconnect(); }
-    }, { threshold: 0.6 });
-    io.observe(route);
-  } else route?.classList.add('go');
+  const road = document.querySelector('.road');
+  if (road && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((es) => {
+      if (es.some((e) => e.isIntersecting)) { road.classList.add('go'); io.disconnect(); }
+    }, { threshold: 0.5 });
+    io.observe(road);
+  } else road?.classList.add('go');
 </script>
 
 <style>
-  .top {
-    display: grid;
-    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
-    gap: clamp(2rem, 5vw, 6rem);
-  }
-  .title { color: var(--honey); }
-  .info { display: flex; flex-direction: column; gap: 1.5rem; padding-top: 0.6rem; }
-  address { display: flex; flex-direction: column; gap: 0.25rem; font-style: normal; }
-  address span:first-child { font-weight: 500; }
-  .actions { display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; }
-
-  /* The road: Tbilisi → Stepantsminda */
-  .route {
-    --line: color-mix(in oklab, var(--blush) 55%, transparent);
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(var(--count), minmax(0, 1fr));
-    margin: clamp(4rem, 3rem + 4vw, 6.5rem) 0 0;
-    padding: 0;
-    list-style: none;
-  }
-  .route::before, .route::after {
-    content: '';
-    position: absolute;
-    top: 22px;
-    left: calc(50% / var(--count));
-    height: 2px;
-  }
-  .route::before { right: calc(50% / var(--count)); background: var(--line); }
-  /* honey road up to Navazi */
-  .route::after {
-    width: calc(100% / var(--count) * var(--here));
-    background: var(--honey);
-    transform-origin: left;
-    transform: scaleX(0);
-  }
-  .route.go::after { transform: scaleX(1); transition: transform 1.8s var(--ease-out) 0.2s; }
-  @media (prefers-reduced-motion: reduce) { .route::after { transform: none; } }
-
-  .route li { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.9rem; text-align: center; }
-  .dot {
-    display: grid;
-    place-items: center;
-    width: 46px;
-    height: 46px;
-  }
-  .dot::before {
-    content: '';
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--olive);
-    box-shadow: 0 0 0 2px var(--blush);
-  }
-  .passed .dot::before { box-shadow: 0 0 0 2px var(--honey); }
+  .loc { padding-bottom: 0; overflow: hidden; }
+  .top { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(2rem, 5vw, 5rem); align-items: end; }
+  h2 { font-size: clamp(2.6rem, 1.6rem + 4vw, 5rem); }
+  :lang(ka) h2 { font-size: clamp(2rem, 1.3rem + 2.8vw, 3.6rem); }
+  .info { display: grid; gap: 1.25rem; color: var(--cream-soft); }
+  .info b { color: var(--cream); font-weight: 400; }
+  .scene { position: relative; margin-top: clamp(2rem, 1rem + 3vw, 3.5rem); }
+  .landscape { display: block; width: 100%; height: clamp(260px, 30vw, 420px); }
+  .road { position: absolute; left: 0; right: 0; bottom: clamp(18px, 2.4vw, 34px); }
+  ol { position: relative; display: grid; grid-template-columns: repeat(var(--count), minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; }
+  ol::before, ol::after { content: ''; position: absolute; top: 22px; left: calc(50% / var(--count)); height: 3px; }
+  ol::before { right: calc(50% / var(--count)); background: repeating-linear-gradient(90deg, var(--cream) 0 18px, transparent 18px 30px); opacity: 0.6; }
+  ol::after { width: calc(100% / var(--count) * var(--here)); background: var(--gold); transform-origin: left; transform: scaleX(0); }
+  .road.go ol::after { transform: scaleX(1); transition: transform 1.8s var(--ease) 0.2s; }
+  li { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.7rem; text-align: center; font: 400 16px var(--display); letter-spacing: 0.06em; color: var(--cream); text-shadow: 0 1px 3px rgb(0 0 0 / 0.6); }
+  .dot { display: grid; place-items: center; width: 46px; height: 46px; }
+  .dot::before { content: ''; width: 12px; height: 12px; border-radius: 50%; background: var(--olive); box-shadow: 0 0 0 2px var(--cream); }
+  .passed .dot::before { box-shadow: 0 0 0 2px var(--gold); }
   .here .dot::before { display: none; }
-  .here svg { fill: var(--honey); position: relative; z-index: 1; translate: 0 -6px; }
-  .name { font-size: var(--fs-small); }
-  .here .name { font-size: var(--fs-h3); font-weight: 400; color: var(--honey); line-height: 1.1; }
-  .you { color: var(--blush); }
-
-  @media (max-width: 860px) {
+  .here svg { fill: var(--gold); translate: 0 -6px; filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.5)); }
+  .here .name { font-size: 26px; color: var(--gold); }
+  .you { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; }
+  :lang(ka) .you { text-transform: none; letter-spacing: 0.02em; }
+  @media (prefers-reduced-motion: reduce) { ol::after { transform: none; } }
+  @media (max-width: 900px) {
     .top { grid-template-columns: 1fr; }
-    .route { grid-template-columns: 1fr; gap: 0; }
-    .route::before, .route::after { top: 23px; bottom: 23px; left: 22px; right: auto; width: 2px; height: auto; }
-    .route::after { height: calc(100% / var(--count) * var(--here)); bottom: auto; transform: scaleY(0); transform-origin: top; }
-    .route.go::after { transform: scaleY(1); }
-    .route li { flex-direction: row; align-items: center; text-align: left; gap: 1rem; min-height: 56px; }
-    .you { margin-left: auto; }
+    li { font-size: 12px; }
+    li:not(.here) .name { writing-mode: vertical-rl; rotate: 180deg; }
+    .here .name { font-size: 18px; }
+    .you { display: none; }
   }
 </style>

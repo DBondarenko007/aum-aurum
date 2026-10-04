@@ -20,13 +20,13 @@ slug:
   clean_accents: true
 
 collections:
-  # ---------------------------------------------------------------- Home page
+  # ---------------------------------------------------------------- Page texts (one file per language)
   - name: home
-    label: Главная страница
+    label: Тексты сайта
     icon: home
     files:
       - name: home
-        label: Тексты главной страницы
+        label: Тексты сайта (все разделы)
         file: src/content/home/{{locale}}.yaml
         format: yaml
         i18n: true
@@ -35,6 +35,7 @@ collections:
             label: Поиск (Google)
             widget: object
             i18n: true
+            collapsed: true
             fields:
               - { name: title, label: Заголовок вкладки, widget: string, i18n: true }
               - { name: description, label: Описание для Google, widget: text, i18n: true }
@@ -44,13 +45,12 @@ collections:
             i18n: true
             collapsed: true
             fields:
-              - { name: concept, label: О нас, widget: string, i18n: true }
+              - { name: home, label: Главная, widget: string, i18n: true }
               - { name: shop, label: Магазин, widget: string, i18n: true }
-              - { name: gallery, label: Галерея, widget: string, i18n: true }
-              - { name: reviews, label: Отзывы, widget: string, i18n: true }
-              - { name: news, label: Новости, widget: string, i18n: true }
               - { name: location, label: Как добраться, widget: string, i18n: true }
-              - { name: contact, label: Контакты, widget: string, i18n: true }
+              - { name: news, label: Новости, widget: string, i18n: true }
+              - { name: reviews, label: Отзывы, widget: string, i18n: true }
+              - { name: gallery, label: Галерея, widget: string, i18n: true }
           - name: ui
             label: Кнопки и служебные надписи
             widget: object
@@ -60,126 +60,99 @@ collections:
               - { name: order_honey, label: Кнопка «Заказать мёд», widget: string, i18n: true }
               - { name: order_message, label: Текст сообщения в WhatsApp при заказе, widget: string, i18n: true }
               - { name: photo_soon, label: Надпись вместо фото, widget: string, i18n: true }
-              - { name: read_more, label: Читать, widget: string, i18n: true }
               - { name: all_news, label: Все новости, widget: string, i18n: true }
               - { name: back, label: Назад, widget: string, i18n: true }
               - { name: menu, label: Меню (кнопка на телефоне), widget: string, i18n: true }
               - { name: close, label: Закрыть, widget: string, i18n: true }
-              - { name: coming_soon, label: «Скоро» (пустой контакт), widget: string, i18n: true }
+              - { name: coming_soon, label: «Скоро» (контакты не заполнены), widget: string, i18n: true }
               - { name: price_on_request, label: Цена не указана, widget: string, i18n: true }
               - { name: language, label: Язык, widget: string, i18n: true }
               - { name: placeholder_note, label: Метка «пример», widget: string, i18n: true }
+              - { name: to_top, label: Подсказка у логотипа в шапке, widget: string, i18n: true }
           - name: hero
-            label: Первый экран
+            label: Home — первый экран
+            widget: object
+            i18n: true
+            fields:
+              - { name: title, label: Название (шрифтом логотипа), widget: string, i18n: true }
+              - { name: lead, label: Подзаголовок, widget: text, i18n: true }
+              - { name: cta_primary, label: Главная кнопка, widget: string, i18n: true }
+              - { name: cta_secondary, label: Вторая кнопка, widget: string, i18n: true }
+              - { name: apiary_label, label: Описание анимации ульев (для незрячих), widget: string, i18n: true }
+              - { name: open_hive, label: Подсказка «открыть улей», widget: string, i18n: true }
+          - name: story
+            label: Home — полоса «5 500 лет»
+            widget: object
+            i18n: true
+            fields:
+              - { name: number, label: Число, widget: string, i18n: true }
+              - { name: text, label: Текст (слово Aurum выделится курсивом), widget: text, i18n: true }
+          - name: shop
+            label: Shop — рамки
             widget: object
             i18n: true
             fields:
               - { name: title, label: Заголовок, widget: string, i18n: true }
               - { name: subtitle, label: Подзаголовок, widget: text, i18n: true }
-              - { name: text, label: Текст, widget: text, i18n: true }
-              - { name: cta_primary, label: Главная кнопка, widget: string, i18n: true }
-              - { name: cta_secondary, label: Вторая кнопка, widget: string, i18n: true }
-              - name: polaroids
-                label: Полароиды на верёвке (до 4)
-                widget: list
-                i18n: true
-                max: 4
-                fields:
-                  - { name: caption, label: Подпись, widget: string, i18n: true }
-                  - { name: image, label: Фото, widget: image, required: false, i18n: duplicate }
-          - name: concept
-            label: О нас
-            widget: object
-            i18n: true
-            fields:
-              - { name: history_title, label: История — заголовок, widget: string, i18n: true }
-              - { name: history_text, label: История — текст, widget: text, i18n: true }
-              - { name: history_source, label: История — источник, widget: string, i18n: true }
-              - { name: family_title, label: Семья — заголовок, widget: string, i18n: true }
-              - { name: family_text, label: Семья — текст, widget: text, i18n: true }
-              - { name: facts, label: Полоса фактов, widget: list, i18n: true }
-              - name: photos
-                label: Фото семьи (3)
-                widget: list
-                i18n: true
-                max: 3
-                fields:
-                  - { name: caption, label: Подпись, widget: string, i18n: true }
-                  - { name: image, label: Фото, widget: image, required: false, i18n: duplicate }
-          - name: shop
-            label: Магазин
+              - { name: honey_title, label: Мёд — заголовок (цены — в разделе «Товары»), widget: string, i18n: true }
+              - { name: honey_image, label: Мёд — фото, widget: image, required: false, i18n: duplicate }
+              - { name: colonies_title, label: Пчелосемьи — заголовок, widget: string, i18n: true }
+              - { name: colonies_text, label: Пчелосемьи — текст, widget: text, i18n: true }
+              - { name: colonies_cta, label: Пчелосемьи — кнопка, widget: string, i18n: true }
+              - { name: colonies_image, label: Пчелосемьи — фото, widget: image, required: false, i18n: duplicate }
+              - { name: hives_title, label: Ульи — заголовок, widget: string, i18n: true }
+              - { name: hives_text, label: Ульи — текст, widget: text, i18n: true }
+              - { name: hives_cta, label: Ульи — кнопка, widget: string, i18n: true }
+              - { name: hives_image, label: Ульи — фото, widget: image, required: false, i18n: duplicate }
+              - { name: starter_title, label: «Старт пчеловода» — заголовок, widget: string, i18n: true }
+              - { name: starter_parts, label: «Старт пчеловода» — состав, widget: list, i18n: true }
+              - { name: starter_cta, label: «Старт пчеловода» — кнопка, widget: string, i18n: true }
+          - name: location
+            label: Location — как добраться
             widget: object
             i18n: true
             fields:
               - { name: title, label: Заголовок, widget: string, i18n: true }
-              - { name: subtitle, label: Подзаголовок, widget: string, i18n: true }
-              - { name: cta, label: Кнопка, widget: string, i18n: true }
-              - { name: honey_title, label: Мёд — заголовок, widget: string, i18n: true }
-              - { name: honey_text, label: Мёд — текст, widget: text, i18n: true }
-              - { name: colonies_title, label: Пчелосемьи — заголовок, widget: string, i18n: true }
-              - { name: colonies_text, label: Пчелосемьи — текст, widget: text, i18n: true }
-              - { name: colonies_cta, label: Пчелосемьи — кнопка, widget: string, i18n: true }
-              - { name: hives_title, label: Ульи — заголовок, widget: string, i18n: true }
-              - { name: hives_text, label: Ульи — текст, widget: text, i18n: true }
-              - { name: hives_cta, label: Ульи — кнопка, widget: string, i18n: true }
-              - { name: starter_title, label: «Старт пчеловода» — заголовок, widget: string, i18n: true }
-              - { name: starter_parts, label: «Старт пчеловода» — состав, widget: list, i18n: true }
-              - { name: starter_text, label: «Старт пчеловода» — текст, widget: text, i18n: true }
-              - { name: starter_cta, label: «Старт пчеловода» — кнопка, widget: string, i18n: true }
-              - { name: seasons, label: Бегущая строка сезонов, widget: list, i18n: true }
+              - { name: address, label: Адрес (выделяется), widget: string, i18n: true }
+              - { name: text, label: Текст после адреса, widget: string, i18n: true }
+              - { name: visit_note, label: Примечание к визиту, widget: string, i18n: true }
+              - { name: route_cta, label: Кнопка маршрута, widget: string, i18n: true }
+              - { name: stops, label: Остановки на дороге (3-я — Навази), widget: list, i18n: true }
+              - { name: here, label: Подпись «мы здесь», widget: string, i18n: true }
+          - name: news
+            label: News — заголовок
+            widget: object
+            i18n: true
+            fields:
+              - { name: title, label: Заголовок, widget: string, i18n: true }
+          - name: reviews
+            label: Reviews — заголовки
+            widget: object
+            i18n: true
+            fields:
+              - { name: title, label: Заголовок, widget: string, i18n: true }
+              - { name: placeholder, label: Текст-заглушка (пока отзывов нет), widget: string, i18n: true }
           - name: gallery
-            label: Галерея — заголовки
+            label: Gallery — полароиды
             widget: object
             i18n: true
             fields:
               - { name: title, label: Заголовок, widget: string, i18n: true }
               - { name: text, label: Текст, widget: string, i18n: true }
-          - name: reviews
-            label: Отзывы — заголовки
-            widget: object
-            i18n: true
-            fields:
-              - { name: title, label: Заголовок, widget: string, i18n: true }
-              - { name: cta, label: Кнопка «Все отзывы», widget: string, i18n: true }
-              - { name: placeholder, label: Текст-заглушка (пока отзывов нет), widget: string, i18n: true }
-          - name: news
-            label: Новости — заголовок
-            widget: object
-            i18n: true
-            fields:
-              - { name: title, label: Заголовок, widget: string, i18n: true }
-          - name: location
-            label: Как добраться
-            widget: object
-            i18n: true
-            fields:
-              - { name: title, label: Заголовок, widget: string, i18n: true }
-              - { name: text, label: Текст, widget: text, i18n: true }
-              - { name: address, label: Адрес, widget: string, i18n: true }
-              - { name: hours, label: Часы работы, widget: string, i18n: true }
-              - { name: visit_note, label: Примечание к визиту, widget: string, i18n: true }
-              - { name: route_cta, label: Кнопка маршрута, widget: string, i18n: true }
-              - { name: stops, label: Остановки на трассе (3-я — Навази), widget: list, i18n: true }
-              - { name: here, label: Подпись «мы здесь», widget: string, i18n: true }
-          - name: contact
-            label: Контакты
-            widget: object
-            i18n: true
-            fields:
-              - { name: title, label: Заголовок, widget: string, i18n: true }
-              - name: columns
-                label: Колонки
+              - name: photos
+                label: Фото (до 8, по 4 на верёвочке)
                 widget: list
                 i18n: true
+                max: 8
                 fields:
-                  - { name: title, label: Заголовок, widget: string, i18n: true }
-                  - { name: text, label: Текст, widget: string, i18n: true }
-                  - name: channel
-                    label: Канал связи
-                    widget: select
-                    i18n: duplicate
-                    options: [whatsapp, telegram, phone, email]
-              - { name: footer, label: Текст в подвале, widget: string, i18n: true }
+                  - { name: caption, label: Подпись, widget: string, i18n: true }
+                  - { name: image, label: Фото, widget: image, required: false, i18n: duplicate }
+          - name: footer
+            label: Подвал
+            widget: object
+            i18n: true
+            fields:
+              - { name: text, label: Текст после «© Aum Aurum», widget: string, i18n: true }
 
   # ---------------------------------------------------------------- Products
   - name: products
@@ -205,7 +178,7 @@ collections:
       - { name: title, label: Название, widget: string, i18n: true }
       - { name: text, label: Описание, widget: text, i18n: true, required: false }
       - { name: size, label: Объём / размер, widget: string, i18n: true, required: false }
-      - { name: price, label: Цена (пусто = «цена по запросу»), widget: string, i18n: true, required: false }
+      - { name: price, label: Цена (пусто = «по запросу»), widget: string, i18n: true, required: false }
       - { name: image, label: Фото, widget: image, i18n: duplicate, required: false }
       - { name: order, label: Порядок, widget: number, value_type: int, default: 10, i18n: duplicate }
       - { name: available, label: В наличии, widget: boolean, default: true, i18n: duplicate }
@@ -231,7 +204,7 @@ collections:
 
   # ---------------------------------------------------------------- Settings (one language)
   - name: settings
-    label: Настройки, отзывы, галерея
+    label: Контакты и отзывы
     icon: settings
     files:
       - name: site
@@ -245,7 +218,7 @@ collections:
           - { name: email, label: E-mail, widget: string, required: false }
           - { name: facebook, label: Facebook (ссылка), widget: string, required: false }
           - { name: instagram, label: Instagram (ссылка), widget: string, required: false }
-          - { name: google_maps, label: Ссылка на карточку в Google Maps (для отзывов), widget: string, required: false }
+          - { name: google_maps, label: Ссылка на карточку в Google Maps, widget: string, required: false }
           - { name: lat, label: Широта точки продаж, widget: number, value_type: float }
           - { name: lng, label: Долгота точки продаж, widget: number, value_type: float }
       - name: reviews
@@ -265,15 +238,3 @@ collections:
                 label: Язык отзыва
                 widget: select
                 options: [ru, ka, en]
-      - name: gallery
-        label: Галерея
-        file: src/content/settings/gallery.yaml
-        format: yaml
-        fields:
-          - name: photos
-            label: Фото
-            widget: list
-            fields:
-              - { name: image, label: Фото, widget: image }
-              - { name: alt, label: Что на фото (для незрячих и Google), widget: string }
-              - { name: tall, label: Вертикальное фото, widget: boolean, default: false }

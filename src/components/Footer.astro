@@ -1,0 +1,40 @@
+---
+import Mark from './Mark.astro';
+import { LOCALES, LOCALE_LABEL, type Locale } from '../lib/site';
+
+interface Props {
+  lang: Locale;
+  text: string;
+  links: { href: string; label: string }[];
+  comingSoon: string;
+}
+const { lang, text, links, comingSoon } = Astro.props;
+const year = new Date().getFullYear();
+---
+<footer id="contact" class="footer dark">
+  <div class="wrap row">
+    <Mark size={22} />
+    <p>© {year} Aum Aurum · {text}</p>
+    <p class="links">
+      {links.length
+        ? links.map((l, i) => <>{i > 0 && ' · '}<a href={l.href} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener">{l.label}</a></>)
+        : <span>WhatsApp · Telegram — {comingSoon}</span>}
+    </p>
+    <ul class="langs">
+      {LOCALES.map((l) => (
+        <li><a href={`/${l}/`} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{LOCALE_LABEL[l]}</a></li>
+      ))}
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .footer { border-top: 1px solid rgb(231 182 73 / 0.18); }
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2rem; padding-top: 2.5rem; padding-bottom: 2.5rem; color: var(--cream-soft); font-size: 15px; }
+  .row p:first-of-type { flex: 1; }
+  .links a { color: var(--cream); }
+  .links a:hover { color: var(--gold); }
+  .langs { display: flex; gap: 0.25rem; margin: 0; padding: 0; list-style: none; }
+  .langs a { padding: 0.4rem 0.55rem; text-decoration: none; }
+  .langs a[aria-current='true'] { color: var(--gold); }
+</style>

@@ -40,15 +40,13 @@ export async function getNews(lang: Locale) {
 }
 
 export async function getSettings() {
-  const [site, reviews, gallery] = await Promise.all([
+  const [site, reviews] = await Promise.all([
     getEntry('settings', 'site'),
     getEntry('settings', 'reviews'),
-    getEntry('settings', 'gallery'),
   ]);
   return {
     site: site?.data ?? {},
     reviews: reviews?.data.reviews ?? [],
-    photos: gallery?.data.photos ?? [],
   };
 }
 

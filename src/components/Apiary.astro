@@ -1,0 +1,144 @@
+---
+// Hero apiary: five painted hives with copper roofs; bees fly between entrances and the sky.
+// Hover / click / Enter on a hive lifts its lid and releases a swarm. Built in the script so
+// the bee count and paths stay in one place.
+interface Props { label: string; openLabel: string }
+const { label, openLabel } = Astro.props;
+---
+<svg class="apiary" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMax slice" role="img" aria-label={label} data-open-label={openLabel}>
+  <path d="M0 300 V250 C 240 228, 480 236, 720 244 S 1200 226, 1440 240 V300 Z" fill="#3A3027" />
+  <path d="M0 250 C 240 228, 480 236, 720 244 S 1200 226, 1440 240" fill="none" stroke="#55693A" stroke-width="4" />
+  <g class="hives"></g>
+  <g class="bees"></g>
+</svg>
+
+<script>
+  const svg = document.querySelector<SVGSVGElement>('svg.apiary');
+  if (svg) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const el = (tag: string, attrs: Record<string, string | number>, parent?: Element) => {
+      const n = document.createElementNS(NS, tag);
+      for (const k in attrs) n.setAttribute(k, String(attrs[k]));
+      parent?.appendChild(n);
+      return n;
+    };
+    const rand = (a: number, b: number) => a + Math.random() * (b - a);
+
+    const spec = [
+      { x: 250, bodies: ['#E7B649', '#EDE1C7'] },
+      { x: 470, bodies: ['#6E1F2E', '#E7B649', '#55693A'] },
+      { x: 720, bodies: ['#EDE1C7', '#C9932E', '#6E1F2E'] },
+      { x: 970, bodies: ['#55693A', '#E7B649'] },
+      { x: 1190, bodies: ['#C9932E', '#EDE1C7', '#4C6270'] },
+    ];
+    const hivesG = svg.querySelector('.hives')!;
+    const beesG = svg.querySelector('.bees')!;
+    const ground = 246, W = 96, H = 38;
+    const entrances: { x: number; y: number }[] = [];
+
+    type Bee = { g: SVGGElement; wing: SVGElement; x: number; y: number; sx: number; sy: number; tx: number; ty: number;
+                 cx: number; cy: number; t: number; dur: number; home: boolean; phase: number; temp: boolean; life: number; wait: number };
+    const bees: Bee[] = [];
+
+    function trip(b: Bee, fromHive?: number) {
+      const from = fromHive != null && fromHive >= 0 ? entrances[fromHive] : { x: b.x, y: b.y };
+      const home = Math.random() < 0.45;
+      const to = home ? entrances[Math.floor(Math.random() * entrances.length)] : { x: rand(80, 1360), y: rand(70, 200) };
+      Object.assign(b, {
+        sx: from.x, sy: from.y, tx: to.x, ty: to.y,
+        cx: (from.x + to.x) / 2 + rand(-220, 220), cy: Math.max(50, Math.min(from.y, to.y) - rand(30, 110)),
+        t: 0, dur: rand(2600, 5200), home, phase: rand(0, 6.28),
+      });
+    }
+    function spawn(hive: number, temp = false) {
+      const g = el('g', {}, beesG) as SVGGElement;
+      const wing = el('ellipse', { cx: -1, cy: -4, rx: 3.2, ry: 2, fill: '#EDE1C7', opacity: 0.8 }, g);
+      el('ellipse', { cx: 0, cy: 0, rx: 5, ry: 3.2, fill: '#E7B649' }, g);
+      el('path', { d: 'M-1.5 -3V3M1.5 -3V3', stroke: '#14110E', 'stroke-width': 1.3 }, g);
+      const b = { g, wing, x: entrances[hive].x, y: entrances[hive].y, temp, life: temp ? 2 : Infinity, wait: 0 } as Bee;
+      trip(b, hive);
+      bees.push(b);
+      if (reduced) g.setAttribute('transform', `translate(${(b.x + rand(-60, 60)).toFixed(0)} ${rand(90, 190).toFixed(0)})`);
+    }
+
+    spec.forEach((h, i) => {
+      const g = el('g', { class: 'hive', tabindex: 0, role: 'button', 'aria-label': svg.dataset.openLabel ?? '' }, hivesG);
+      el('rect', { x: h.x - W / 2 + 8, y: ground - 4, width: 6, height: 14, fill: '#6B5A45' }, g);
+      el('rect', { x: h.x + W / 2 - 14, y: ground - 4, width: 6, height: 14, fill: '#6B5A45' }, g);
+      let top = ground - 6;
+      h.bodies.forEach((c, b) => {
+        top -= H;
+        el('rect', { x: h.x - W / 2, y: top, width: W, height: H - 3, fill: c }, g);
+        el('rect', { x: h.x - 16, y: top + 9, width: 32, height: 6, rx: 3, fill: 'rgba(0,0,0,.22)' }, g);
+        if (b === 0) el('rect', { x: h.x - 26, y: top + H - 13, width: 52, height: 6, rx: 3, fill: '#14110E' }, g);
+      });
+      const lid = el('g', { class: 'lid' }, g) as SVGGElement;
+      lid.style.transformOrigin = `${h.x - W / 2 - 6}px ${top}px`;
+      el('path', { d: `M${h.x - W / 2 - 8} ${top} L${h.x - W / 2 + 4} ${top - 14} H${h.x + W / 2 - 4} L${h.x + W / 2 + 8} ${top} Z`, fill: '#B8692F' }, lid);
+      el('path', { d: `M${h.x - W / 2 + 4} ${top - 14} H${h.x + W / 2 - 4}`, stroke: '#F0A862', 'stroke-width': 3, 'stroke-linecap': 'round' }, lid);
+      el('rect', { x: h.x - W / 2 - 8, y: top - 3, width: W + 16, height: 5, rx: 1, fill: '#8C4A1E' }, lid);
+      entrances.push({ x: h.x, y: ground - 16 });
+
+      let timer: number | undefined;
+      const burst = () => {
+        g.classList.add('open');
+        if (!reduced) for (let k = 0; k < 7; k++) spawn(i, true);
+        clearTimeout(timer);
+        timer = window.setTimeout(() => g.classList.remove('open'), 1600);
+      };
+      g.addEventListener('mouseenter', burst);
+      g.addEventListener('click', burst);
+      g.addEventListener('keydown', (e) => {
+        const k = (e as KeyboardEvent).key;
+        if (k === 'Enter' || k === ' ') { e.preventDefault(); burst(); }
+      });
+    });
+
+    for (let i = 0; i < 16; i++) spawn(i % entrances.length);
+
+    if (!reduced) {
+      let last = performance.now();
+      let visible = true;
+      new IntersectionObserver((es) => { visible = es.some((e) => e.isIntersecting); }).observe(svg);
+      const frame = (now: number) => {
+        const dt = Math.min(now - last, 50);
+        last = now;
+        if (visible) {
+          for (let i = bees.length - 1; i >= 0; i--) {
+            const b = bees[i];
+            if (b.wait > 0) {
+              b.wait -= dt;
+              b.g.style.opacity = '0';
+              if (b.wait <= 0) { b.g.style.opacity = '1'; trip(b, entrances.findIndex((e) => e.x === b.tx)); }
+              continue;
+            }
+            b.t += dt / b.dur;
+            const t = Math.min(b.t, 1), u = 1 - t;
+            const x = u * u * b.sx + 2 * u * t * b.cx + t * t * b.tx;
+            const y = u * u * b.sy + 2 * u * t * b.cy + t * t * b.ty + Math.sin(now / 160 + b.phase) * 3;
+            const ang = (Math.atan2(y - b.y, x - b.x) * 180) / Math.PI;
+            b.x = x; b.y = y;
+            b.g.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${ang.toFixed(0)})`);
+            b.wing.setAttribute('ry', Math.sin(now / 18) > 0 ? '2.2' : '0.8');
+            if (t >= 1) {
+              if (b.temp && --b.life <= 0) { b.g.remove(); bees.splice(i, 1); continue; }
+              if (b.home) b.wait = rand(600, 2200); else trip(b);
+            }
+          }
+        }
+        requestAnimationFrame(frame);
+      };
+      requestAnimationFrame(frame);
+    }
+  }
+</script>
+
+<style>
+  .apiary { display: block; width: 100%; height: clamp(210px, 18vw, 270px); margin-top: clamp(0.25rem, 0.2rem + 0.5vw, 0.75rem); }
+  .apiary :global(.hive) { cursor: pointer; outline: none; }
+  .apiary :global(.hive:focus-visible rect:first-of-type) { stroke: #e7b649; }
+  .apiary :global(.lid) { transition: transform 0.5s var(--ease); }
+  .apiary :global(.hive:hover .lid), .apiary :global(.hive.open .lid) { transform: translate(0, -14px) rotate(-6deg); }
+  @media (max-width: 900px) { .apiary { height: 160px; margin-top: 2rem; } }
+</style>
