@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aum Aurum — демо C «Мир логотипа»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Forum&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Noto+Serif+Georgian:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  /* Demo C — the world of the logo: soot, gold, comb cream and a Georgian-wine red.
+     A seven-cell comb in the header fills with honey as you read down the page. */
+  :root {
+    --soot: #14110e; --soot-2: #1d1914; --gold: #e7b649; --cream: #ede1c7; --wine: #7a2333;
+    --cream-soft: #c9bea6;
+    --display: 'Forum', 'Noto Serif Georgian', serif;
+    --text: 'PT Serif', 'Noto Serif Georgian', Georgia, serif;
+    --gutter: clamp(16px, 4vw, 56px);
+    --ease: cubic-bezier(.16, 1, .3, 1);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--soot); color: var(--cream); font: 400 18px/1.65 var(--text); }
+  ::selection { background: var(--gold); color: var(--soot); }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+  h1, h2, h3, p { margin: 0; }
+  h1, h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1.02; text-wrap: balance; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 var(--gutter); }
+  .rule { height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: .5; }
+
+  header { position: sticky; top: 0; z-index: 10; background: rgb(20 17 14 / .96); border-bottom: 1px solid rgb(231 182 73 / .2); }
+  header .wrap { display: flex; align-items: center; gap: 2rem; height: 68px; }
+  header nav { display: flex; gap: 1.8rem; font: 400 16px var(--display); letter-spacing: .12em; text-transform: uppercase; }
+  header nav a { text-decoration: none; color: var(--cream-soft); transition: color .3s; }
+  header nav a:hover { color: var(--gold); }
+  .comb { display: flex; gap: 3px; }
+  .comb svg { width: 16px; height: 14px; }
+  .comb polygon { fill: none; stroke: var(--gold); stroke-width: 1.4; transition: fill .6s var(--ease); }
+  .comb .full polygon { fill: var(--gold); }
+  .langs { margin-left: auto; display: flex; gap: .9rem; font-size: 15px; color: var(--cream-soft); }
+  .langs b { color: var(--gold); font-weight: 400; }
+
+  section { padding: clamp(4.5rem, 3rem + 6vw, 8.5rem) 0; }
+  .btn { display: inline-flex; align-items: center; gap: .7rem; min-height: 52px; padding: 0 1.7rem; font: 400 16px var(--display); letter-spacing: .14em; text-transform: uppercase; text-decoration: none; border: 1px solid var(--gold); color: var(--gold); transition: background .4s var(--ease), color .4s; }
+  .btn:hover, .btn.fill { background: var(--gold); color: var(--soot); }
+  .btn.fill:hover { background: var(--cream); border-color: var(--cream); }
+
+  /* Home */
+  .home { text-align: center; padding-top: clamp(4rem, 3rem + 5vw, 7rem); }
+  .home svg.mark { width: clamp(120px, 14vw, 180px); height: auto; }
+  .home h1 { margin-top: 2rem; font-size: clamp(3.2rem, 1.5rem + 8vw, 8.5rem); letter-spacing: .14em; color: var(--gold); padding-left: .14em; }
+  .home .lead { margin: 1.5rem auto 2.5rem; max-width: 34ch; font-size: clamp(1.1rem, 1rem + .5vw, 1.4rem); color: var(--cream); }
+  .home .actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; }
+  .plaque { margin: clamp(4rem, 3rem + 4vw, 6.5rem) auto 0; max-width: 820px; display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: center; text-align: left; padding: 2rem 2.25rem; border: 1px solid rgb(231 182 73 / .35); }
+  .plaque strong { font: 400 clamp(3rem, 2rem + 4vw, 5.5rem)/1 var(--display); color: var(--gold); }
+  .plaque p { color: var(--cream-soft); }
+  .plaque em { color: var(--cream); font-style: italic; }
+
+  /* Shop */
+  .head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1.5rem; margin-bottom: 3.5rem; }
+  .head h2 { font-size: clamp(2.6rem, 1.6rem + 4vw, 5.25rem); color: var(--cream); }
+  .head h2 span { color: var(--gold); }
+  .head p { max-width: 36ch; color: var(--cream-soft); }
+  .shop-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 1px; background: rgb(231 182 73 / .25); border: 1px solid rgb(231 182 73 / .25); }
+  .shop-grid > * { background: var(--soot); padding: clamp(1.5rem, 1rem + 2vw, 2.75rem); display: grid; gap: 1.1rem; align-content: start; }
+  .honey-card { grid-row: span 2; }
+  .shop-grid h3 { font-size: clamp(2rem, 1.4rem + 2vw, 3.2rem); color: var(--gold); }
+  .honey-card h3 { font-size: clamp(3rem, 2rem + 4vw, 5.5rem); }
+  .frame { aspect-ratio: 16/10; border: 1px solid rgb(237 225 199 / .25); padding: 10px; }
+  .frame div { height: 100%; background: var(--soot-2); display: grid; place-items: center; font-size: 14px; color: var(--cream-soft); }
+  .prices { list-style: none; margin: 0; padding: 0; font-variant-numeric: tabular-nums; }
+  .prices li { display: flex; gap: .75rem; align-items: baseline; padding: .7rem 0; border-bottom: 1px solid rgb(237 225 199 / .15); }
+  .prices .dots { flex: 1; border-bottom: 1px dotted rgb(231 182 73 / .5); }
+  .prices .p { color: var(--gold); }
+  .shop-grid .btn { justify-self: start; }
+  .starter { margin-top: 3rem; display: flex; flex-wrap: wrap; gap: 1.25rem 2rem; align-items: center; justify-content: space-between; padding: 1.75rem 2.25rem; background: var(--wine); }
+  .starter strong { font: 400 clamp(1.5rem, 1rem + 1.6vw, 2.5rem)/1.1 var(--display); }
+
+  /* News */
+  .news li { display: grid; grid-template-columns: 11rem 1fr auto; gap: 2rem; padding: 1.75rem 0; border-top: 1px solid rgb(237 225 199 / .15); align-items: baseline; }
+  .news ul { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid rgb(237 225 199 / .15); }
+  .news time { color: var(--gold); font: 400 17px var(--display); letter-spacing: .08em; }
+  .news h3 { font-size: clamp(1.5rem, 1.2rem + 1vw, 2.1rem); }
+  .news p { color: var(--cream-soft); margin-top: .35rem; }
+  .tag { font-size: 13px; border: 1px solid rgb(237 225 199 / .4); padding: .1rem .6rem; color: var(--cream-soft); }
+
+  /* Location */
+  .loc { background: var(--soot-2); }
+  .loc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+  .loc h2 { font-size: clamp(2.6rem, 1.6rem + 4vw, 5rem); }
+  .loc p { color: var(--cream-soft); margin: 1.5rem 0 2rem; }
+  .route { list-style: none; margin: 0; padding: 0 0 0 2rem; position: relative; }
+  .route::before { content: ''; position: absolute; left: 6px; top: .9rem; bottom: .9rem; width: 1px; background: rgb(231 182 73 / .45); }
+  .route li { position: relative; padding: .55rem 0; font: 400 20px var(--display); letter-spacing: .06em; color: var(--cream-soft); }
+  .route li::before { content: ''; position: absolute; left: calc(-2rem + 1px); top: 50%; width: 11px; height: 11px; translate: 0 -50%; border: 1px solid var(--gold); border-radius: 50%; background: var(--soot-2); }
+  .route li.here { color: var(--gold); font-size: 34px; }
+  .route li.here::before { width: 22px; height: 19px; left: calc(-2rem - 5px); border: 0; border-radius: 0; background: var(--gold); clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
+
+  /* Reviews */
+  .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
+  .quotes blockquote { margin: 0; font: italic 400 clamp(1.15rem, 1rem + .6vw, 1.45rem)/1.5 var(--text); color: var(--cream-soft); }
+  .quotes blockquote::before { content: '“'; display: block; font: 400 4.5rem/.7 var(--display); color: var(--gold); margin-bottom: .6rem; }
+
+  /* Gallery — museum plates */
+  .plates { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .plates figure { margin: 0; padding: 14px; background: var(--cream); }
+  .plates figure div { aspect-ratio: 4/5; background: var(--soot-2); display: grid; place-items: center; color: var(--cream-soft); font-size: 14px; }
+  .plates figcaption { color: var(--soot); font: 400 15px var(--display); letter-spacing: .1em; text-transform: uppercase; padding-top: 10px; text-align: center; }
+  .plates figure:nth-child(2) { translate: 0 2.5rem; }
+
+  footer { padding: 3rem 0; border-top: 1px solid rgb(231 182 73 / .2); color: var(--cream-soft); font-size: 15px; }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem 2rem; }
+  .demo-note { position: fixed; right: 12px; bottom: 12px; z-index: 20; background: var(--gold); color: var(--soot); font: 400 13px var(--display); letter-spacing: .1em; text-transform: uppercase; padding: .45rem .9rem; }
+
+  @media (max-width: 900px) {
+    header nav { display: none; }
+    .shop-grid, .loc-grid, .quotes, .plates { grid-template-columns: 1fr; }
+    .honey-card { grid-row: auto; }
+    .plaque { grid-template-columns: 1fr; gap: 1rem; }
+    .news li { grid-template-columns: 1fr; gap: .4rem; }
+    .plates figure:nth-child(2) { translate: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .comb polygon, .btn { transition: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="comb" aria-hidden="true">
+      <svg viewBox="-13 -11.5 26 23"><polygon points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/></svg><svg viewBox="-13 -11.5 26 23"><polygon points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/></svg><svg viewBox="-13 -11.5 26 23"><polygon points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/></svg><svg viewBox="-13 -11.5 26 23"><polygon points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/></svg><svg viewBox="-13 -11.5 26 23"><polygon points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/></svg><svg viewBox="-13 -11.5 26 23"><polygon points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/></svg>
+    </div>
+    <nav aria-label="Разделы">
+      <a href="#home">Home</a><a href="#shop">Shop</a><a href="#news">News</a><a href="#location">Location</a><a href="#reviews">Reviews</a><a href="#gallery">Gallery</a>
+    </nav>
+    <div class="langs"><a href="#" lang="ka">ქარ</a><b>рус</b><a href="#">eng</a></div>
+  </div>
+</header>
+
+<main>
+  <section id="home" class="home">
+    <div class="wrap">
+      <svg class="mark" viewBox="-44 -42 88 118" aria-hidden="true"><g fill="#EDE1C7"><polygon transform="translate(-29 -5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-29 17.5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 -16.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 6.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 28.8)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(10 -27.5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(10 -5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/></g><polygon transform="translate(29.5 6.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39" fill="#E7B649"/><path transform="translate(29.5 19)" d="M0,0 C3,5 6,8 6,11 A6,6 0 1 1 -6,11 C-6,8 -3,5 0,0Z" fill="#E7B649"/><g fill="#E7B649" stroke="#B8932F" stroke-width="1"><polygon points="-31,72 -1,72 -4,62 -28,62"/><polygon points="1,72 31,72 28,62 4,62"/><polygon points="-15,61 15,61 12,51 -12,51"/></g></svg>
+      <h1>AUM AURUM</h1>
+      <p class="lead">Мёд, пчёлы и ульи из Навази — семейная пасека по дороге в Казбеги.</p>
+      <div class="actions"><a class="btn fill" href="#shop">Заказать мёд</a><a class="btn" href="#location">Как нас найти</a></div>
+      <div class="plaque">
+        <strong>5 500</strong>
+        <p>лет — столько старейшему известному мёду в мире. Его нашли в Грузии, под Боржоми. <em>Aurum</em> по-латыни — золото: так мы и называем то, что делают наши пчёлы.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
+  <section id="shop">
+    <div class="wrap">
+      <div class="head"><h2>Из улья <span>к столу</span></h2><p>Мёд — главное. А ещё пчелосемьи на весну и ульи, которые мы строим своими руками.</p></div>
+      <div class="shop-grid">
+        <article class="honey-card">
+          <h3>Мёд</h3>
+          <div class="frame"><div>фото мёда</div></div>
+          <ul class="prices"><li><span>Сезонный мёд, 0,5 кг</span><span class="dots"></span><span class="p">по запросу</span></li><li><span>Сезонный мёд, 1 кг</span><span class="dots"></span><span class="p">по запросу</span></li></ul>
+          <a class="btn fill" href="#">Заказать в WhatsApp</a>
+        </article>
+        <article><h3>Пчелосемьи</h3><p>Сильные семьи и отводки. Предзаказ на весну.</p><a class="btn" href="#">Предзаказ</a></article>
+        <article><h3>Ульи</h3><p>Ручная работа, проверены на нашей пасеке.</p><a class="btn" href="#">Заказать улей</a></article>
+      </div>
+      <div class="starter"><strong>Старт пчеловода: улей + пчелосемья + консультация</strong><a class="btn" href="#" style="border-color:var(--cream);color:var(--cream)">Связаться</a></div>
+    </div>
+  </section>
+
+  <section id="news" class="news" style="padding-top:0">
+    <div class="wrap">
+      <div class="head"><h2>Новости</h2><a href="#" style="color:var(--gold)">Все новости →</a></div>
+      <ul>
+        <li><time>04.10.2026</time><div><h3>Добро пожаловать в Aum Aurum</h3><p>У нашей семейной пасеки появился сайт.</p></div><span class="tag">пример</span></li>
+        <li><time>01.10.2026</time><div><h3>Пчелосемьи на весну — предзаказ</h3><p>Сообщите заранее, сколько семей нужно.</p></div><span class="tag">пример</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="location" class="loc">
+    <div class="wrap loc-grid">
+      <div>
+        <h2>Заезжайте по пути в Казбеги</h2>
+        <p>Село Навази, Мцхетский муниципалитет — прямо на Военно-Грузинской дороге. Пожалуйста, позвоните перед визитом.</p>
+        <a class="btn fill" href="https://www.google.com/maps/dir/?api=1&destination=41.9818,44.7410" target="_blank" rel="noopener">Маршрут в Google Maps</a>
+      </div>
+      <ol class="route"><li>Тбилиси</li><li>Мцхета</li><li class="here">Навази</li><li>Жинвали</li><li>Ананури</li><li>Гудаури</li><li>Степанцминда</li></ol>
+    </div>
+  </section>
+
+  <section id="reviews">
+    <div class="wrap">
+      <div class="head"><h2>Что о нас говорят</h2></div>
+      <div class="quotes">
+        <blockquote>Здесь появится отзыв одного из наших покупателей.</blockquote>
+        <blockquote>Здесь появится отзыв одного из наших покупателей.</blockquote>
+        <blockquote>Здесь появится отзыв одного из наших покупателей.</blockquote>
+      </div>
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
+  <section id="gallery">
+    <div class="wrap">
+      <div class="head"><h2>Галерея</h2><p>Пасека в любое время года.</p></div>
+      <div class="plates">
+        <figure><div>фото</div><figcaption>Пасека</figcaption></figure>
+        <figure><div>фото</div><figcaption>Соты</figcaption></figure>
+        <figure><div>фото</div><figcaption>Мастерская</figcaption></figure>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap"><span>© 2026 Aum Aurum · семейная пасека в Навази, Грузия</span><span>WhatsApp · Telegram · телефон — скоро</span></div></footer>
+<div class="demo-note">Демо C · Мир логотипа</div>
+
+<script>
+  // Header comb: one cell fills with honey per section read.
+  const cells = [...document.querySelectorAll('.comb svg')];
+  const sections = [...document.querySelectorAll('main section')];
+  const update = () => {
+    const passed = sections.filter((s) => s.getBoundingClientRect().top < innerHeight * 0.6).length;
+    cells.forEach((c, i) => c.classList.toggle('full', i < passed));
+  };
+  addEventListener('scroll', update, { passive: true });
+  update();
+</script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aum Aurum — демо A «Крашеный улей»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Onest:wght@400;500&family=Noto+Sans+Georgian:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* Demo A — the page is a stack of painted hive bodies. Beekeepers paint hives in
+     different colours so the bees find their own; each section is one body. */
+  :root {
+    --cobalt: #2e5aac; --honey: #f2b227; --sage: #8db08a; --oxide: #b5452c;
+    --chalk: #f4efe4; --ink: #1a1712; --seam: #1a1712;
+    --display: 'Unbounded', 'Noto Sans Georgian', sans-serif;
+    --text: 'Onest', 'Noto Sans Georgian', system-ui, sans-serif;
+    --gutter: clamp(16px, 4vw, 56px);
+    --ease: cubic-bezier(.16, 1, .3, 1);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--ink); color: var(--ink); font: 400 17px/1.6 var(--text); }
+  ::selection { background: var(--honey); color: var(--ink); }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--honey); outline-offset: 3px; }
+  h1, h2, h3, p { margin: 0; }
+  h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.02em; line-height: 0.95; text-wrap: balance; }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 var(--gutter); }
+
+  /* Roof */
+  .roof { position: sticky; top: 0; z-index: 10; background: var(--ink); color: var(--chalk); }
+  .roof .wrap { display: flex; align-items: center; gap: 2rem; height: 68px; }
+  .roof nav { display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 15px; }
+  .roof nav a { text-decoration: none; padding: .3rem 0; border-bottom: 2px solid transparent; transition: border-color .3s; }
+  .roof nav a:hover { border-color: var(--honey); }
+  .roof .langs { margin-left: auto; display: flex; gap: .8rem; font-size: 14px; opacity: .85; }
+  .brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; font-family: var(--display); font-weight: 600; font-size: 15px; }
+
+  /* Hive bodies */
+  .body { position: relative; padding: clamp(4rem, 3rem + 5vw, 7.5rem) 0; border-top: 6px solid var(--seam); overflow: hidden; }
+  .body::before { /* hand-hold cut into every hive body */
+    content: ''; position: absolute; top: 28px; left: 50%; width: 120px; height: 18px; translate: -50% 0;
+    border-radius: 9px; background: rgb(0 0 0 / .22); box-shadow: inset 0 3px 0 rgb(0 0 0 / .25);
+  }
+  .paint-mark { /* stencilled section name, tone on tone */
+    position: absolute; right: -1rem; bottom: -2.4rem; font: 800 clamp(5rem, 16vw, 15rem)/1 var(--display);
+    letter-spacing: -0.04em; color: rgb(0 0 0 / .07); pointer-events: none; user-select: none; white-space: nowrap;
+  }
+  .cobalt { background: var(--cobalt); color: var(--chalk); }
+  .honey { background: var(--honey); }
+  .sage { background: var(--sage); }
+  .oxide { background: var(--oxide); color: var(--chalk); }
+  .chalk { background: var(--chalk); }
+
+  .btn { display: inline-flex; align-items: center; gap: .6rem; min-height: 52px; padding: 0 1.5rem; border-radius: 999px;
+         font: 600 15px var(--display); text-decoration: none; border: 2px solid currentColor; transition: transform .3s var(--ease), background .3s; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn.fill { background: var(--honey); border-color: var(--honey); color: var(--ink); }
+  .btn.ink { background: var(--ink); border-color: var(--ink); color: var(--chalk); }
+
+  /* Home */
+  .home .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+  .home h1 { font-size: clamp(3.4rem, 1.5rem + 8vw, 8.5rem); }
+  .home .lead { margin: 2rem 0 2.5rem; max-width: 30ch; font-size: clamp(1.1rem, 1rem + .5vw, 1.4rem); }
+  .home .actions { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .hive { position: relative; justify-self: center; width: min(100%, 380px); }
+  .hive .lid { height: 34px; background: var(--ink); border-radius: 6px 6px 0 0; margin: 0 -14px; }
+  .hive .box { height: 120px; border-top: 5px solid var(--seam); position: relative; }
+  .hive .box:nth-child(2) { background: var(--honey); }
+  .hive .box:nth-child(3) { background: var(--sage); }
+  .hive .box:nth-child(4) { background: var(--oxide); }
+  .hive .box::after { content: ''; position: absolute; left: 50%; top: 16px; width: 70px; height: 12px; translate: -50% 0; border-radius: 6px; background: rgb(0 0 0 / .2); }
+  .hive .entrance { position: absolute; left: 50%; bottom: 14px; width: 120px; height: 12px; translate: -50% 0; border-radius: 6px; background: var(--ink); }
+  .bee { position: absolute; width: 9px; height: 7px; border-radius: 50%; background: var(--ink); box-shadow: 0 0 0 2px var(--honey);
+         left: 50%; bottom: 20px; animation: fly 6s var(--ease) infinite; opacity: 0; }
+  .bee:nth-child(6) { animation-delay: 1.5s; --dx: -160px; --dy: -260px; }
+  .bee:nth-child(7) { animation-delay: 3s; --dx: 150px; --dy: -320px; }
+  .bee:nth-child(8) { animation-delay: 4.5s; --dx: -60px; --dy: -380px; }
+  @keyframes fly { 0% { opacity: 0; transform: translate(0, 0); } 10% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx, 120px), var(--dy, -300px)); } }
+
+  /* Shop — products are hive frames you can lift out */
+  .head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1.5rem; margin-bottom: 3.5rem; }
+  .head h2 { font-size: clamp(2.6rem, 1.5rem + 4.5vw, 5.5rem); }
+  .head p { max-width: 34ch; }
+  .frames { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: clamp(1rem, 2vw, 1.75rem); align-items: start; }
+  .frame { position: relative; padding: 0 12px 12px; background: #d8a523; transition: transform .5s var(--ease); }
+  .frame:hover { transform: translateY(-14px); }
+  .frame .bar { height: 22px; margin: 0 -34px 12px; background: var(--ink); border-radius: 3px; }
+  .frame .cell { background: var(--chalk); padding: 1.5rem; display: grid; gap: .9rem; }
+  .frame h3 { font-size: clamp(1.4rem, 1.1rem + 1vw, 2rem); }
+  .comb { aspect-ratio: 4/3; background-color: #f7c948;
+          background-image: radial-gradient(circle at 50% 50%, #e9b52f 0 34%, transparent 35%);
+          background-size: 26px 22px; display: grid; place-items: center; font-size: 13px; }
+  .comb span { background: var(--chalk); padding: .2rem .6rem; border-radius: 999px; }
+  .prices { list-style: none; margin: 0; padding: 0; font-variant-numeric: tabular-nums; }
+  .prices li { display: flex; justify-content: space-between; gap: 1rem; padding: .55rem 0; border-bottom: 2px dotted rgb(26 23 18 / .3); }
+  .frame .btn { justify-self: start; min-height: 46px; font-size: 14px; }
+  .starter { margin-top: 3.5rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2rem; padding: 1.75rem 2rem; background: var(--ink); color: var(--chalk); border-radius: 18px; }
+  .starter strong { font: 800 clamp(1.4rem, 1rem + 1.5vw, 2.2rem)/1.1 var(--display); flex: 1 1 360px; }
+  .starter strong em { font-style: normal; color: var(--honey); }
+
+  /* News */
+  .news-list { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .post { display: grid; grid-template-columns: 140px 1fr; gap: 1.25rem; padding: 1.5rem; background: #fff9ee; border-radius: 18px; text-decoration: none; transition: transform .4s var(--ease); }
+  .post:hover { transform: rotate(-1deg); }
+  .post .stamp { aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; text-align: center; font: 600 13px/1.2 var(--display); background: var(--cobalt); color: var(--chalk); }
+  .post time { font-size: 14px; opacity: .7; }
+  .post h3 { font-size: 1.35rem; line-height: 1.1; margin: .3rem 0 .5rem; }
+  .tag { display: inline-block; font-size: 12px; padding: .1rem .6rem; border: 1.5px solid currentColor; border-radius: 999px; margin-left: .4rem; }
+
+  /* Location — the road as a row of hives */
+  .loc .wrap > p { max-width: 46ch; font-size: 1.15rem; margin: 1.5rem 0 3rem; }
+  .road { display: grid; grid-template-columns: repeat(7, 1fr); gap: .6rem; align-items: end; list-style: none; padding: 0; margin: 0 0 3rem; }
+  .road li { text-align: center; font-size: 14px; }
+  .road li::before { content: ''; display: block; height: 42px; margin-bottom: .6rem; border-radius: 6px 6px 0 0; background: rgb(26 23 18 / .18); border-top: 8px solid rgb(26 23 18 / .35); }
+  .road li.here::before { height: 110px; background: var(--honey); border-top-color: var(--ink); }
+  .road li.here { font: 800 1.2rem var(--display); }
+  .addr { display: flex; flex-wrap: wrap; gap: 1rem 3rem; align-items: center; }
+
+  /* Reviews */
+  .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+  .quotes blockquote { margin: 0; font: 400 clamp(1.1rem, 1rem + .5vw, 1.4rem)/1.45 var(--text); padding-top: 1.25rem; border-top: 6px solid var(--chalk); }
+
+  /* Gallery */
+  .gallery { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 120px; gap: 10px; }
+  .gallery div { border-radius: 14px; display: grid; place-items: center; font-size: 13px; color: var(--ink); }
+  .gallery div:nth-child(1) { grid-column: span 3; grid-row: span 3; background: var(--honey); }
+  .gallery div:nth-child(2) { grid-column: span 3; grid-row: span 2; background: var(--sage); }
+  .gallery div:nth-child(3) { grid-column: span 2; grid-row: span 2; background: var(--oxide); color: var(--chalk); }
+  .gallery div:nth-child(4) { grid-column: span 1; grid-row: span 2; background: var(--cobalt); color: var(--chalk); }
+  .gallery div:nth-child(5) { grid-column: span 3; grid-row: span 1; background: #fff9ee; }
+
+  footer { background: var(--ink); color: var(--chalk); padding: 3rem 0; border-top: 6px solid var(--seam); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 1.5rem 3rem; align-items: center; justify-content: space-between; font-size: 15px; }
+  .demo-note { position: fixed; right: 12px; bottom: 12px; z-index: 20; background: var(--chalk); color: var(--ink); font-size: 12px; padding: .4rem .8rem; border-radius: 999px; box-shadow: 0 6px 18px -6px rgb(0 0 0 / .4); }
+
+  @media (max-width: 900px) {
+    .roof nav { display: none; }
+    .home .wrap, .frames, .news-list, .quotes { grid-template-columns: 1fr; }
+    .hive { width: min(80%, 320px); }
+    .road { grid-template-columns: repeat(7, minmax(0, 1fr)); font-size: 11px; }
+    .road li { font-size: 11px; overflow-wrap: anywhere; }
+    .road li.here { font-size: .85rem; }
+    .gallery { grid-template-columns: repeat(2, 1fr); }
+    .gallery div { grid-column: span 1 !important; grid-row: span 1 !important; }
+    .gallery div:nth-child(1) { grid-column: span 2 !important; grid-row: span 2 !important; }
+    .post { grid-template-columns: 84px 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) { .bee { animation: none; } .frame, .post, .btn { transition: none; } }
+</style>
+</head>
+<body>
+<header class="roof">
+  <div class="wrap">
+    <a class="brand" href="#home">
+      <svg width="30" height="40" viewBox="-44 -42 88 118" aria-hidden="true"><g fill="#F4EFE4"><polygon transform="translate(-29 -5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-29 17.5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 -16.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 6.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 28.8)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(10 -27.5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(10 -5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/></g><polygon transform="translate(29.5 6.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39" fill="#F2B227"/><path transform="translate(29.5 19)" d="M0,0 C3,5 6,8 6,11 A6,6 0 1 1 -6,11 C-6,8 -3,5 0,0Z" fill="#F2B227"/><g fill="#F2B227"><polygon points="-31,72 -1,72 -4,62 -28,62"/><polygon points="1,72 31,72 28,62 4,62"/><polygon points="-15,61 15,61 12,51 -12,51"/></g></svg>
+      Aum Aurum
+    </a>
+    <nav aria-label="Разделы">
+      <a href="#home">Home</a><a href="#shop">Shop</a><a href="#news">News</a><a href="#location">Location</a><a href="#reviews">Reviews</a><a href="#gallery">Gallery</a>
+    </nav>
+    <div class="langs"><a href="#" lang="ka">ქარ</a><b>рус</b><a href="#">eng</a></div>
+  </div>
+</header>
+
+<main>
+  <section id="home" class="body cobalt home">
+    <div class="wrap">
+      <div>
+        <h1>Aum<br>Aurum</h1>
+        <p class="lead">Мёд, пчёлы и ульи из Навази — семейная пасека по дороге в Казбеги.</p>
+        <div class="actions">
+          <a class="btn fill" href="#shop">Заказать мёд</a>
+          <a class="btn" href="#location">Как нас найти →</a>
+        </div>
+      </div>
+      <div class="hive" aria-hidden="true">
+        <div class="lid"></div><div class="box"></div><div class="box"></div><div class="box"><span class="entrance"></span></div>
+        <span class="bee"></span><span class="bee"></span><span class="bee"></span><span class="bee"></span>
+      </div>
+    </div>
+    <span class="paint-mark" aria-hidden="true">home</span>
+  </section>
+
+  <section id="shop" class="body honey">
+    <div class="wrap">
+      <div class="head">
+        <h2>Из нашего улья</h2>
+        <p>Мёд — главное. А ещё пчелосемьи на весну и ульи, которые мы строим сами и проверяем на своих пчёлах.</p>
+      </div>
+      <div class="frames">
+        <article class="frame">
+          <div class="bar"></div>
+          <div class="cell">
+            <div class="comb"><span>фото мёда</span></div>
+            <h3>Мёд</h3>
+            <ul class="prices"><li><span>Сезонный мёд, 0,5 кг</span><span>цена по запросу</span></li><li><span>Сезонный мёд, 1 кг</span><span>цена по запросу</span></li></ul>
+            <a class="btn ink" href="#">Заказать в WhatsApp</a>
+          </div>
+        </article>
+        <article class="frame">
+          <div class="bar"></div>
+          <div class="cell">
+            <div class="comb"><span>фото пчёл</span></div>
+            <h3>Пчелосемьи</h3>
+            <p>Сильные семьи и отводки. Предзаказ на весну.</p>
+            <a class="btn" href="#">Предзаказ →</a>
+          </div>
+        </article>
+        <article class="frame">
+          <div class="bar"></div>
+          <div class="cell">
+            <div class="comb"><span>фото ульев</span></div>
+            <h3>Ульи</h3>
+            <p>Ручная работа, проверены на нашей пасеке.</p>
+            <a class="btn" href="#">Заказать улей →</a>
+          </div>
+        </article>
+      </div>
+      <div class="starter">
+        <strong>Старт пчеловода: <em>улей + пчелосемья + консультация</em></strong>
+        <a class="btn fill" href="#">Связаться</a>
+      </div>
+    </div>
+    <span class="paint-mark" aria-hidden="true">shop</span>
+  </section>
+
+  <section id="news" class="body chalk">
+    <div class="wrap">
+      <div class="head"><h2>Новости пасеки</h2><a href="#">Все новости →</a></div>
+      <div class="news-list">
+        <a class="post" href="#"><span class="stamp">4<br>окт</span><div><time>4 октября 2026</time><span class="tag">пример</span><h3>Добро пожаловать в Aum Aurum</h3><p>У нашей семейной пасеки появился сайт.</p></div></a>
+        <a class="post" href="#"><span class="stamp" style="background:var(--oxide)">1<br>окт</span><div><time>1 октября 2026</time><span class="tag">пример</span><h3>Пчелосемьи на весну — предзаказ</h3><p>Сообщите заранее, сколько семей нужно.</p></div></a>
+      </div>
+    </div>
+    <span class="paint-mark" aria-hidden="true">news</span>
+  </section>
+
+  <section id="location" class="body sage loc">
+    <div class="wrap">
+      <h2 style="font-size:clamp(2.6rem,1.5rem + 4.5vw,5.5rem)">Заезжайте по пути в Казбеги</h2>
+      <p>Навази стоит прямо на трассе Мцхета — Степанцминда. Мы — третья остановка от Тбилиси.</p>
+      <ol class="road">
+        <li>Тбилиси</li><li>Мцхета</li><li class="here">Навази</li><li>Жинвали</li><li>Ананури</li><li>Гудаури</li><li>Степанцминда</li>
+      </ol>
+      <div class="addr">
+        <p>Село Навази, Мцхетский муниципалитет, Грузия<br>Пожалуйста, позвоните перед визитом.</p>
+        <a class="btn ink" href="https://www.google.com/maps/dir/?api=1&destination=41.9818,44.7410" target="_blank" rel="noopener">Маршрут в Google Maps</a>
+      </div>
+    </div>
+    <span class="paint-mark" aria-hidden="true">navazi</span>
+  </section>
+
+  <section id="reviews" class="body oxide">
+    <div class="wrap">
+      <div class="head"><h2>Что говорят</h2></div>
+      <div class="quotes">
+        <blockquote>Здесь появится отзыв одного из наших покупателей.</blockquote>
+        <blockquote>Здесь появится отзыв одного из наших покупателей.</blockquote>
+        <blockquote>Здесь появится отзыв одного из наших покупателей.</blockquote>
+      </div>
+    </div>
+    <span class="paint-mark" aria-hidden="true">reviews</span>
+  </section>
+
+  <section id="gallery" class="body chalk">
+    <div class="wrap">
+      <div class="head"><h2>Галерея</h2><p>Жизнь пасеки в любое время года.</p></div>
+      <div class="gallery"><div>фото</div><div>фото</div><div>фото</div><div>фото</div><div>фото</div></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Aum Aurum · семейная пасека в Навази, Грузия</span>
+    <span>WhatsApp · Telegram · телефон — скоро</span>
+  </div>
+</footer>
+<div class="demo-note">Демо A · Крашеный улей</div>
+</body>
+</html>

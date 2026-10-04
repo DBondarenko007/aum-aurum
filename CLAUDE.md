@@ -10,11 +10,16 @@ sections, decisions, open questions). Read it before any change.
 - Site languages: **ka, ru, en** (`/ka/ /ru/ /en/`; `/` redirects by saved choice → browser → en).
 - Stack: **Astro 7 (static) + Sveltia CMS** admin at `/admin/`. Hosting (Cloudflare Pages) and a
   Telegram bot for orders come **later**.
-- **No git yet** — the user explicitly postponed it, but it WILL be added. The local admin
-  ("Work with Local Repository") requires a `.git` folder, so admin testing waits for git.
+- **Local git only** (since 2026-10-04, branch `main`, no remote). Commit checkpoints when
+  asked; never push. The admin's "Work with Local Repository" mode now has its `.git`.
 - Logo: vector version of the family's 3D render, **gold bars stay** (user's call — do not
   propose removing them again). Files in `assets/logo/`; site uses `src/components/Mark.astro`.
-- Layout reference: pottery1.com (polaroids on a string, facts strip, dark bands, "Let's talk").
+- **Redesign in progress (2026-10-04):** the user rejected the sister-draft look (blush/olive/plum
+  palette, Inter Light). Three style demos in `demos/` (A painted hive, B road to Kazbegi,
+  C logo world) — waiting for the family to pick one. Until then the current site stays as is.
+- New section set for the redesign: **Home, Shop, News, Location, Reviews, Gallery** (in that
+  order; concept/contacts fold into Home and the footer). Layout follows the chosen style,
+  not pottery1.com.
 - Georgian texts are machine drafts — a native speaker must proofread before publishing.
 - Every suggestion of Claude's that changes scope must be agreed with the user first.
 

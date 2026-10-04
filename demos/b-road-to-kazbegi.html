@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aum Aurum — демо B «Дорога на Казбеги»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=PT+Sans:wght@400;700&family=Noto+Sans+Georgian:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  /* Demo B — a Caucasus travel poster. The page is the drive from Tbilisi to Kazbegi:
+     a route rail on the left fills with honey as you scroll; Navazi is where it stops. */
+  :root {
+    --night: #1e3443; --glacier: #e9eef0; --ridge: #7d97a6; --meadow: #5c7d36;
+    --sun: #f0b23a; --brick: #9c3b2a; --paper: #f3efe6; --ink: #14212b;
+    --display: 'Oswald', 'Noto Sans Georgian', sans-serif;
+    --text: 'PT Sans', 'Noto Sans Georgian', system-ui, sans-serif;
+    --gutter: clamp(16px, 4vw, 56px);
+    --rail: 64px;
+    --ease: cubic-bezier(.16, 1, .3, 1);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 18px/1.55 var(--text); }
+  ::selection { background: var(--sun); color: var(--ink); }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+  h1, h2, h3, p { margin: 0; }
+  h1, h2, h3 { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .01em; line-height: .95; text-wrap: balance; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 var(--gutter) 0 calc(var(--gutter) + var(--rail)); }
+
+  /* Header */
+  header { position: sticky; top: 0; z-index: 10; background: var(--night); color: var(--glacier); }
+  header .wrap { display: flex; align-items: center; gap: 2rem; height: 64px; padding-left: var(--gutter); }
+  header nav { display: flex; gap: 1.6rem; font: 500 15px var(--display); text-transform: uppercase; letter-spacing: .08em; }
+  header nav a { text-decoration: none; }
+  header nav a:hover, header nav a.on { color: var(--sun); }
+  .brand { font: 600 18px var(--display); text-transform: uppercase; letter-spacing: .06em; text-decoration: none; display: flex; gap: .6rem; align-items: center; }
+  .langs { margin-left: auto; display: flex; gap: .8rem; font-size: 15px; }
+
+  /* Route rail */
+  .rail { position: fixed; left: calc(var(--gutter) / 2 + 12px); top: 96px; bottom: 32px; width: 4px; background: rgb(20 33 43 / .14); z-index: 5; border-radius: 2px; }
+  .rail i { position: absolute; inset: 0 0 auto; height: var(--p, 0%); background: var(--sun); border-radius: 2px; }
+  .rail b { position: absolute; left: 50%; top: var(--p, 0%); width: 16px; height: 16px; translate: -50% -50%; border-radius: 50%; background: var(--sun); box-shadow: 0 0 0 4px var(--paper), 0 0 0 5px var(--sun); }
+
+  section { padding: clamp(4rem, 3rem + 5vw, 7rem) 0; }
+  .label { font: 500 14px var(--display); text-transform: uppercase; letter-spacing: .14em; color: var(--brick); }
+
+  /* Home — poster */
+  .poster { position: relative; background: var(--night); color: var(--glacier); padding: 0; overflow: hidden; }
+  .poster .wrap { position: relative; z-index: 2; min-height: min(88vh, 820px); display: flex; flex-direction: column; justify-content: center; padding-top: 4rem; padding-bottom: 14rem; }
+  .poster h1 { font-size: clamp(4rem, 2rem + 10vw, 10.5rem); line-height: .86; }
+  .poster h1 span { display: block; color: var(--sun); }
+  .poster .lead { margin-top: 1.75rem; max-width: 32ch; font-size: clamp(1.1rem, 1rem + .5vw, 1.45rem); }
+  .poster .actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2.25rem; }
+  .poster svg.mount { position: absolute; inset: auto 0 0 0; width: 100%; height: 58%; z-index: 1; }
+  .btn { display: inline-flex; align-items: center; gap: .6rem; min-height: 52px; padding: 0 1.6rem; font: 500 16px var(--display); text-transform: uppercase; letter-spacing: .08em; text-decoration: none; border: 2px solid currentColor; transition: background .3s, color .3s; }
+  .btn.sun { background: var(--sun); border-color: var(--sun); color: var(--ink); }
+  .btn.sun:hover { background: var(--glacier); border-color: var(--glacier); }
+  .btn:not(.sun):hover { background: rgb(255 255 255 / .1); }
+
+  /* Shop — roadside enamel signs */
+  .head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1.5rem; margin-bottom: 3rem; }
+  .head h2 { font-size: clamp(2.8rem, 1.6rem + 4.5vw, 6rem); }
+  .head p { max-width: 36ch; }
+  .signs { display: grid; grid-template-columns: 1.4fr 1fr; grid-template-rows: auto auto; gap: 1.5rem; }
+  .sign { position: relative; border-radius: 14px; padding: 10px; color: var(--glacier); transition: transform .5s var(--ease); }
+  .sign:hover { transform: rotate(-1.2deg); }
+  .sign .in { border: 3px solid currentColor; border-radius: 8px; padding: 1.75rem; height: 100%; display: grid; gap: 1rem; align-content: start; }
+  .sign h3 { font-size: clamp(2rem, 1.4rem + 2vw, 3.4rem); }
+  .sign.honey { grid-row: span 2; background: var(--sun); color: var(--ink); }
+  .sign.honey h3 { font-size: clamp(3rem, 2rem + 4vw, 6rem); }
+  .sign .dist { font: 500 15px var(--display); letter-spacing: .1em; text-transform: uppercase; }
+  .sign.colonies { background: var(--meadow); }
+  .sign.hives { background: var(--brick); }
+  .photo { aspect-ratio: 16/9; border-radius: 6px; display: grid; place-items: center; font-size: 14px; background: rgb(0 0 0 / .14); }
+  .prices { list-style: none; margin: 0; padding: 0; font-variant-numeric: tabular-nums; }
+  .prices li { display: flex; justify-content: space-between; gap: 1rem; padding: .6rem 0; border-bottom: 2px solid rgb(20 33 43 / .2); }
+  .sign .btn { justify-self: start; min-height: 46px; font-size: 14px; }
+  .sign.honey .btn { background: var(--ink); color: var(--glacier); border-color: var(--ink); }
+  .starter { margin-top: 2.5rem; display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: center; justify-content: space-between; padding: 1.5rem 0; border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); }
+  .starter strong { font: 600 clamp(1.4rem, 1rem + 1.5vw, 2.4rem)/1.05 var(--display); text-transform: uppercase; }
+
+  /* News — postcards */
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem; }
+  .card { display: grid; grid-template-columns: 1fr 1.1fr; background: #fff; text-decoration: none; box-shadow: 0 18px 30px -22px rgb(20 33 43 / .5); transition: transform .4s var(--ease); }
+  .card:hover { transform: translateY(-4px); }
+  .card .pic { background: var(--ridge); display: grid; place-items: center; color: var(--glacier); font-size: 14px; min-height: 200px; }
+  .card .txt { padding: 1.5rem; display: grid; gap: .5rem; align-content: start; border-left: 2px dashed rgb(20 33 43 / .2); }
+  .card h3 { font-size: 1.6rem; }
+  .card time { font-size: 15px; color: var(--brick); }
+  .tag { font-size: 12px; border: 1.5px solid currentColor; border-radius: 999px; padding: 0 .55rem; margin-left: .4rem; }
+
+  /* Location — the big route */
+  .loc { background: var(--meadow); color: var(--glacier); }
+  .loc h2 { font-size: clamp(2.8rem, 1.6rem + 4.5vw, 6rem); max-width: 14ch; }
+  .loc .lead { max-width: 46ch; margin: 1.5rem 0 3.5rem; font-size: 1.2rem; }
+  .route { position: relative; display: grid; grid-template-columns: repeat(7, 1fr); list-style: none; margin: 0 0 3rem; padding: 0; }
+  .route::before { content: ''; position: absolute; left: 7%; right: 7%; top: 13px; height: 6px; background: repeating-linear-gradient(90deg, var(--glacier) 0 22px, transparent 22px 36px); }
+  .route li { position: relative; text-align: center; font: 500 15px var(--display); text-transform: uppercase; letter-spacing: .06em; padding-top: 44px; }
+  .route li::before { content: ''; position: absolute; top: 4px; left: 50%; width: 24px; height: 24px; translate: -50% 0; border-radius: 50%; background: var(--meadow); border: 4px solid var(--glacier); }
+  .route li.here { color: var(--sun); font-size: 26px; padding-top: 40px; }
+  .route li.here::before { width: 40px; height: 40px; top: -4px; background: var(--sun); border-color: var(--ink); }
+  .addr { display: flex; flex-wrap: wrap; gap: 1rem 3rem; align-items: center; }
+
+  /* Reviews */
+  .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+  .quotes blockquote { margin: 0; padding: 1.75rem; background: var(--glacier); font-size: 1.2rem; position: relative; }
+  .quotes blockquote::before { content: '“'; position: absolute; top: -.35em; left: .4em; font: 600 5rem/1 var(--display); color: var(--sun); }
+
+  /* Gallery — poster wall */
+  .wall { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .wall div { aspect-ratio: 3/4; display: grid; place-items: center; font-size: 14px; color: var(--glacier); }
+  .wall div:nth-child(1) { background: var(--night); grid-column: span 2; aspect-ratio: auto; }
+  .wall div:nth-child(2) { background: var(--brick); }
+  .wall div:nth-child(3) { background: var(--ridge); }
+  .wall div:nth-child(4) { background: var(--meadow); }
+  .wall div:nth-child(5) { background: var(--sun); color: var(--ink); }
+
+  footer { background: var(--night); color: var(--glacier); padding: 2.5rem 0; }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem 2rem; font-size: 15px; }
+  .demo-note { position: fixed; right: 12px; bottom: 12px; z-index: 20; background: var(--sun); color: var(--ink); font: 500 12px var(--display); letter-spacing: .06em; text-transform: uppercase; padding: .45rem .8rem; }
+
+  @media (max-width: 900px) {
+    :root { --rail: 0px; }
+    .rail { display: none; }
+    header nav { display: none; }
+    .signs, .cards, .quotes { grid-template-columns: 1fr; }
+    .sign.honey { grid-row: auto; }
+    .card { grid-template-columns: 1fr; }
+    .card .txt { border-left: 0; border-top: 2px dashed rgb(20 33 43 / .2); }
+    .route { grid-template-columns: 1fr; }
+    .route::before { left: 10px; right: auto; top: 0; bottom: 0; width: 6px; height: auto; background: repeating-linear-gradient(180deg, var(--glacier) 0 18px, transparent 18px 30px); }
+    .route li { text-align: left; padding: .7rem 0 .7rem 48px; }
+    .route li::before { left: 13px; top: 50%; translate: -50% -50%; }
+    .route li.here { padding-top: .7rem; }
+    .route li.here::before { top: 50%; }
+    .wall { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (prefers-reduced-motion: reduce) { .sign, .card { transition: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="#home">
+      <svg width="26" height="34" viewBox="-44 -42 88 118" aria-hidden="true"><g fill="#E9EEF0"><polygon transform="translate(-29 -5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-29 17.5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 -16.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 6.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 28.8)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(10 -27.5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(10 -5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/></g><polygon transform="translate(29.5 6.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39" fill="#F0B23A"/><path transform="translate(29.5 19)" d="M0,0 C3,5 6,8 6,11 A6,6 0 1 1 -6,11 C-6,8 -3,5 0,0Z" fill="#F0B23A"/><g fill="#F0B23A"><polygon points="-31,72 -1,72 -4,62 -28,62"/><polygon points="1,72 31,72 28,62 4,62"/><polygon points="-15,61 15,61 12,51 -12,51"/></g></svg>
+      Aum Aurum
+    </a>
+    <nav aria-label="Разделы">
+      <a href="#home">Home</a><a href="#shop">Shop</a><a href="#news">News</a><a href="#location">Location</a><a href="#reviews">Reviews</a><a href="#gallery">Gallery</a>
+    </nav>
+    <div class="langs"><a href="#" lang="ka">ქარ</a><b>рус</b><a href="#">eng</a></div>
+  </div>
+</header>
+<div class="rail" aria-hidden="true"><i></i><b></b></div>
+
+<main>
+  <section id="home" class="poster">
+    <svg class="mount" viewBox="0 0 1440 520" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <circle cx="1130" cy="150" r="78" fill="#F0B23A"/>
+      <polygon points="0,440 220,330 360,380 600,260 760,320 860,240 1040,60 1240,280 1440,200 1440,520 0,520" fill="#7D97A6"/>
+      <polygon points="980,120 1040,60 1100,128 1076,120 1060,140 1040,118 1018,140 1004,124" fill="#E9EEF0"/>
+      <polygon points="0,470 240,380 520,440 760,360 1040,420 1280,350 1440,390 1440,520 0,520" fill="#5C7D36"/>
+      <path d="M0 505 C 300 470, 520 500, 760 470 S 1200 440, 1440 450" fill="none" stroke="#F0B23A" stroke-width="5" stroke-dasharray="26 18"/>
+    </svg>
+    <div class="wrap">
+      <h1>Aum<span>Aurum</span></h1>
+      <p class="lead">Мёд, пчёлы и ульи из Навази — семейная пасека по дороге в Казбеги.</p>
+      <div class="actions">
+        <a class="btn sun" href="#shop">Заказать мёд</a>
+        <a class="btn" href="#location">Маршрут →</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="shop">
+    <div class="wrap">
+      <div class="head"><h2>Остановка «Мёд»</h2><p>Как придорожный знак: видно издалека, понятно с первого взгляда. Мёд, пчелосемьи и ульи с нашей пасеки.</p></div>
+      <div class="signs">
+        <article class="sign honey"><div class="in">
+          <span class="dist">Навази · пасека</span>
+          <h3>Мёд</h3>
+          <div class="photo">фото мёда</div>
+          <ul class="prices"><li><span>Сезонный мёд, 0,5 кг</span><span>цена по запросу</span></li><li><span>Сезонный мёд, 1 кг</span><span>цена по запросу</span></li></ul>
+          <a class="btn" href="#">Заказать в WhatsApp</a>
+        </div></article>
+        <article class="sign colonies"><div class="in">
+          <h3>Пчелосемьи</h3><p>Сильные семьи и отводки. Предзаказ на весну.</p><a class="btn" href="#">Предзаказ →</a>
+        </div></article>
+        <article class="sign hives"><div class="in">
+          <h3>Ульи</h3><p>Ручная работа, проверены на нашей пасеке.</p><a class="btn" href="#">Заказать улей →</a>
+        </div></article>
+      </div>
+      <div class="starter"><strong>Старт пчеловода — улей + пчелосемья + консультация</strong><a class="btn" href="#">Связаться →</a></div>
+    </div>
+  </section>
+
+  <section id="news" style="padding-top:0">
+    <div class="wrap">
+      <div class="head"><h2>Новости</h2><a href="#">Все новости →</a></div>
+      <div class="cards">
+        <a class="card" href="#"><div class="pic">фото</div><div class="txt"><time>4 октября 2026 <span class="tag">пример</span></time><h3>Добро пожаловать в Aum Aurum</h3><p>У нашей семейной пасеки появился сайт.</p></div></a>
+        <a class="card" href="#"><div class="pic" style="background:var(--brick)">фото</div><div class="txt"><time>1 октября 2026 <span class="tag">пример</span></time><h3>Пчелосемьи на весну</h3><p>Сообщите заранее, сколько семей нужно.</p></div></a>
+      </div>
+    </div>
+  </section>
+
+  <section id="location" class="loc">
+    <div class="wrap">
+      <h2>Заезжайте по пути в Казбеги</h2>
+      <p class="lead">Навази — прямо на Военно-Грузинской дороге, между Мцхетой и Жинвали.</p>
+      <ol class="route">
+        <li>Тбилиси</li><li>Мцхета</li><li class="here">Навази</li><li>Жинвали</li><li>Ананури</li><li>Гудаури</li><li>Казбеги</li>
+      </ol>
+      <div class="addr">
+        <p>Село Навази, Мцхетский муниципалитет, Грузия · позвоните перед визитом</p>
+        <a class="btn sun" href="https://www.google.com/maps/dir/?api=1&destination=41.9818,44.7410" target="_blank" rel="noopener">Маршрут в Google Maps</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="reviews">
+    <div class="wrap">
+      <div class="head"><h2>Попутчики о нас</h2></div>
+      <div class="quotes">
+        <blockquote>Здесь появится отзыв одного из наших покупателей.</blockquote>
+        <blockquote>Здесь появится отзыв одного из наших покупателей.</blockquote>
+        <blockquote>Здесь появится отзыв одного из наших покупателей.</blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery" style="padding-top:0">
+    <div class="wrap">
+      <div class="head"><h2>Галерея</h2><p>Пасека, горы и дорога — в любое время года.</p></div>
+      <div class="wall"><div>фото</div><div>фото</div><div>фото</div><div>фото</div><div>фото</div></div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap"><span>© 2026 Aum Aurum · семейная пасека в Навази, Грузия</span><span>WhatsApp · Telegram · телефон — скоро</span></div></footer>
+<div class="demo-note">Демо B · Дорога на Казбеги</div>
+
+<script>
+  // Route rail: honey fills with scroll progress.
+  const rail = document.querySelector('.rail');
+  const update = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    rail.style.setProperty('--p', (max > 0 ? (scrollY / max) * 100 : 0) + '%');
+  };
+  addEventListener('scroll', update, { passive: true });
+  update();
+</script>
+</body>
+</html>
