@@ -6,6 +6,7 @@
 - Бриф и все решения — [BRIEF.md](BRIEF.md)
 - Контекст для Claude — [CLAUDE.md](CLAUDE.md)
 - Дизайн-система — [DESIGN.md](DESIGN.md)
+- Утверждённый стиль (демо, открывается двойным кликом) — [demos/d-combined.html](demos/d-combined.html)
 
 ## Посмотреть сайт у себя
 

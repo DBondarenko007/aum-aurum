@@ -15,7 +15,7 @@
     --soot: #14110e; --soot-2: #1d1914; --soot-3: #2a241d;
     --gold: #e7b649; --gold-deep: #c9932e; --wood: #b98535;
     --cream: #ede1c7; --paper: #f6f0e2; --cream-soft: #c9bea6;
-    --wine: #6e1f2e; --olive: #55693a; --slate: #1e2a33; --ridge: #4c6270; --snow: #e9eef0;
+    --wine: #6e1f2e; --olive: #55693a; --dusk: #231d17; --ridge: #4d4436; --ridge-far: #2f2821; --earth: #3a3027;
     --mark: 'Cinzel', 'Forum', serif;
     --display: 'Forum', 'Noto Serif Georgian', serif;
     --text: 'PT Serif', 'Noto Serif Georgian', Georgia, serif;
@@ -60,26 +60,28 @@
   .rail { position: fixed; left: calc(var(--gutter) / 2 + 14px); top: 100px; bottom: 36px; width: 2px; z-index: 15;
           background: repeating-linear-gradient(180deg, rgb(201 190 166 / .35) 0 6px, transparent 6px 12px); }
   .rail i { position: absolute; inset: 0 0 auto; height: var(--p, 0%); background: var(--gold); }
-  .rail .bee-rider { position: absolute; left: 50%; top: var(--p, 0%); width: 34px; height: 34px; translate: -50% -50%; rotate: 180deg; filter: drop-shadow(0 2px 3px rgb(0 0 0 / .5)); }
+  .rail .bee-rider { position: absolute; left: 50%; top: var(--p, 0%); width: 34px; height: 34px; translate: -50% -50%; rotate: 180deg; transition: rotate .35s var(--ease); filter: drop-shadow(0 2px 3px rgb(0 0 0 / .5)); }
+  .rail.up .bee-rider { rotate: 0deg; }
   .bee-rider .wing { transform-box: fill-box; transform-origin: 50% 100%; }
   .rail.flying .wing.l { animation: flap .08s linear infinite alternate; }
   .rail.flying .wing.r { animation: flap .08s linear infinite alternate-reverse; }
   @keyframes flap { from { transform: scaleY(1); } to { transform: scaleY(.35); } }
 
   /* Home */
-  .home { padding-bottom: 0; text-align: center; overflow: hidden; }
-  .home .mark { width: clamp(110px, 12vw, 160px); height: auto; }
-  .home h1 { margin-top: 1.6rem; font: 500 clamp(2.8rem, 1.2rem + 7vw, 7.5rem)/1 var(--mark); letter-spacing: .14em; padding-left: .14em; color: var(--gold); }
-  .home .lead { margin: 1.4rem auto 2.4rem; max-width: 34ch; font-size: clamp(1.1rem, 1rem + .5vw, 1.4rem); }
+  .home { padding-top: clamp(1.25rem, .8rem + 1.4vw, 2.25rem); padding-bottom: 0; text-align: center; overflow: hidden; }
+  .home .mark { width: clamp(54px, 4.6vw, 72px); height: auto; }
+  .home h1 { margin-top: .7rem; font: 500 clamp(2.1rem, 1.1rem + 3.4vw, 4.1rem)/1 var(--mark); letter-spacing: .14em; padding-left: .14em; color: var(--gold); }
+  .home .lead { margin: .6rem auto 1.2rem; max-width: 40ch; font-size: clamp(1rem, .95rem + .3vw, 1.2rem); }
+  .home .btn { min-height: 46px; padding: 0 1.4rem; font-size: 15px; }
   .home .actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; }
-  .apiary { display: block; width: 100%; height: clamp(220px, 24vw, 340px); margin-top: clamp(2.5rem, 2rem + 3vw, 4.5rem); }
+  .apiary { display: block; width: 100%; height: clamp(210px, 18vw, 270px); margin-top: clamp(.25rem, .2rem + .5vw, .75rem); }
   .apiary .hive { cursor: pointer; }
   .apiary .lid { transition: transform .5s var(--ease); }
   .apiary .hive:hover .lid, .apiary .hive.open .lid { transform: translate(0, -14px) rotate(-6deg); }
   .apiary .bee .w { opacity: .8; }
-  .story { display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: center; max-width: 860px; margin: 0 auto; padding: 2.5rem 0 clamp(3.5rem, 3rem + 3vw, 5rem); text-align: left; }
-  .story strong { font: 400 clamp(3rem, 2rem + 4vw, 5.5rem)/1 var(--display); color: var(--gold); }
-  .story p { color: var(--cream-soft); }
+  .story { display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: center; max-width: 780px; margin: 0 auto; padding: 1rem 0 clamp(1.5rem, 1rem + 1.5vw, 2.25rem); text-align: left; gap: 1.5rem; }
+  .story strong { font: 400 clamp(2.2rem, 1.6rem + 2vw, 3.4rem)/1 var(--display); color: var(--gold); }
+  .story p { color: var(--cream-soft); font-size: 16px; line-height: 1.55; }
   .story em { color: var(--cream); }
 
   /* Shop — hive frames (from A) */
@@ -104,17 +106,18 @@
   .starter strong span { color: var(--gold); }
 
   /* News */
-  .news { background: var(--soot-2); }
-  .news ul { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid rgb(237 225 199 / .15); }
-  .news li a { display: grid; grid-template-columns: 11rem 1fr auto; gap: 2rem; padding: 1.75rem 0; border-top: 1px solid rgb(237 225 199 / .15); align-items: baseline; text-decoration: none; }
-  .news li a:hover h3 { color: var(--gold); }
-  .news time { color: var(--gold); font: 400 17px var(--display); letter-spacing: .08em; }
+  .news { background: var(--paper); color: var(--soot); }
+  .news .all { color: var(--wine); }
+  .news ul { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid rgb(20 17 14 / .15); }
+  .news li a { display: grid; grid-template-columns: 11rem 1fr auto; gap: 2rem; padding: 1.75rem 0; border-top: 1px solid rgb(20 17 14 / .15); align-items: baseline; text-decoration: none; }
+  .news li a:hover h3 { color: var(--wine); }
+  .news time { color: var(--wine); font: 400 17px var(--display); letter-spacing: .08em; }
   .news h3 { font-size: clamp(1.5rem, 1.2rem + 1vw, 2.1rem); transition: color .3s; }
-  .news p { color: var(--cream-soft); margin-top: .35rem; }
-  .tag { font-size: 13px; border: 1px solid rgb(237 225 199 / .4); padding: .1rem .6rem; color: var(--cream-soft); }
+  .news p { color: #4a4036; margin-top: .35rem; }
+  .tag { font-size: 13px; border: 1px solid rgb(20 17 14 / .35); padding: .1rem .6rem; color: #4a4036; }
 
   /* Location — mountain (B) + road to Navazi (stage 1) */
-  .loc { background: var(--slate); padding-bottom: 0; overflow: hidden; }
+  .loc { background: var(--soot); padding-bottom: 0; overflow: hidden; }
   .loc .top { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(2rem, 5vw, 5rem); align-items: end; }
   .loc h2 { font-size: clamp(2.6rem, 1.6rem + 4vw, 5rem); color: var(--cream); }
   .loc .info { display: grid; gap: 1.25rem; color: var(--cream-soft); }
@@ -137,7 +140,7 @@
   .road li.here .you { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; }
 
   /* Reviews */
-  .reviews { background: var(--wine); }
+  .reviews { background: var(--soot); }
   .reviews h2 { color: var(--cream); }
   .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
   .quotes blockquote { margin: 0; font: italic 400 clamp(1.15rem, 1rem + .6vw, 1.45rem)/1.5 var(--text); color: var(--cream); }
@@ -191,12 +194,11 @@
 <body>
 <header>
   <div class="bar">
-    <a class="brand" href="#home">
-      <svg width="24" height="32" viewBox="-44 -42 88 118" aria-hidden="true"><g fill="#EDE1C7"><polygon transform="translate(-29 -5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-29 17.5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 -16.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 6.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 28.8)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(10 -27.5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(10 -5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/></g><polygon transform="translate(29.5 6.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39" fill="#E7B649"/><path transform="translate(29.5 19)" d="M0,0 C3,5 6,8 6,11 A6,6 0 1 1 -6,11 C-6,8 -3,5 0,0Z" fill="#E7B649"/><g fill="#E7B649"><polygon points="-31,72 -1,72 -4,62 -28,62"/><polygon points="1,72 31,72 28,62 4,62"/><polygon points="-15,61 15,61 12,51 -12,51"/></g></svg>
-      AUM AURUM
+    <a class="brand" href="#home" aria-label="Aum Aurum — наверх">
+      <svg width="30" height="40" viewBox="-44 -42 88 118" aria-hidden="true"><g fill="#EDE1C7"><polygon transform="translate(-29 -5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-29 17.5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 -16.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 6.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 28.8)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(10 -27.5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(10 -5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/></g><polygon transform="translate(29.5 6.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39" fill="#E7B649"/><path transform="translate(29.5 19)" d="M0,0 C3,5 6,8 6,11 A6,6 0 1 1 -6,11 C-6,8 -3,5 0,0Z" fill="#E7B649"/><g fill="#E7B649"><polygon points="-31,72 -1,72 -4,62 -28,62"/><polygon points="1,72 31,72 28,62 4,62"/><polygon points="-15,61 15,61 12,51 -12,51"/></g></svg>
     </a>
     <nav aria-label="Разделы">
-      <a href="#home">Home</a><a href="#shop">Shop</a><a href="#news">News</a><a href="#location">Location</a><a href="#reviews">Reviews</a><a href="#gallery">Gallery</a>
+      <a href="#home">Home</a><a href="#shop">Shop</a><a href="#location">Location</a><a href="#news">News</a><a href="#reviews">Reviews</a><a href="#gallery">Gallery</a>
     </nav>
     <div class="langs"><a href="#" lang="ka">ქარ</a><b>рус</b><a href="#">eng</a></div>
   </div>
@@ -224,7 +226,8 @@
 
     <!-- The apiary: hover a hive and its lid lifts, bees pour out -->
     <svg class="apiary" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMax slice" role="img" aria-label="Пасека: ульи и летающие пчёлы">
-      <path d="M0 300 V250 C 240 228, 480 236, 720 244 S 1200 226, 1440 240 V300 Z" fill="#1D1914"/>
+      <path d="M0 300 V250 C 240 228, 480 236, 720 244 S 1200 226, 1440 240 V300 Z" fill="#3A3027"/>
+      <path d="M0 250 C 240 228, 480 236, 720 244 S 1200 226, 1440 240" fill="none" stroke="#55693A" stroke-width="4"/>
       <g id="hives"></g>
       <g id="bees"></g>
     </svg>
@@ -261,16 +264,6 @@
     </div>
   </section>
 
-  <section id="news" class="news">
-    <div class="wrap">
-      <div class="head"><h2>Новости</h2><a href="#" style="color:var(--gold)">Все новости →</a></div>
-      <ul>
-        <li><a href="#"><time>04.10.2026</time><div><h3>Добро пожаловать в Aum Aurum</h3><p>У нашей семейной пасеки появился сайт.</p></div><span class="tag">пример</span></a></li>
-        <li><a href="#"><time>01.10.2026</time><div><h3>Пчелосемьи на весну — предзаказ</h3><p>Сообщите заранее, сколько семей нужно.</p></div><span class="tag">пример</span></a></li>
-      </ul>
-    </div>
-  </section>
-
   <section id="location" class="loc">
     <div class="wrap">
       <div class="top">
@@ -283,9 +276,13 @@
     </div>
     <div class="scene">
       <svg viewBox="0 0 1440 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-        <circle cx="1130" cy="110" r="64" fill="#E7B649"/>
-        <polygon points="0,330 220,230 360,280 600,170 760,230 860,160 1040,40 1240,210 1440,140 1440,420 0,420" fill="#4C6270"/>
-        <polygon points="980,100 1040,40 1100,108 1076,100 1060,120 1040,98 1018,120 1004,104" fill="#E9EEF0"/>
+        <g fill="#EDE1C7"><circle cx="180" cy="60" r="1.6" opacity=".7"/><circle cx="420" cy="34" r="1.2" opacity=".5"/><circle cx="700" cy="80" r="1.4" opacity=".6"/><circle cx="880" cy="28" r="1.2" opacity=".5"/><circle cx="1180" cy="40" r="1.6" opacity=".7"/><circle cx="1010" cy="140" r="1" opacity=".4"/><circle cx="300" cy="130" r="1" opacity=".4"/></g>
+        <circle cx="1290" cy="96" r="40" fill="#EDE1C7"/>
+        <circle cx="1307" cy="84" r="36" fill="#14110E"/>
+        <polygon points="0,290 160,220 330,250 480,150 640,220 760,190 900,240 1080,170 1250,230 1440,180 1440,420 0,420" fill="#2F2821"/>
+        <polygon points="0,330 220,230 360,280 600,170 760,230 860,160 1040,40 1240,210 1440,140 1440,420 0,420" fill="#4D4436"/>
+        <polygon points="980,100 1040,40 1100,108 1076,100 1060,120 1040,98 1018,120 1004,104" fill="#EDE1C7"/>
+        <polygon points="568,186 600,170 626,190 612,186 600,196 588,186" fill="#EDE1C7"/>
         <polygon points="0,360 240,300 520,340 760,280 1040,330 1280,280 1440,310 1440,420 0,420" fill="#55693A"/>
         <rect x="0" y="372" width="1440" height="48" fill="#3F4F2B"/>
       </svg>
@@ -302,6 +299,16 @@
           </ol>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section id="news" class="news">
+    <div class="wrap">
+      <div class="head"><h2>Новости</h2><a class="all" href="#">Все новости →</a></div>
+      <ul>
+        <li><a href="#"><time>04.10.2026</time><div><h3>Добро пожаловать в Aum Aurum</h3><p>У нашей семейной пасеки появился сайт.</p></div><span class="tag">пример</span></a></li>
+        <li><a href="#"><time>01.10.2026</time><div><h3>Пчелосемьи на весну — предзаказ</h3><p>Сообщите заранее, сколько семей нужно.</p></div><span class="tag">пример</span></a></li>
+      </ul>
     </div>
   </section>
 
@@ -326,11 +333,11 @@
         <figure class="pol" style="--x:12%;--y:26px;--r:-5deg;--d:0s"><span class="pin"></span><div class="ph" style="background:#C9932E">фото</div><figcaption>пчёлы на рамке</figcaption></figure>
         <figure class="pol" style="--x:37%;--y:40px;--r:3.5deg;--d:-1.7s"><span class="pin"></span><div class="ph" style="background:#6E1F2E">фото</div><figcaption>наш мёд</figcaption></figure>
         <figure class="pol" style="--x:62%;--y:39px;--r:-2.5deg;--d:-3.4s"><span class="pin"></span><div class="ph" style="background:#55693A">фото</div><figcaption>ульи у гор</figcaption></figure>
-        <figure class="pol" style="--x:87%;--y:24px;--r:5deg;--d:-5.1s"><span class="pin"></span><div class="ph" style="background:#1E2A33">фото</div><figcaption>мастерская</figcaption></figure>
+        <figure class="pol" style="--x:87%;--y:24px;--r:5deg;--d:-5.1s"><span class="pin"></span><div class="ph" style="background:#4D4436">фото</div><figcaption>мастерская</figcaption></figure>
       </div>
       <div class="strand">
         <svg class="string" viewBox="0 0 100 30" preserveAspectRatio="none"><path d="M-2 3 Q50 21 102 5"/></svg>
-        <figure class="pol" style="--x:16%;--y:22px;--r:4deg;--d:-.8s"><span class="pin"></span><div class="ph" style="background:#4C6270">фото</div><figcaption>Казбек</figcaption></figure>
+        <figure class="pol" style="--x:16%;--y:22px;--r:4deg;--d:-.8s"><span class="pin"></span><div class="ph" style="background:#8A7254">фото</div><figcaption>Казбек</figcaption></figure>
         <figure class="pol" style="--x:41%;--y:38px;--r:-3deg;--d:-2.6s"><span class="pin"></span><div class="ph" style="background:#C9932E">фото</div><figcaption>соты</figcaption></figure>
         <figure class="pol" style="--x:66%;--y:40px;--r:2deg;--d:-4.2s"><span class="pin"></span><div class="ph" style="background:#14110E">фото</div><figcaption>сбор мёда</figcaption></figure>
         <figure class="pol" style="--x:90%;--y:26px;--r:-4.5deg;--d:-6s"><span class="pin"></span><div class="ph" style="background:#6E1F2E">фото</div><figcaption>наша семья</figcaption></figure>
@@ -357,12 +364,12 @@
   ];
   const hivesG = document.getElementById('hives');
   const beesG = document.getElementById('bees');
-  const ground = 246, W = 104, H = 46;
+  const ground = 246, W = 96, H = 38;
   const entrances = [];
   hiveSpec.forEach((h, i) => {
     const g = el('g', { class: 'hive', tabindex: 0, 'data-i': i, role: 'button', 'aria-label': 'Открыть улей' }, hivesG);
-    el('rect', { x: h.x - W / 2 + 8, y: ground - 4, width: 6, height: 14, fill: '#2A241D' }, g);
-    el('rect', { x: h.x + W / 2 - 14, y: ground - 4, width: 6, height: 14, fill: '#2A241D' }, g);
+    el('rect', { x: h.x - W / 2 + 8, y: ground - 4, width: 6, height: 14, fill: '#6B5A45' }, g);
+    el('rect', { x: h.x + W / 2 - 14, y: ground - 4, width: 6, height: 14, fill: '#6B5A45' }, g);
     let top = ground - 6;
     h.bodies.forEach((c, b) => {
       top -= H;
@@ -372,7 +379,9 @@
     });
     const lid = el('g', { class: 'lid' }, g);
     lid.style.transformOrigin = `${h.x - W / 2 - 6}px ${top}px`;
-    el('path', { d: `M${h.x - W / 2 - 8} ${top} L${h.x - W / 2 + 4} ${top - 14} H${h.x + W / 2 - 4} L${h.x + W / 2 + 8} ${top} Z`, fill: '#2A241D' }, lid);
+    el('path', { d: `M${h.x - W / 2 - 8} ${top} L${h.x - W / 2 + 4} ${top - 14} H${h.x + W / 2 - 4} L${h.x + W / 2 + 8} ${top} Z`, fill: '#B8692F' }, lid);
+    el('path', { d: `M${h.x - W / 2 + 4} ${top - 14} H${h.x + W / 2 - 4}`, stroke: '#F0A862', 'stroke-width': 3, 'stroke-linecap': 'round' }, lid);
+    el('rect', { x: h.x - W / 2 - 8, y: top - 3, width: W + 16, height: 5, rx: 1, fill: '#8C4A1E' }, lid);
     entrances.push({ x: h.x, y: ground - 6 - 10 });
     const burst = () => { g.classList.add('open'); for (let k = 0; k < 7; k++) spawn(i, true); setTimeout(() => g.classList.remove('open'), 1600); };
     g.addEventListener('mouseenter', burst);
@@ -392,8 +401,8 @@
   function trip(b, fromHive) {
     const from = fromHive != null ? entrances[fromHive] : { x: b.x, y: b.y };
     const goHome = Math.random() < 0.45;
-    const to = goHome ? entrances[Math.floor(Math.random() * entrances.length)] : { x: rand(80, 1360), y: rand(30, 170) };
-    Object.assign(b, { sx: from.x, sy: from.y, tx: to.x, ty: to.y, cx: (from.x + to.x) / 2 + rand(-220, 220), cy: Math.min(from.y, to.y) - rand(40, 160),
+    const to = goHome ? entrances[Math.floor(Math.random() * entrances.length)] : { x: rand(80, 1360), y: rand(70, 200) };
+    Object.assign(b, { sx: from.x, sy: from.y, tx: to.x, ty: to.y, cx: (from.x + to.x) / 2 + rand(-220, 220), cy: Math.max(50, Math.min(from.y, to.y) - rand(30, 110)),
                        t: 0, dur: rand(2600, 5200), home: goHome, phase: rand(0, 6.28) });
   }
   function spawn(hive, temp = false) {
@@ -429,7 +438,10 @@
   /* ---------- Bee scroll rail ---------- */
   const rail = document.querySelector('.rail');
   let stop;
+  let lastY = scrollY;
   const onScroll = () => {
+    if (scrollY !== lastY) rail.classList.toggle('up', scrollY < lastY);
+    lastY = scrollY;
     const max = document.documentElement.scrollHeight - innerHeight;
     rail.style.setProperty('--p', (max > 0 ? scrollY / max * 100 : 0) + '%');
     rail.classList.add('flying'); clearTimeout(stop); stop = setTimeout(() => rail.classList.remove('flying'), 180);
