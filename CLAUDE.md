@@ -17,6 +17,10 @@ sections, decisions, open questions). Read it before any change.
 - **Redesign in progress (2026-10-04):** the user rejected the sister-draft look (blush/olive/plum
   palette, Inter Light). Three style demos in `demos/` (A painted hive, B road to Kazbegi,
   C logo world) — waiting for the family to pick one. Until then the current site stays as is.
+  The family then picked pieces of each → **demo D `demos/d-combined.html`** is the candidate:
+  C's soot/gold world + logo + Cinzel wordmark (Forum for headings, PT Serif body), hero apiary
+  animation (hives, flying bees, lid lifts on hover), A's hive-frame shop, B's mountain + stage-1
+  road to Navazi in Location, bee on the scroll rail, polaroid gallery on strings.
 - New section set for the redesign: **Home, Shop, News, Location, Reviews, Gallery** (in that
   order; concept/contacts fold into Home and the footer). Layout follows the chosen style,
   not pottery1.com.

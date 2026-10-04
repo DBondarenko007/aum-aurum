@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aum Aurum — демо D «Сборный»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Forum&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Noto+Serif+Georgian:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  /* Demo D — one world built from what the family liked:
+     logo + Cinzel wordmark and the soot/gold world (C), hive-frame shop (A),
+     mountain + road to Navazi (B + stage 1), bee scroll rail, polaroid gallery. */
+  :root {
+    --soot: #14110e; --soot-2: #1d1914; --soot-3: #2a241d;
+    --gold: #e7b649; --gold-deep: #c9932e; --wood: #b98535;
+    --cream: #ede1c7; --paper: #f6f0e2; --cream-soft: #c9bea6;
+    --wine: #6e1f2e; --olive: #55693a; --slate: #1e2a33; --ridge: #4c6270; --snow: #e9eef0;
+    --mark: 'Cinzel', 'Forum', serif;
+    --display: 'Forum', 'Noto Serif Georgian', serif;
+    --text: 'PT Serif', 'Noto Serif Georgian', Georgia, serif;
+    --gutter: clamp(16px, 4vw, 56px);
+    --rail: 56px;
+    --ease: cubic-bezier(.16, 1, .3, 1);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scrollbar-width: none; }
+  html::-webkit-scrollbar { display: none; }
+  body { margin: 0; background: var(--soot); color: var(--cream); font: 400 18px/1.65 var(--text); }
+  ::selection { background: var(--gold); color: var(--soot); }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+  h1, h2, h3, p { margin: 0; }
+  h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1.02; text-wrap: balance; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 var(--gutter) 0 calc(var(--gutter) + var(--rail)); }
+  section { padding: clamp(4.5rem, 3rem + 6vw, 8rem) 0; position: relative; }
+  .head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1.5rem; margin-bottom: 3.5rem; }
+  .head h2 { font-size: clamp(2.6rem, 1.6rem + 4vw, 5.25rem); }
+  .head p { max-width: 36ch; }
+
+  .btn { display: inline-flex; align-items: center; gap: .7rem; min-height: 52px; padding: 0 1.7rem; font: 400 16px var(--display); letter-spacing: .14em; text-transform: uppercase; text-decoration: none; border: 1px solid currentColor; transition: background .4s var(--ease), color .4s, border-color .4s; }
+  .btn.gold { background: var(--gold); border-color: var(--gold); color: var(--soot); }
+  .btn.gold:hover { background: var(--cream); border-color: var(--cream); }
+  .btn.ghost { color: var(--gold); }
+  .btn.ghost:hover { background: var(--gold); color: var(--soot); }
+  .btn.ink { background: var(--soot); border-color: var(--soot); color: var(--cream); }
+  .btn.ink:hover { background: var(--wine); border-color: var(--wine); }
+
+  /* Header */
+  header { position: sticky; top: 0; z-index: 20; background: rgb(20 17 14 / .96); border-bottom: 1px solid rgb(231 182 73 / .18); }
+  header .bar { display: flex; align-items: center; gap: 2rem; height: 68px; max-width: 1200px; margin: 0 auto; padding: 0 var(--gutter); }
+  .brand { display: flex; align-items: center; gap: .7rem; text-decoration: none; font: 500 17px var(--mark); letter-spacing: .16em; color: var(--gold); }
+  header nav { display: flex; gap: 1.7rem; font: 400 16px var(--display); letter-spacing: .12em; text-transform: uppercase; }
+  header nav a { text-decoration: none; color: var(--cream-soft); transition: color .3s; }
+  header nav a:hover { color: var(--gold); }
+  .langs { margin-left: auto; display: flex; gap: .9rem; font-size: 15px; color: var(--cream-soft); }
+  .langs b { color: var(--gold); font-weight: 400; }
+
+  /* Bee scroll rail */
+  .rail { position: fixed; left: calc(var(--gutter) / 2 + 14px); top: 100px; bottom: 36px; width: 2px; z-index: 15;
+          background: repeating-linear-gradient(180deg, rgb(201 190 166 / .35) 0 6px, transparent 6px 12px); }
+  .rail i { position: absolute; inset: 0 0 auto; height: var(--p, 0%); background: var(--gold); }
+  .rail .bee-rider { position: absolute; left: 50%; top: var(--p, 0%); width: 34px; height: 34px; translate: -50% -50%; rotate: 180deg; filter: drop-shadow(0 2px 3px rgb(0 0 0 / .5)); }
+  .bee-rider .wing { transform-box: fill-box; transform-origin: 50% 100%; }
+  .rail.flying .wing.l { animation: flap .08s linear infinite alternate; }
+  .rail.flying .wing.r { animation: flap .08s linear infinite alternate-reverse; }
+  @keyframes flap { from { transform: scaleY(1); } to { transform: scaleY(.35); } }
+
+  /* Home */
+  .home { padding-bottom: 0; text-align: center; overflow: hidden; }
+  .home .mark { width: clamp(110px, 12vw, 160px); height: auto; }
+  .home h1 { margin-top: 1.6rem; font: 500 clamp(2.8rem, 1.2rem + 7vw, 7.5rem)/1 var(--mark); letter-spacing: .14em; padding-left: .14em; color: var(--gold); }
+  .home .lead { margin: 1.4rem auto 2.4rem; max-width: 34ch; font-size: clamp(1.1rem, 1rem + .5vw, 1.4rem); }
+  .home .actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; }
+  .apiary { display: block; width: 100%; height: clamp(220px, 24vw, 340px); margin-top: clamp(2.5rem, 2rem + 3vw, 4.5rem); }
+  .apiary .hive { cursor: pointer; }
+  .apiary .lid { transition: transform .5s var(--ease); }
+  .apiary .hive:hover .lid, .apiary .hive.open .lid { transform: translate(0, -14px) rotate(-6deg); }
+  .apiary .bee .w { opacity: .8; }
+  .story { display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: center; max-width: 860px; margin: 0 auto; padding: 2.5rem 0 clamp(3.5rem, 3rem + 3vw, 5rem); text-align: left; }
+  .story strong { font: 400 clamp(3rem, 2rem + 4vw, 5.5rem)/1 var(--display); color: var(--gold); }
+  .story p { color: var(--cream-soft); }
+  .story em { color: var(--cream); }
+
+  /* Shop — hive frames (from A) */
+  .shop { background: var(--paper); color: var(--soot); }
+  .shop .head p { color: #4a4036; }
+  .frames { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: clamp(1.25rem, 2.5vw, 2.25rem); align-items: start; padding-top: 14px; }
+  .frame { position: relative; padding: 0 12px 12px; background: var(--wood); transition: transform .55s var(--ease), box-shadow .55s var(--ease); box-shadow: 0 10px 20px -16px rgb(20 17 14 / .6); }
+  .frame:hover { transform: translateY(-16px); box-shadow: 0 30px 40px -24px rgb(20 17 14 / .55); }
+  .frame .bar { height: 20px; margin: 0 -30px 12px; background: var(--soot); border-radius: 3px; }
+  .frame .cell { background: #fbf6ea; padding: 1.5rem; display: grid; gap: .9rem; }
+  .frame h3 { font-size: clamp(2rem, 1.4rem + 1.6vw, 2.9rem); }
+  .comb { aspect-ratio: 4/3; background-color: #f2c75c; background-image: radial-gradient(circle, var(--gold-deep) 0 30%, transparent 32%); background-size: 24px 21px; display: grid; place-items: center; font-size: 14px; }
+  .comb span { background: #fbf6ea; padding: .15rem .7rem; border-radius: 999px; }
+  .prices { list-style: none; margin: 0; padding: 0; font-variant-numeric: tabular-nums; }
+  .prices li { display: flex; gap: .7rem; align-items: baseline; padding: .55rem 0; border-bottom: 1px solid rgb(20 17 14 / .15); }
+  .prices .dots { flex: 1; border-bottom: 1px dotted rgb(20 17 14 / .4); }
+  .frame .btn { justify-self: start; min-height: 46px; font-size: 14px; }
+  .frame .btn.line { color: var(--soot); }
+  .frame .btn.line:hover { background: var(--soot); color: var(--cream); }
+  .starter { margin-top: 3.5rem; display: flex; flex-wrap: wrap; gap: 1.25rem 2rem; align-items: center; justify-content: space-between; padding: 1.75rem 2.25rem; background: var(--soot); color: var(--cream); }
+  .starter strong { font: 400 clamp(1.5rem, 1rem + 1.6vw, 2.4rem)/1.1 var(--display); }
+  .starter strong span { color: var(--gold); }
+
+  /* News */
+  .news { background: var(--soot-2); }
+  .news ul { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid rgb(237 225 199 / .15); }
+  .news li a { display: grid; grid-template-columns: 11rem 1fr auto; gap: 2rem; padding: 1.75rem 0; border-top: 1px solid rgb(237 225 199 / .15); align-items: baseline; text-decoration: none; }
+  .news li a:hover h3 { color: var(--gold); }
+  .news time { color: var(--gold); font: 400 17px var(--display); letter-spacing: .08em; }
+  .news h3 { font-size: clamp(1.5rem, 1.2rem + 1vw, 2.1rem); transition: color .3s; }
+  .news p { color: var(--cream-soft); margin-top: .35rem; }
+  .tag { font-size: 13px; border: 1px solid rgb(237 225 199 / .4); padding: .1rem .6rem; color: var(--cream-soft); }
+
+  /* Location — mountain (B) + road to Navazi (stage 1) */
+  .loc { background: var(--slate); padding-bottom: 0; overflow: hidden; }
+  .loc .top { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(2rem, 5vw, 5rem); align-items: end; }
+  .loc h2 { font-size: clamp(2.6rem, 1.6rem + 4vw, 5rem); color: var(--cream); }
+  .loc .info { display: grid; gap: 1.25rem; color: var(--cream-soft); }
+  .loc .info b { color: var(--cream); font-weight: 400; }
+  .scene { position: relative; margin-top: clamp(2rem, 1rem + 3vw, 3.5rem); }
+  .scene > svg { display: block; width: 100%; height: clamp(240px, 30vw, 420px); }
+  .road { position: absolute; left: 0; right: 0; bottom: clamp(18px, 2.4vw, 34px); }
+  .road ol { --count: 7; --here: 2; position: relative; display: grid; grid-template-columns: repeat(var(--count), minmax(0, 1fr)); list-style: none; margin: 0; padding: 0; }
+  .road ol::before, .road ol::after { content: ''; position: absolute; top: 22px; left: calc(50% / var(--count)); height: 3px; }
+  .road ol::before { right: calc(50% / var(--count)); background: repeating-linear-gradient(90deg, var(--cream) 0 18px, transparent 18px 30px); opacity: .6; }
+  .road ol::after { width: calc(100% / var(--count) * var(--here)); background: var(--gold); transform-origin: left; transform: scaleX(0); }
+  .road.go ol::after { transform: scaleX(1); transition: transform 1.8s var(--ease) .2s; }
+  .road li { position: relative; display: flex; flex-direction: column; align-items: center; gap: .7rem; text-align: center; font: 400 16px var(--display); letter-spacing: .06em; color: var(--cream); text-shadow: 0 1px 3px rgb(0 0 0 / .6); }
+  .road .dot { width: 46px; height: 46px; display: grid; place-items: center; }
+  .road .dot::before { content: ''; width: 12px; height: 12px; border-radius: 50%; background: var(--olive); box-shadow: 0 0 0 2px var(--cream); }
+  .road li.passed .dot::before { box-shadow: 0 0 0 2px var(--gold); }
+  .road li.here .dot::before { display: none; }
+  .road li.here .dot svg { fill: var(--gold); translate: 0 -6px; filter: drop-shadow(0 2px 3px rgb(0 0 0 / .5)); }
+  .road li.here .name { font-size: 26px; color: var(--gold); }
+  .road li.here .you { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; }
+
+  /* Reviews */
+  .reviews { background: var(--wine); }
+  .reviews h2 { color: var(--cream); }
+  .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
+  .quotes blockquote { margin: 0; font: italic 400 clamp(1.15rem, 1rem + .6vw, 1.45rem)/1.5 var(--text); color: var(--cream); }
+  .quotes blockquote::before { content: '“'; display: block; font: 400 4.5rem/.7 var(--display); color: var(--gold); margin-bottom: .6rem; }
+
+  /* Gallery — polaroids on strings */
+  .gallery { background: var(--paper); color: var(--soot); overflow: hidden; }
+  .strand { position: relative; height: clamp(300px, 26vw, 360px); }
+  .strand + .strand { margin-top: 1rem; }
+  .strand svg.string { position: absolute; inset: 0 0 auto; width: 100%; height: 90px; overflow: visible; }
+  .strand svg.string path { fill: none; stroke: var(--soot); stroke-width: 1.2; vector-effect: non-scaling-stroke; opacity: .55; }
+  .pol { --w: clamp(150px, 15vw, 210px); position: absolute; left: var(--x); top: var(--y); width: var(--w); margin: 0; padding: 10px 10px 0; background: #fff; box-shadow: 0 22px 34px -20px rgb(20 17 14 / .55), 0 2px 4px rgb(20 17 14 / .12);
+         translate: -50% 0; rotate: var(--r); transform-origin: 50% -12px; animation: sway 7s ease-in-out var(--d) infinite alternate; transition: scale .5s var(--ease); }
+  .pol:hover { scale: 1.06; animation-play-state: paused; z-index: 2; }
+  .pol .ph { aspect-ratio: 4/5; display: grid; place-items: center; font-size: 13px; color: var(--cream); }
+  .pol figcaption { padding: .55rem 0 .75rem; text-align: center; font: 400 16px var(--display); letter-spacing: .04em; }
+  .pin { position: absolute; top: -15px; left: 50%; width: 11px; height: 30px; translate: -50% 0; border-radius: 2px; background: linear-gradient(90deg, #b48c3a 0 46%, #8f6d2a 46% 54%, #c9a24f 54%); box-shadow: 0 2px 3px rgb(0 0 0 / .3); }
+  @keyframes sway { from { rotate: var(--r); } to { rotate: calc(var(--r) * -.4); } }
+
+  footer { padding: 2.75rem 0; color: var(--cream-soft); font-size: 15px; border-top: 1px solid rgb(231 182 73 / .18); }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem 2rem; }
+  .demo-note { position: fixed; right: 12px; bottom: 12px; z-index: 30; background: var(--gold); color: var(--soot); font: 400 13px var(--display); letter-spacing: .1em; text-transform: uppercase; padding: .45rem .9rem; }
+
+  @media (max-width: 900px) {
+    :root { --rail: 0px; }
+    .rail { display: none; }
+    html { scrollbar-width: auto; }
+    header nav { display: none; }
+    .frames, .quotes, .loc .top { grid-template-columns: 1fr; }
+    .frame .bar { margin: 0 -14px 12px; }
+    .apiary { height: 160px; margin-top: 2rem; }
+    .story { grid-template-columns: 1fr; gap: .75rem; padding-inline: var(--gutter); }
+    .news li a { grid-template-columns: 1fr; gap: .4rem; }
+    .road li { font-size: 12px; }
+    .road li .name { font-size: 12px; }
+    .road li:not(.here) .name { writing-mode: vertical-rl; rotate: 180deg; }
+    .road li.here .name { font-size: 18px; }
+    .road li.here .you { display: none; }
+    .strand { height: 250px; }
+    .pol { --w: 30vw; padding: 6px 6px 0; }
+    .pol:nth-child(n+5) { display: none; }
+    .pol figcaption { font-size: 13px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .pol { animation: none; }
+    .frame, .btn, .apiary .lid { transition: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <a class="brand" href="#home">
+      <svg width="24" height="32" viewBox="-44 -42 88 118" aria-hidden="true"><g fill="#EDE1C7"><polygon transform="translate(-29 -5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-29 17.5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 -16.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 6.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 28.8)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(10 -27.5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(10 -5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/></g><polygon transform="translate(29.5 6.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39" fill="#E7B649"/><path transform="translate(29.5 19)" d="M0,0 C3,5 6,8 6,11 A6,6 0 1 1 -6,11 C-6,8 -3,5 0,0Z" fill="#E7B649"/><g fill="#E7B649"><polygon points="-31,72 -1,72 -4,62 -28,62"/><polygon points="1,72 31,72 28,62 4,62"/><polygon points="-15,61 15,61 12,51 -12,51"/></g></svg>
+      AUM AURUM
+    </a>
+    <nav aria-label="Разделы">
+      <a href="#home">Home</a><a href="#shop">Shop</a><a href="#news">News</a><a href="#location">Location</a><a href="#reviews">Reviews</a><a href="#gallery">Gallery</a>
+    </nav>
+    <div class="langs"><a href="#" lang="ka">ქარ</a><b>рус</b><a href="#">eng</a></div>
+  </div>
+</header>
+
+<div class="rail" aria-hidden="true">
+  <i></i>
+  <svg class="bee-rider" viewBox="-17 -17 34 34">
+    <g transform="rotate(-25 -6 -2)"><ellipse class="wing l" cx="-6" cy="-7" rx="5" ry="8" fill="#EDE1C7" opacity=".85"/></g>
+    <g transform="rotate(25 6 -2)"><ellipse class="wing r" cx="6" cy="-7" rx="5" ry="8" fill="#EDE1C7" opacity=".85"/></g>
+    <ellipse cx="0" cy="3" rx="6.5" ry="10" fill="#E7B649"/>
+    <path d="M-6.2 0h12.4M-6.4 5h12.8M-5 9.5h10" stroke="#14110E" stroke-width="2.4" stroke-linecap="round"/>
+    <circle cx="0" cy="-8.5" r="4" fill="#14110E"/>
+  </svg>
+</div>
+
+<main>
+  <section id="home" class="home">
+    <div class="wrap">
+      <svg class="mark" viewBox="-44 -42 88 118" aria-hidden="true"><g fill="#EDE1C7"><polygon transform="translate(-29 -5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-29 17.5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 -16.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 6.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(-9.5 28.8)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(10 -27.5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><polygon transform="translate(10 -5)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/></g><polygon transform="translate(29.5 6.3)" points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39" fill="#E7B649"/><path transform="translate(29.5 19)" d="M0,0 C3,5 6,8 6,11 A6,6 0 1 1 -6,11 C-6,8 -3,5 0,0Z" fill="#E7B649"/><g fill="#E7B649" stroke="#B8932F" stroke-width="1"><polygon points="-31,72 -1,72 -4,62 -28,62"/><polygon points="1,72 31,72 28,62 4,62"/><polygon points="-15,61 15,61 12,51 -12,51"/></g></svg>
+      <h1>AUM AURUM</h1>
+      <p class="lead">Мёд, пчёлы и ульи из Навази — семейная пасека по дороге в Казбеги.</p>
+      <div class="actions"><a class="btn gold" href="#shop">Заказать мёд</a><a class="btn ghost" href="#location">Как нас найти</a></div>
+    </div>
+
+    <!-- The apiary: hover a hive and its lid lifts, bees pour out -->
+    <svg class="apiary" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMax slice" role="img" aria-label="Пасека: ульи и летающие пчёлы">
+      <path d="M0 300 V250 C 240 228, 480 236, 720 244 S 1200 226, 1440 240 V300 Z" fill="#1D1914"/>
+      <g id="hives"></g>
+      <g id="bees"></g>
+    </svg>
+    <div class="wrap">
+      <div class="story">
+        <strong>5 500</strong>
+        <p>лет — столько старейшему известному мёду в мире. Его нашли в Грузии, под Боржоми. <em>Aurum</em> по-латыни — золото: так мы и называем то, что делают наши пчёлы.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="shop" class="shop">
+    <div class="wrap">
+      <div class="head"><h2>Из нашего улья</h2><p>Мёд — главное. А ещё пчелосемьи на весну и ульи, которые мы строим сами и проверяем на своих пчёлах.</p></div>
+      <div class="frames">
+        <article class="frame"><div class="bar"></div><div class="cell">
+          <div class="comb"><span>фото мёда</span></div>
+          <h3>Мёд</h3>
+          <ul class="prices"><li><span>Сезонный мёд, 0,5 кг</span><span class="dots"></span><span>по запросу</span></li><li><span>Сезонный мёд, 1 кг</span><span class="dots"></span><span>по запросу</span></li></ul>
+          <a class="btn ink" href="#">Заказать в WhatsApp</a>
+        </div></article>
+        <article class="frame"><div class="bar"></div><div class="cell">
+          <div class="comb"><span>фото пчёл</span></div>
+          <h3>Пчелосемьи</h3><p>Сильные семьи и отводки. Предзаказ на весну.</p>
+          <a class="btn line" href="#">Предзаказ</a>
+        </div></article>
+        <article class="frame"><div class="bar"></div><div class="cell">
+          <div class="comb"><span>фото ульев</span></div>
+          <h3>Ульи</h3><p>Ручная работа, проверены на нашей пасеке.</p>
+          <a class="btn line" href="#">Заказать улей</a>
+        </div></article>
+      </div>
+      <div class="starter"><strong>Старт пчеловода: <span>улей + пчелосемья + консультация</span></strong><a class="btn gold" href="#">Связаться</a></div>
+    </div>
+  </section>
+
+  <section id="news" class="news">
+    <div class="wrap">
+      <div class="head"><h2>Новости</h2><a href="#" style="color:var(--gold)">Все новости →</a></div>
+      <ul>
+        <li><a href="#"><time>04.10.2026</time><div><h3>Добро пожаловать в Aum Aurum</h3><p>У нашей семейной пасеки появился сайт.</p></div><span class="tag">пример</span></a></li>
+        <li><a href="#"><time>01.10.2026</time><div><h3>Пчелосемьи на весну — предзаказ</h3><p>Сообщите заранее, сколько семей нужно.</p></div><span class="tag">пример</span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="location" class="loc">
+    <div class="wrap">
+      <div class="top">
+        <h2>Заезжайте по пути в Казбеги</h2>
+        <div class="info">
+          <p><b>Село Навази, Мцхетский муниципалитет</b> — прямо на Военно-Грузинской дороге. Пожалуйста, позвоните перед визитом.</p>
+          <div><a class="btn gold" href="https://www.google.com/maps/dir/?api=1&destination=41.9818,44.7410" target="_blank" rel="noopener">Маршрут в Google Maps</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="scene">
+      <svg viewBox="0 0 1440 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        <circle cx="1130" cy="110" r="64" fill="#E7B649"/>
+        <polygon points="0,330 220,230 360,280 600,170 760,230 860,160 1040,40 1240,210 1440,140 1440,420 0,420" fill="#4C6270"/>
+        <polygon points="980,100 1040,40 1100,108 1076,100 1060,120 1040,98 1018,120 1004,104" fill="#E9EEF0"/>
+        <polygon points="0,360 240,300 520,340 760,280 1040,330 1280,280 1440,310 1440,420 0,420" fill="#55693A"/>
+        <rect x="0" y="372" width="1440" height="48" fill="#3F4F2B"/>
+      </svg>
+      <div class="road">
+        <div class="wrap">
+          <ol>
+            <li class="passed"><span class="dot"></span><span class="name">Тбилиси</span></li>
+            <li class="passed"><span class="dot"></span><span class="name">Мцхета</span></li>
+            <li class="here"><span class="dot"><svg width="34" height="46" viewBox="-14 -12 28 40"><polygon points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39"/><path transform="translate(0 13)" d="M0,0 C3,5 6,8 6,11 A6,6 0 1 1 -6,11 C-6,8 -3,5 0,0Z"/></svg></span><span class="name">Навази</span><span class="you">мы здесь</span></li>
+            <li><span class="dot"></span><span class="name">Жинвали</span></li>
+            <li><span class="dot"></span><span class="name">Ананури</span></li>
+            <li><span class="dot"></span><span class="name">Гудаури</span></li>
+            <li><span class="dot"></span><span class="name">Казбеги</span></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reviews" class="reviews">
+    <div class="wrap">
+      <div class="head"><h2>Что о нас говорят</h2></div>
+      <div class="quotes">
+        <blockquote>Здесь появится отзыв одного из наших покупателей.</blockquote>
+        <blockquote>Здесь появится отзыв одного из наших покупателей.</blockquote>
+        <blockquote>Здесь появится отзыв одного из наших покупателей.</blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery" class="gallery">
+    <div class="wrap">
+      <div class="head"><h2>Галерея</h2><p>Жизнь пасеки в любое время года.</p></div>
+    </div>
+    <div class="wrap">
+      <div class="strand">
+        <svg class="string" viewBox="0 0 100 30" preserveAspectRatio="none"><path d="M-2 4 Q50 20 102 3"/></svg>
+        <figure class="pol" style="--x:12%;--y:26px;--r:-5deg;--d:0s"><span class="pin"></span><div class="ph" style="background:#C9932E">фото</div><figcaption>пчёлы на рамке</figcaption></figure>
+        <figure class="pol" style="--x:37%;--y:40px;--r:3.5deg;--d:-1.7s"><span class="pin"></span><div class="ph" style="background:#6E1F2E">фото</div><figcaption>наш мёд</figcaption></figure>
+        <figure class="pol" style="--x:62%;--y:39px;--r:-2.5deg;--d:-3.4s"><span class="pin"></span><div class="ph" style="background:#55693A">фото</div><figcaption>ульи у гор</figcaption></figure>
+        <figure class="pol" style="--x:87%;--y:24px;--r:5deg;--d:-5.1s"><span class="pin"></span><div class="ph" style="background:#1E2A33">фото</div><figcaption>мастерская</figcaption></figure>
+      </div>
+      <div class="strand">
+        <svg class="string" viewBox="0 0 100 30" preserveAspectRatio="none"><path d="M-2 3 Q50 21 102 5"/></svg>
+        <figure class="pol" style="--x:16%;--y:22px;--r:4deg;--d:-.8s"><span class="pin"></span><div class="ph" style="background:#4C6270">фото</div><figcaption>Казбек</figcaption></figure>
+        <figure class="pol" style="--x:41%;--y:38px;--r:-3deg;--d:-2.6s"><span class="pin"></span><div class="ph" style="background:#C9932E">фото</div><figcaption>соты</figcaption></figure>
+        <figure class="pol" style="--x:66%;--y:40px;--r:2deg;--d:-4.2s"><span class="pin"></span><div class="ph" style="background:#14110E">фото</div><figcaption>сбор мёда</figcaption></figure>
+        <figure class="pol" style="--x:90%;--y:26px;--r:-4.5deg;--d:-6s"><span class="pin"></span><div class="ph" style="background:#6E1F2E">фото</div><figcaption>наша семья</figcaption></figure>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap"><span>© 2026 Aum Aurum · семейная пасека в Навази, Грузия</span><span>WhatsApp · Telegram · телефон — скоро</span></div></footer>
+<div class="demo-note">Демо D · Сборный вариант</div>
+
+<script>
+  const NS = 'http://www.w3.org/2000/svg';
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const el = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); parent?.appendChild(n); return n; };
+
+  /* ---------- Apiary: hives + bees ---------- */
+  const hiveSpec = [
+    { x: 250, bodies: ['#E7B649', '#EDE1C7'] },
+    { x: 470, bodies: ['#6E1F2E', '#E7B649', '#55693A'] },
+    { x: 720, bodies: ['#EDE1C7', '#C9932E', '#6E1F2E'] },
+    { x: 970, bodies: ['#55693A', '#E7B649'] },
+    { x: 1190, bodies: ['#C9932E', '#EDE1C7', '#4C6270'] },
+  ];
+  const hivesG = document.getElementById('hives');
+  const beesG = document.getElementById('bees');
+  const ground = 246, W = 104, H = 46;
+  const entrances = [];
+  hiveSpec.forEach((h, i) => {
+    const g = el('g', { class: 'hive', tabindex: 0, 'data-i': i, role: 'button', 'aria-label': 'Открыть улей' }, hivesG);
+    el('rect', { x: h.x - W / 2 + 8, y: ground - 4, width: 6, height: 14, fill: '#2A241D' }, g);
+    el('rect', { x: h.x + W / 2 - 14, y: ground - 4, width: 6, height: 14, fill: '#2A241D' }, g);
+    let top = ground - 6;
+    h.bodies.forEach((c, b) => {
+      top -= H;
+      el('rect', { x: h.x - W / 2, y: top, width: W, height: H - 3, fill: c }, g);
+      el('rect', { x: h.x - 16, y: top + 10, width: 32, height: 6, rx: 3, fill: 'rgba(0,0,0,.22)' }, g);
+      if (b === 0) el('rect', { x: h.x - 26, y: top + H - 13, width: 52, height: 6, rx: 3, fill: '#14110E' }, g);
+    });
+    const lid = el('g', { class: 'lid' }, g);
+    lid.style.transformOrigin = `${h.x - W / 2 - 6}px ${top}px`;
+    el('path', { d: `M${h.x - W / 2 - 8} ${top} L${h.x - W / 2 + 4} ${top - 14} H${h.x + W / 2 - 4} L${h.x + W / 2 + 8} ${top} Z`, fill: '#2A241D' }, lid);
+    entrances.push({ x: h.x, y: ground - 6 - 10 });
+    const burst = () => { g.classList.add('open'); for (let k = 0; k < 7; k++) spawn(i, true); setTimeout(() => g.classList.remove('open'), 1600); };
+    g.addEventListener('mouseenter', burst);
+    g.addEventListener('click', burst);
+    g.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); burst(); } });
+  });
+
+  const bees = [];
+  function makeBee() {
+    const g = el('g', { class: 'bee' }, beesG);
+    el('ellipse', { class: 'w', cx: -1, cy: -4, rx: 3.2, ry: 2, fill: '#EDE1C7' }, g);
+    el('ellipse', { cx: 0, cy: 0, rx: 5, ry: 3.2, fill: '#E7B649' }, g);
+    el('path', { d: 'M-1.5 -3V3M1.5 -3V3', stroke: '#14110E', 'stroke-width': 1.3 }, g);
+    return g;
+  }
+  const rand = (a, b) => a + Math.random() * (b - a);
+  function trip(b, fromHive) {
+    const from = fromHive != null ? entrances[fromHive] : { x: b.x, y: b.y };
+    const goHome = Math.random() < 0.45;
+    const to = goHome ? entrances[Math.floor(Math.random() * entrances.length)] : { x: rand(80, 1360), y: rand(30, 170) };
+    Object.assign(b, { sx: from.x, sy: from.y, tx: to.x, ty: to.y, cx: (from.x + to.x) / 2 + rand(-220, 220), cy: Math.min(from.y, to.y) - rand(40, 160),
+                       t: 0, dur: rand(2600, 5200), home: goHome, phase: rand(0, 6.28) });
+  }
+  function spawn(hive, temp = false) {
+    const b = { g: makeBee(), x: entrances[hive].x, y: entrances[hive].y, temp, life: temp ? 2 : Infinity, wait: 0 };
+    trip(b, hive); bees.push(b);
+  }
+  for (let i = 0; i < 16; i++) spawn(i % entrances.length);
+
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(now - last, 50); last = now;
+    for (let i = bees.length - 1; i >= 0; i--) {
+      const b = bees[i];
+      if (b.wait > 0) { b.wait -= dt; b.g.style.opacity = 0; if (b.wait <= 0) { b.g.style.opacity = 1; trip(b, entrances.findIndex((e) => e.x === b.tx)); } continue; }
+      b.t += dt / b.dur;
+      const t = Math.min(b.t, 1), u = 1 - t;
+      const x = u * u * b.sx + 2 * u * t * b.cx + t * t * b.tx;
+      const y = u * u * b.sy + 2 * u * t * b.cy + t * t * b.ty + Math.sin(now / 160 + b.phase) * 3;
+      const ang = Math.atan2(y - b.y, x - b.x) * 57.3;
+      b.x = x; b.y = y;
+      b.g.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${ang.toFixed(0)})`);
+      b.g.querySelector('.w').setAttribute('ry', (Math.sin(now / 18) > 0 ? 2.2 : 0.8));
+      if (t >= 1) {
+        if (b.temp && --b.life <= 0) { b.g.remove(); bees.splice(i, 1); continue; }
+        if (b.home) { b.wait = rand(600, 2200); } else trip(b);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  if (!reduced) requestAnimationFrame(frame);
+  else bees.forEach((b, i) => b.g.setAttribute('transform', `translate(${entrances[i % 5].x + rand(-60, 60)} ${rand(60, 160)})`));
+
+  /* ---------- Bee scroll rail ---------- */
+  const rail = document.querySelector('.rail');
+  let stop;
+  const onScroll = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    rail.style.setProperty('--p', (max > 0 ? scrollY / max * 100 : 0) + '%');
+    rail.classList.add('flying'); clearTimeout(stop); stop = setTimeout(() => rail.classList.remove('flying'), 180);
+  };
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  /* ---------- Road drives to Navazi when visible ---------- */
+  const road = document.querySelector('.road');
+  new IntersectionObserver((es, io) => { if (es.some((e) => e.isIntersecting)) { road.classList.add('go'); io.disconnect(); } }, { threshold: .5 }).observe(road);
+</script>
+</body>
+</html>
