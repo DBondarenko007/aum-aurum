@@ -1,0 +1,112 @@
+meta:
+  title: Aum Aurum — family apiary in Navazi, Georgia
+  description: Natural honey, bee colonies and handmade hives from the village of Navazi, Mtskheta municipality, Georgia — on the road to Kazbegi.
+nav:
+  concept: concept
+  shop: shop
+  gallery: gallery
+  reviews: reviews
+  news: news
+  location: location
+  contact: contact
+ui:
+  order_honey: Order honey
+  order_message: Hello! I would like to order honey.
+  photo_soon: photo coming soon
+  read_more: Read more
+  all_news: All news
+  back: Back
+  menu: Menu
+  close: Close
+  coming_soon: coming soon
+  price_on_request: price on request
+  language: Language
+  placeholder_note: example
+hero:
+  title: Aum Aurum
+  subtitle: Honey, bees and hives from Navazi, Georgia — made with appreciation and care
+  text: We have fresh mountain air, bees, blossoms and a love for all things natural.
+  cta_primary: Order honey
+  cta_secondary: On the road to Kazbegi →
+  polaroids:
+    - caption: bees on a frame
+    - caption: our honey
+    - caption: hives below the mountains
+    - caption: hives from our workshop
+concept:
+  history_title: 5,500 years of Georgian honey
+  history_text: In 2003, near the village of Sakire in the Borjomi region, archaeologists found traces of honey in an ancient burial. It is about 5,500 years old — the oldest honey known in the world. We carry on that tradition.
+  history_source: 'Source: Eurasianet'
+  family_title: Our family
+  family_text: We are a family apiary in the village of Navazi, Mtskheta municipality. We look after our bees, harvest honey, raise bee colonies and build hives by hand — the same hives our own bees live in.
+  facts:
+    - family apiary
+    - navazi, mtskheta
+    - honey · colonies · hives
+    - hives built by hand
+    - on the road to kazbegi
+  photos:
+    - caption: the apiary
+    - caption: at work
+    - caption: honeycomb
+shop:
+  title: Natural Products
+  subtitle: Seasonal honey and handmade knickknacks packed with love
+  cta: Order honey →
+  honey_title: Honey
+  honey_text: Seasonal honey from our own apiary. Prices and jar sizes will be added soon.
+  colonies_title: Bee colonies
+  colonies_text: Strong, healthy colonies and nucs — pre-order for spring.
+  colonies_cta: Pre-order →
+  hives_title: Hives
+  hives_text: Handmade hives, built and tested on our own apiary.
+  hives_cta: Order a hive →
+  starter_title: Start beekeeping with us
+  starter_text: Everything in one go — a hive, a bee colony and a consultation, so your first season starts right.
+  starter_parts:
+    - a hive
+    - a bee colony
+    - a consultation
+  starter_cta: Get in touch →
+  seasons:
+    - summer — honey harvest
+    - spring — bee colonies
+    - all year — hives to order
+gallery:
+  title: Gallery
+  text: Life at the apiary, season by season.
+reviews:
+  title: What people say
+  cta: All reviews on Google →
+  placeholder: A review from one of our customers will appear here.
+news:
+  title: News
+location:
+  title: Visit us on the road to Kazbegi
+  text: Navazi sits right on the Mtskheta — Stepantsminda highway, the main route from Tbilisi to Ananuri, Gudauri and Kazbegi.
+  address: Navazi village, Mtskheta municipality, Georgia
+  hours: Opening hours coming soon
+  visit_note: Please call us before you come.
+  route_cta: Route in Google Maps →
+  stops:
+    - Tbilisi
+    - Mtskheta
+    - Navazi
+    - Zhinvali
+    - Ananuri
+    - Gudauri
+    - Stepantsminda
+  here: we are here
+contact:
+  title: Let's talk.
+  columns:
+    - title: Honey orders
+      text: Size, variety, delivery or pick-up.
+      channel: whatsapp
+    - title: Colonies & hives
+      text: Pre-orders, hive models and lead times.
+      channel: phone
+    - title: Visits & partners
+      text: Tastings at the apiary, guesthouses and restaurants.
+      channel: telegram
+  footer: Family apiary in Navazi, Georgia

@@ -1,0 +1,55 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Header from '../../../components/Header.astro';
+import { LOCALES, getHome, getNews, formatDate, type Locale } from '../../../lib/site';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const [home, news] = await Promise.all([getHome(lang), getNews(lang)]);
+---
+<Base lang={lang} title={`${home.news.title} — Aum Aurum`} description={home.meta.description} path="news/">
+  <Header lang={lang} nav={home.nav} ui={home.ui} path="news/" home={false} />
+  <main class="section">
+    <div class="wrap">
+      <h1 class="h2">{home.news.title}</h1>
+      <ul class="list">
+        {news.map((n) => (
+          <li>
+            <a href={`/${lang}/news/${n.slug}/`}>
+              <time datetime={n.data.date.toISOString().slice(0, 10)}>{formatDate(n.data.date, lang)}</time>
+              <span class="h3">{n.data.title}</span>
+              <span class="excerpt">{n.data.excerpt}</span>
+              {n.data.example && <span class="tag">{home.ui.placeholder_note}</span>}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </main>
+</Base>
+
+<style>
+  h1 { color: var(--plum); margin-bottom: 3rem; }
+  .list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--rule); }
+  .list a {
+    display: grid;
+    grid-template-columns: 12rem minmax(0, 1fr) auto;
+    grid-template-areas: 'date title tag' 'date excerpt tag';
+    gap: 0.4rem 2rem;
+    padding-block: 1.75rem;
+    border-bottom: 1px solid var(--rule);
+    text-decoration: none;
+  }
+  .list a:hover .h3 { color: var(--plum); }
+  time { grid-area: date; color: var(--olive); font-size: var(--fs-small); font-variant-numeric: tabular-nums; padding-top: 0.3rem; }
+  .h3 { grid-area: title; }
+  .excerpt { grid-area: excerpt; color: var(--ink-soft); max-width: 60ch; }
+  .tag { grid-area: tag; align-self: start; color: var(--plum); }
+  @media (max-width: 700px) {
+    .list a { grid-template-columns: 1fr; grid-template-areas: 'date' 'title' 'excerpt' 'tag'; }
+    .tag { justify-self: start; }
+  }
+</style>

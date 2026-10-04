@@ -1,0 +1,20 @@
+{
+  "name": "aum-aurum",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Aum Aurum — family apiary in Navazi, Georgia. Website (ka/ru/en) + Sveltia CMS admin.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "5.3.0",
+    "@fontsource-variable/noto-sans-georgian": "5.3.0",
+    "@fontsource/cinzel": "5.3.0",
+    "@sveltia/cms": "0.227.4",
+    "astro": "7.3.5"
+  }
+}

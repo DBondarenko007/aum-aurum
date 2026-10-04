@@ -1,0 +1,91 @@
+---
+import Mark from './Mark.astro';
+import { LOCALES, LOCALE_LABEL, type Locale } from '../lib/site';
+
+interface Props {
+  lang: Locale;
+  contact: { title: string; columns: { title: string; text: string; channel: string }[]; footer: string };
+  links: ({ href: string; label: string } | null)[];
+  socials: { href: string; label: string }[];
+  comingSoon: string;
+}
+const { lang, contact, links, socials, comingSoon } = Astro.props;
+const year = new Date().getFullYear();
+---
+<section id="contact" class="section dark contact" aria-labelledby="contact-title">
+  <div class="wrap">
+    <div class="grid">
+      <h2 id="contact-title" class="big">{contact.title}</h2>
+      <ul class="cols">
+        {contact.columns.map((c, i) => (
+          <li>
+            <h3 class="label">{c.title}</h3>
+            <p>{c.text}</p>
+            {links[i]
+              ? <a class="go" href={links[i]!.href} target={links[i]!.href.startsWith('http') ? '_blank' : undefined} rel="noopener">{links[i]!.label} <span aria-hidden="true">→</span></a>
+              : <span class="soon">{comingSoon}</span>}
+          </li>
+        ))}
+      </ul>
+    </div>
+    {socials.length > 0 && (
+      <ul class="socials">
+        {socials.map((s) => <li><a href={s.href} target="_blank" rel="noopener">{s.label}</a></li>)}
+      </ul>
+    )}
+  </div>
+</section>
+
+<footer class="footer dark">
+  <div class="wrap row">
+    <Mark size={22} />
+    <p>© {year} Aum Aurum · {contact.footer}</p>
+    <ul class="langs">
+      {LOCALES.map((l) => (
+        <li><a href={`/${l}/`} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{LOCALE_LABEL[l]}</a></li>
+      ))}
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .contact { padding-bottom: clamp(3rem, 2rem + 3vw, 5rem); }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(2.5rem, 2rem + 3vw, 4.5rem); }
+  .big {
+    font-size: clamp(2.5rem, 1rem + 7vw, 6rem);
+    font-weight: 200;
+    line-height: 0.95;
+    letter-spacing: var(--track-display);
+    color: var(--blush);
+  }
+  :lang(ka) .big { font-size: clamp(2rem, 0.6rem + 6.4vw, 5rem); }
+  .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; margin: 0; padding: 0; list-style: none; }
+  .cols li { display: flex; flex-direction: column; gap: 0.75rem; padding-top: 1.25rem; border-top: 1px solid color-mix(in oklab, var(--blush) 25%, transparent); }
+  .cols h3 { margin: 0; color: var(--honey); }
+  .cols p { color: var(--blush-soft); font-size: 1rem; }
+  .go {
+    display: inline-flex;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    color: var(--blush);
+    font-size: 1.125rem;
+    text-decoration: none;
+  }
+  .go span { transition: translate 0.3s var(--ease-out); }
+  .go:hover span { translate: 4px 0; }
+  .go:hover { color: var(--honey); }
+  .soon { margin-top: auto; padding-top: 0.75rem; color: var(--blush-soft); font-size: var(--fs-small); }
+  .socials { display: flex; flex-wrap: wrap; gap: 1.5rem; margin: 3rem 0 0; padding: 0; list-style: none; }
+
+  .footer { border-top: 1px solid color-mix(in oklab, var(--blush) 14%, transparent); }
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.25rem; padding-block: 1.5rem; font-size: var(--fs-small); color: var(--blush-soft); }
+  .row p { flex: 1; }
+  .langs { display: flex; gap: 0.25rem; margin: 0; padding: 0; list-style: none; }
+  .langs a { padding: 0.4rem 0.55rem; text-decoration: none; }
+  .langs a[aria-current='true'] { color: var(--honey); }
+
+  @media (max-width: 640px) {
+    .cols { grid-template-columns: 1fr; }
+  }
+</style>

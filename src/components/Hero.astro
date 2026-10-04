@@ -1,0 +1,150 @@
+---
+import Photo from './Photo.astro';
+
+interface Props {
+  hero: {
+    title: string; subtitle: string; text: string; cta_primary: string; cta_secondary: string;
+    polaroids: { caption: string; image?: string | null }[];
+  };
+  photoSoon: string;
+  orderHref: string;
+}
+const { hero, photoSoon, orderHref } = Astro.props;
+
+// Positions along the string: t = share of width, y = where the curve passes (px),
+// r = resting tilt. The string is drawn with the same curve in the SVG below.
+const slots = [
+  { t: 12, y: 28, r: -5, tone: 'olive', icon: 'bee' },
+  { t: 37, y: 40, r: 3.5, tone: 'honey', icon: 'jar' },
+  { t: 62, y: 38, r: -2.5, tone: 'plum', icon: 'mountains' },
+  { t: 87, y: 24, r: 5, tone: 'ink', icon: 'hive' },
+] as const;
+const [first, ...rest] = hero.title.split(' ');
+---
+<section class="hero olive" aria-labelledby="hero-title">
+  <div class="wrap grid">
+    <div class="copy">
+      <h1 id="hero-title" class="title">
+        <span>{first}</span>{rest.length > 0 && <span>{rest.join(' ')}</span>}
+      </h1>
+      <p class="lead subtitle">{hero.subtitle}</p>
+      <p class="text">{hero.text}</p>
+      <div class="actions">
+        <a class="btn btn--honey" href={orderHref}>{hero.cta_primary}</a>
+        <a class="btn" href="#location">{hero.cta_secondary}</a>
+      </div>
+    </div>
+
+    <div class="line" aria-hidden="true">
+      <svg class="string" viewBox="0 0 100 40" preserveAspectRatio="none">
+        <path d="M-2 6 Q50 22 102 4" />
+      </svg>
+      {slots.map((s, i) => {
+        const p = hero.polaroids[i];
+        if (!p) return null;
+        return (
+          <figure class="polaroid" style={`--t:${s.t}%;--y:${s.y}px;--r:${s.r}deg;--d:${i * -1.7}s`}>
+            <span class="pin"></span>
+            <Photo image={p.image} alt={p.caption} note={photoSoon} tone={s.tone} icon={s.icon} ratio="4 / 5" />
+            <figcaption>{p.caption}</figcaption>
+          </figure>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    align-items: center;
+    min-height: min(880px, calc(100svh - var(--header-h)));
+    padding-block: clamp(3rem, 2rem + 4vw, 6rem);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(2rem, 4vw, 4rem);
+    align-items: center;
+  }
+  .title {
+    display: flex;
+    flex-direction: column;
+    color: var(--honey);
+    font-size: var(--fs-display);
+    font-weight: 300;
+    line-height: 0.98;
+    letter-spacing: var(--track-display);
+  }
+  .subtitle { margin-top: clamp(1.5rem, 1rem + 1.5vw, 2.25rem); max-width: 26ch; }
+  .text { margin-top: 1rem; max-width: 34ch; font-size: 1rem; }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; margin-top: clamp(2rem, 1.5rem + 1.5vw, 2.75rem); }
+
+  /* Polaroids on a string */
+  .line { position: relative; height: clamp(300px, 24vw, 350px); }
+  .string {
+    position: absolute;
+    inset: 0 0 auto;
+    width: 100%;
+    height: 120px;
+    overflow: visible;
+  }
+  .string path { fill: none; stroke: var(--blush); stroke-width: 1.4; vector-effect: non-scaling-stroke; opacity: 0.85; }
+
+  .polaroid {
+    --w: clamp(118px, 10.4vw, 156px);
+    position: absolute;
+    left: var(--t);
+    top: calc(var(--y) / 120 * 120);
+    width: var(--w);
+    margin: 0;
+    padding: 9px 9px 0;
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: 0 22px 34px -18px rgb(0 0 0 / 0.55), 0 2px 4px rgb(0 0 0 / 0.12);
+    translate: -50% 0;
+    rotate: var(--r);
+    transform-origin: 50% -12px;
+    animation: sway 7s ease-in-out var(--d) infinite alternate;
+    transition: scale 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out);
+  }
+  .polaroid:hover { animation-play-state: paused; scale: 1.05; box-shadow: 0 30px 44px -18px rgb(0 0 0 / 0.6), 0 2px 4px rgb(0 0 0 / 0.12); z-index: 2; }
+  .polaroid figcaption {
+    padding: 0.5rem 0.1rem 0.65rem;
+    font-size: 0.8125rem;
+    line-height: 1.25;
+    text-align: center;
+  }
+  .pin {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    width: 11px;
+    height: 30px;
+    translate: -50% 0;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #b48c3a 0 46%, #8f6d2a 46% 54%, #c9a24f 54%);
+    box-shadow: 0 2px 3px rgb(0 0 0 / 0.3);
+  }
+  @keyframes sway {
+    from { rotate: var(--r); }
+    to { rotate: calc(var(--r) * -0.35); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .polaroid { animation: none; }
+  }
+
+  @media (max-width: 860px) {
+    .hero { min-height: 0; }
+    .grid { grid-template-columns: 1fr; }
+    .line { height: calc(30vw * 1.25 + 120px); margin-inline: calc(var(--gutter) * -0.5); }
+    .polaroid { --w: 30vw; padding: 6px 6px 0; }
+    .polaroid:nth-of-type(4) { display: none; }
+    .polaroid:nth-of-type(1) { left: 17%; }
+    .polaroid:nth-of-type(2) { left: 50%; }
+    .polaroid:nth-of-type(3) { left: 83%; }
+    .polaroid figcaption { font-size: 0.75rem; }
+  }
+</style>

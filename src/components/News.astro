@@ -1,0 +1,60 @@
+---
+import Photo from './Photo.astro';
+import { formatDate, type Locale } from '../lib/site';
+
+interface Props {
+  lang: Locale;
+  title: string;
+  items: { slug: string; data: { title: string; date: Date; excerpt: string; image?: string | null; example: boolean } }[];
+  ui: { all_news: string; photo_soon: string; placeholder_note: string };
+}
+const { lang, title, items, ui } = Astro.props;
+const tones = ['plum', 'olive', 'honey'] as const;
+const icons = ['bee', 'hive', 'jar'] as const;
+---
+<section id="news" class="section" aria-labelledby="news-title">
+  <div class="wrap">
+    <div class="head-row">
+      <h2 id="news-title" class="h2 title">{title}</h2>
+      <a class="all" href={`/${lang}/news/`}>{ui.all_news} →</a>
+    </div>
+    <ul class="list">
+      {items.slice(0, 3).map((n, i) => (
+        <li>
+          <a class="item" href={`/${lang}/news/${n.slug}/`}>
+            <Photo image={n.data.image} alt={n.data.title} note={ui.photo_soon} tone={tones[i % 3]} icon={icons[i % 3]} ratio={i === 0 ? '16 / 10' : '4 / 3'} />
+            <div class="meta">
+              <time datetime={n.data.date.toISOString().slice(0, 10)}>{formatDate(n.data.date, lang)}</time>
+              {n.data.example && <span class="tag">{ui.placeholder_note}</span>}
+            </div>
+            <h3 class="h3">{n.data.title}</h3>
+            <p>{n.data.excerpt}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .title { color: var(--plum); }
+  .all { color: var(--plum); font-size: 1.0625rem; }
+  .list {
+    display: grid;
+    grid-template-columns: 1.45fr;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .item { display: flex; flex-direction: column; gap: 0.75rem; text-decoration: none; }
+  .item :global(.photo) { transition: filter 0.4s var(--ease-out); }
+  .item:hover :global(.photo) { filter: brightness(1.08); }
+  .item:hover .h3 { color: var(--plum); text-decoration: underline; text-decoration-thickness: 1px; }
+  .meta { display: flex; align-items: center; gap: 0.75rem; margin-top: 0.5rem; color: var(--olive); font-size: var(--fs-small); font-variant-numeric: tabular-nums; }
+  .meta .tag { color: var(--plum); }
+  .item p { color: var(--ink-soft); max-width: 46ch; }
+  @media (max-width: 860px) { .list { grid-template-columns: 1fr; grid-auto-flow: row; } }
+</style>

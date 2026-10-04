@@ -1,0 +1,37 @@
+---
+// Root: send the visitor to their language (saved choice → browser language → English).
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aum Aurum</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" hreflang="ka" href="/ka/" />
+    <link rel="alternate" hreflang="ru" href="/ru/" />
+    <link rel="alternate" hreflang="en" href="/en/" />
+    <script is:inline>
+      (function () {
+        var supported = ['ka', 'ru', 'en'];
+        var saved = null;
+        try { saved = localStorage.getItem('aa-lang'); } catch (e) {}
+        var wanted = [saved].concat(navigator.languages || [navigator.language]);
+        var lang = 'en';
+        for (var i = 0; i < wanted.length; i++) {
+          var code = (wanted[i] || '').slice(0, 2).toLowerCase();
+          if (supported.indexOf(code) !== -1) { lang = code; break; }
+        }
+        location.replace('/' + lang + '/');
+      })();
+    </script>
+    <noscript><meta http-equiv="refresh" content="0; url=/en/" /></noscript>
+    <style>
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #626b2f; color: #f7ebec; font-family: system-ui, sans-serif; }
+      a { color: #efcb68; margin: 0 0.5rem; }
+    </style>
+  </head>
+  <body>
+    <p><a href="/ka/" lang="ka">ქართული</a> <a href="/ru/" lang="ru">Русский</a> <a href="/en/">English</a></p>
+  </body>
+</html>

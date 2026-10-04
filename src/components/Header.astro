@@ -1,0 +1,164 @@
+---
+import Mark from './Mark.astro';
+import { LOCALES, LOCALE_LABEL, LOCALE_NAME, type Locale } from '../lib/site';
+
+interface Props {
+  lang: Locale;
+  nav: Record<string, string>;
+  ui: { menu: string; close: string; language: string };
+  /** path after the locale for the language switcher, e.g. "" or "news/welcome/" */
+  path?: string;
+  /** anchors point to the home page when rendered on a sub-page */
+  home?: boolean;
+}
+const { lang, nav, ui, path = '', home = true } = Astro.props;
+const items = ['concept', 'shop', 'gallery', 'reviews', 'news', 'location', 'contact'] as const;
+const href = (id: string) => (home ? `#${id}` : `/${lang}/#${id}`);
+---
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="logo" href={`/${lang}/`} aria-label="Aum Aurum">
+      <span class="badge"><Mark size={26} /></span>
+    </a>
+
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <ul>
+        {items.map((id) => <li><a href={href(id)}>{nav[id]}</a></li>)}
+      </ul>
+      <ul class="langs" aria-label={ui.language}>
+        {LOCALES.map((l) => (
+          <li>
+            <a
+              href={`/${l}/${path}`}
+              hreflang={l}
+              lang={l}
+              aria-current={l === lang ? 'true' : undefined}
+              title={LOCALE_NAME[l]}
+              data-lang={l}
+            >{LOCALE_LABEL[l]}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <button class="menu-btn" type="button" aria-controls="site-nav" aria-expanded="false" data-open={ui.menu} data-close={ui.close}>
+      <span class="menu-icon" aria-hidden="true"></span>
+      <span class="menu-text">{ui.menu}</span>
+    </button>
+  </div>
+</header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.menu-btn');
+  const nav = document.getElementById('site-nav');
+  const setOpen = (open: boolean) => {
+    if (!btn || !nav) return;
+    btn.setAttribute('aria-expanded', String(open));
+    nav.classList.toggle('is-open', open);
+    btn.querySelector('.menu-text')!.textContent = open ? btn.dataset.close! : btn.dataset.open!;
+  };
+  btn?.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'));
+  nav?.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement).closest('a');
+    if (!a) return;
+    if (a.dataset.lang) {
+      try { localStorage.setItem('aa-lang', a.dataset.lang); } catch {}
+    }
+    setOpen(false);
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: var(--blush);
+    border-bottom: 1px solid var(--rule);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    height: var(--header-h);
+  }
+  .logo { flex: none; display: block; border-radius: 50%; }
+  .badge {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--ink);
+    transition: transform 0.5s var(--ease-out);
+  }
+  .logo:hover .badge { transform: rotate(-8deg); }
+
+  .nav { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+  .nav ul { display: flex; flex-wrap: wrap; gap: 0.25rem 1.6rem; margin: 0; padding: 0; list-style: none; }
+  .nav a {
+    display: inline-block;
+    padding-block: 0.4rem;
+    font-size: 1.0625rem;
+    text-decoration: none;
+    background: linear-gradient(var(--plum), var(--plum)) left bottom / 0 1px no-repeat;
+    transition: background-size 0.35s var(--ease-out), color 0.2s;
+  }
+  .nav a:hover { color: var(--plum); background-size: 100% 1px; }
+
+  .langs { gap: 0.25rem !important; }
+  .langs a { padding: 0.35rem 0.55rem; font-size: 0.9375rem; color: var(--ink-soft); background: none; }
+  .langs a:hover { color: var(--plum); }
+  .langs a[aria-current='true'] { color: var(--plum); box-shadow: inset 0 -1.5px 0 var(--plum); }
+
+  .menu-btn {
+    display: none;
+    margin-left: auto;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 44px;
+    padding: 0 0.25rem;
+    border: 0;
+    background: none;
+    color: var(--ink);
+    font: inherit;
+    cursor: pointer;
+  }
+  .menu-icon, .menu-icon::before {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform 0.3s var(--ease-out);
+  }
+  .menu-icon { position: relative; box-shadow: 0 -6px 0 currentColor; transform: translateY(3px); }
+  .menu-icon::before { content: ''; position: absolute; top: 6px; }
+  .menu-btn[aria-expanded='true'] .menu-icon { box-shadow: none; transform: rotate(45deg); }
+  .menu-btn[aria-expanded='true'] .menu-icon::before { top: 0; transform: rotate(-90deg); }
+
+  @media (max-width: 1080px) {
+    .nav ul { gap: 0.25rem 1.1rem; }
+  }
+  @media (max-width: 960px) {
+    .menu-btn { display: inline-flex; }
+    .nav {
+      position: absolute;
+      inset: var(--header-h) 0 auto 0;
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 2rem;
+      padding: 1.5rem var(--gutter) 2rem;
+      background: var(--blush);
+      border-bottom: 1px solid var(--rule);
+      max-height: calc(100svh - var(--header-h));
+      overflow-y: auto;
+    }
+    .nav.is-open { display: flex; }
+    .nav ul { flex-direction: column; gap: 0; }
+    .nav a { padding-block: 0.7rem; font-size: 1.375rem; font-weight: 300; }
+    .langs { flex-direction: row !important; gap: 0.5rem !important; }
+    .langs a { font-size: 1rem; font-weight: 400; padding: 0.5rem 0.8rem; }
+  }
+</style>

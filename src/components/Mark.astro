@@ -1,0 +1,20 @@
+---
+// The logo mark (honeycomb, golden cell with a drop, gold bars) — same geometry as
+// assets/logo/aum-aurum-logo-black.svg.
+interface Props { size?: number; cream?: string; class?: string }
+const { size = 32, cream = '#EDE1C7', class: cls = '' } = Astro.props;
+const HX = '12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39';
+const cells = [[-29, -5], [-29, 17.5], [-9.5, -16.3], [-9.5, 6.3], [-9.5, 28.8], [10, -27.5], [10, -5]];
+---
+<svg class={cls} width={size} height={size * 118 / 88} viewBox="-44 -42 88 118" aria-hidden="true">
+  <g fill={cream}>
+    {cells.map(([x, y]) => <polygon transform={`translate(${x} ${y})`} points={HX} />)}
+  </g>
+  <polygon transform="translate(29.5 6.3)" points={HX} fill="#EFCB68" />
+  <path transform="translate(29.5 19)" d="M0,0 C3,5 6,8 6,11 A6,6 0 1 1 -6,11 C-6,8 -3,5 0,0Z" fill="#EFCB68" />
+  <g fill="#EFCB68" stroke="#B8932F" stroke-width="1" stroke-linejoin="round">
+    <polygon points="-31,72 -1,72 -4,62 -28,62" />
+    <polygon points="1,72 31,72 28,62 4,62" />
+    <polygon points="-15,61 15,61 12,51 -12,51" />
+  </g>
+</svg>

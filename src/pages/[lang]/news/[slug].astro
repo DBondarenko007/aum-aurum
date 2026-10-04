@@ -1,0 +1,46 @@
+---
+import { render } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Header from '../../../components/Header.astro';
+import Photo from '../../../components/Photo.astro';
+import { LOCALES, getHome, getNews, formatDate, type Locale } from '../../../lib/site';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of LOCALES) {
+    for (const post of await getNews(lang)) paths.push({ params: { lang, slug: post.slug }, props: { post } });
+  }
+  return paths;
+}
+
+const lang = Astro.params.lang as Locale;
+const { post } = Astro.props;
+const home = await getHome(lang);
+const { Content } = await render(post);
+---
+<Base lang={lang} title={`${post.data.title} — Aum Aurum`} description={post.data.excerpt} path={`news/${post.slug}/`}>
+  <Header lang={lang} nav={home.nav} ui={home.ui} path={`news/${post.slug}/`} home={false} />
+  <main class="section">
+    <article class="wrap post">
+      <a class="back" href={`/${lang}/news/`}>← {home.ui.all_news}</a>
+      <div class="meta">
+        <time datetime={post.data.date.toISOString().slice(0, 10)}>{formatDate(post.data.date, lang)}</time>
+        {post.data.example && <span class="tag">{home.ui.placeholder_note}</span>}
+      </div>
+      <h1 class="h2">{post.data.title}</h1>
+      <Photo image={post.data.image} alt={post.data.title} note={home.ui.photo_soon} tone="olive" icon="bee" ratio="16 / 9" class="cover" />
+      <div class="body"><Content /></div>
+    </article>
+  </main>
+</Base>
+
+<style>
+  .post { max-width: 820px; }
+  .back { color: var(--plum); font-size: var(--fs-small); }
+  .meta { display: flex; gap: 0.75rem; align-items: center; margin: 2rem 0 1rem; color: var(--olive); font-size: var(--fs-small); }
+  .meta .tag { color: var(--plum); }
+  h1 { color: var(--plum); }
+  .post :global(.cover) { margin-block: 2.5rem; }
+  .body { font-size: var(--fs-lead); line-height: 1.6; max-width: 65ch; }
+  .body :global(p + p) { margin-top: 1em; }
+</style>

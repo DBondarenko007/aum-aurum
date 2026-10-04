@@ -1,0 +1,50 @@
+---
+interface Props {
+  reviews: { title: string; cta: string; placeholder: string };
+  items: { quote: string; author: string; place: string; lang: string }[];
+  googleMaps?: string;
+}
+const { reviews, items, googleMaps } = Astro.props;
+const shown = items.length ? items.slice(0, 3) : [0, 1, 2].map(() => ({ quote: reviews.placeholder, author: '', place: '', lang: '' }));
+const empty = items.length === 0;
+---
+<section id="reviews" class="section plum" aria-labelledby="reviews-title">
+  <div class="wrap">
+    <div class="head-row">
+      <h2 id="reviews-title" class="h2 title">{reviews.title}</h2>
+      {googleMaps && <a class="btn honey-line" href={googleMaps} target="_blank" rel="noopener">{reviews.cta}</a>}
+    </div>
+    <ul class="quotes" class:list={{ empty }}>
+      {shown.map((r) => (
+        <li>
+          <svg class="qm" width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><path d="M0 20V11C0 5 3.2 1.4 9.5 0l1 2.6C7 3.8 5.5 6 5.5 9H10v11zm15.5 0V11c0-6 3.2-9.6 9.5-11l1 2.6C22.5 3.8 21 6 21 9h4.5v11z" /></svg>
+          <blockquote lang={r.lang || undefined}>
+            <p>{r.quote}</p>
+          </blockquote>
+          {(r.author || r.place) && <p class="who">{r.author}{r.place && <span>, {r.place}</span>}</p>}
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .title { color: var(--honey); }
+  .honey-line { color: var(--honey); }
+  .quotes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(2rem, 4vw, 4rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .quotes li { position: relative; padding-top: 2.5rem; border-top: 1px solid color-mix(in oklab, var(--blush) 35%, transparent); }
+  .qm { position: absolute; top: 0.9rem; left: 0; fill: var(--honey); }
+  blockquote { margin: 0; }
+  blockquote p { font-size: var(--fs-lead); font-weight: 300; line-height: 1.45; }
+  .empty blockquote p { color: color-mix(in oklab, var(--blush) 82%, var(--plum)); }
+  .who { margin-top: 1.25rem; color: var(--honey); font-size: var(--fs-small); }
+  .who span { color: var(--blush); }
+  @media (max-width: 860px) { .quotes { grid-template-columns: 1fr; } }
+</style>

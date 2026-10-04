@@ -1,0 +1,40 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/noto-sans-georgian';
+import '../styles/global.css';
+import { LOCALES, HTML_LANG, type Locale } from '../lib/site';
+
+interface Props {
+  lang: Locale;
+  title: string;
+  description: string;
+  /** path after the locale, e.g. "" or "news/welcome/" */
+  path?: string;
+  jsonLd?: object;
+}
+const { lang, title, description, path = '', jsonLd } = Astro.props;
+const site = Astro.site!;
+const url = (l: Locale) => new URL(`/${l}/${path}`, site).href;
+---
+<!doctype html>
+<html lang={HTML_LANG[lang]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={url(lang)} />
+    {LOCALES.map((l) => <link rel="alternate" hreflang={HTML_LANG[l]} href={url(l)} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL('/', site).href} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={url(lang)} />
+    <meta name="theme-color" content="#626B2F" />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

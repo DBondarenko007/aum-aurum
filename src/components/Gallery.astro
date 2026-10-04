@@ -1,0 +1,36 @@
+---
+import Photo from './Photo.astro';
+
+interface Props {
+  gallery: { title: string; text: string };
+  photos: { image?: string | null; alt: string; tall: boolean }[];
+  photoSoon: string;
+}
+const { gallery, photos, photoSoon } = Astro.props;
+const icons = ['bee', 'comb', 'mountains', 'hive', 'jar', 'hands', 'bee', 'mountains'] as const;
+const ratios = ['4 / 5', '1 / 1', '4 / 3', '3 / 4', '1 / 1', '4 / 3', '4 / 5', '1 / 1'];
+const items = photos.length
+  ? photos.map((p) => ({ ...p, ratio: p.tall ? '3 / 4' : '4 / 3' }))
+  : icons.map((icon, i) => ({ image: null, alt: '', icon, ratio: ratios[i] }));
+---
+<section id="gallery" class="section dark" aria-labelledby="gallery-title">
+  <div class="wrap">
+    <div class="head-row">
+      <h2 id="gallery-title" class="h2">{gallery.title}</h2>
+      <p class="lead soft">{gallery.text}</p>
+    </div>
+    <div class="masonry">
+      {items.map((p, i) => (
+        <Photo image={p.image} alt={p.alt} note={p.image ? '' : photoSoon} tone="ink" icon={'icon' in p ? p.icon : 'bee'} ratio={p.ratio} class="tile" />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .soft { color: var(--blush-soft); }
+  .masonry { columns: 4; column-gap: 1rem; }
+  @media (max-width: 1100px) { .masonry { columns: 3; } }
+  .masonry :global(.tile) { break-inside: avoid; margin-bottom: 1rem; }
+  @media (max-width: 860px) { .masonry { columns: 2; column-gap: 0.75rem; } .masonry :global(.tile) { margin-bottom: 0.75rem; } }
+</style>

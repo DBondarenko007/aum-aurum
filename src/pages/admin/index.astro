@@ -1,0 +1,19 @@
+---
+// Sveltia CMS admin. Reads /admin/config.yml (public/admin/config.yml).
+---
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Aum Aurum — админка</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <script>
+      import CMS from '@sveltia/cms';
+      CMS.init();
+    </script>
+  </body>
+</html>

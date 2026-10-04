@@ -1,0 +1,11 @@
+# Shared settings (not translated). Empty values show as "coming soon" on the site.
+phone: ""
+whatsapp: ""
+telegram: ""
+email: ""
+facebook: ""
+instagram: ""
+google_maps: ""
+# Navazi village (OpenStreetMap). Replace with the exact sales point later.
+lat: 41.9818
+lng: 44.7410

@@ -1,0 +1,198 @@
+---
+import Photo from './Photo.astro';
+
+interface Product { slug: string; data: { category: string; title: string; text: string; size: string; price: string; image?: string | null; available: boolean } }
+interface Props {
+  shop: {
+    title: string; subtitle: string; cta: string;
+    honey_title: string; honey_text: string;
+    colonies_title: string; colonies_text: string; colonies_cta: string;
+    hives_title: string; hives_text: string; hives_cta: string;
+    starter_title: string; starter_text: string; starter_parts: string[]; starter_cta: string;
+    seasons: string[];
+  };
+  products: Product[];
+  ui: { photo_soon: string; price_on_request: string; order_honey: string };
+  orderHref: string;
+  contactHref: string;
+}
+const { shop, products, ui, orderHref, contactHref } = Astro.props;
+const honey = products.filter((p) => p.data.category === 'honey' && p.data.available);
+const loop = [...shop.seasons, ...shop.seasons];
+---
+<section id="shop" class="section shop" aria-labelledby="shop-title">
+  <div class="wrap">
+    <div class="head-row">
+      <div>
+        <h2 id="shop-title" class="h2 title">{shop.title}</h2>
+        <p class="lead subtitle">{shop.subtitle}</p>
+      </div>
+      <a class="btn cta" href={orderHref}>{shop.cta}</a>
+    </div>
+
+    <div class="grid">
+      <article class="card honey">
+        <Photo tone="olive" icon="jar" ratio="16 / 10" note={ui.photo_soon} alt={shop.honey_title} />
+        <div class="body">
+          <h3 class="h2 card-title">{shop.honey_title}</h3>
+          <p>{shop.honey_text}</p>
+          {honey.length > 0 && (
+            <ul class="prices">
+              {honey.map((p) => (
+                <li>
+                  <span class="name">{p.data.title}</span>
+                  <span class="dots" aria-hidden="true"></span>
+                  <span class="size">{p.data.size}</span>
+                  <span class="price">{p.data.price || ui.price_on_request}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          <a class="btn btn--ink" href={orderHref}>{ui.order_honey}</a>
+        </div>
+      </article>
+
+      <article class="card side colonies">
+        <div class="body">
+          <h3 class="h3">{shop.colonies_title}</h3>
+          <p>{shop.colonies_text}</p>
+          <a class="btn" href={contactHref}>{shop.colonies_cta}</a>
+        </div>
+        <Photo tone="paper" icon="bee" ratio="1 / 1" note={ui.photo_soon} alt={shop.colonies_title} class="thumb" />
+      </article>
+
+      <article class="card side hives">
+        <div class="body">
+          <h3 class="h3">{shop.hives_title}</h3>
+          <p>{shop.hives_text}</p>
+          <a class="btn" href={contactHref}>{shop.hives_cta}</a>
+        </div>
+        <Photo tone="paper" icon="hive" ratio="1 / 1" note={ui.photo_soon} alt={shop.hives_title} class="thumb" />
+      </article>
+    </div>
+
+    <div class="starter">
+      <h3 class="h3 starter-title">{shop.starter_title}</h3>
+      <p class="equation" aria-label={shop.starter_parts.join(' + ')}>
+        {shop.starter_parts.map((part, i) => (
+          <>{i > 0 && <span class="plus" aria-hidden="true">+</span>}<span>{part}</span></>
+        ))}
+      </p>
+      <div class="starter-foot">
+        <p>{shop.starter_text}</p>
+        <a class="btn btn--plum" href={contactHref}>{shop.starter_cta}</a>
+      </div>
+    </div>
+  </div>
+
+  {shop.seasons.length > 0 && (
+    <div class="seasons dark">
+      <ul class="visually-hidden">{shop.seasons.map((s) => <li>{s}</li>)}</ul>
+      <div class="track" aria-hidden="true">
+        {loop.map((s, i) => (
+          <span class:list={['label', 'item', { dup: i >= shop.seasons.length }]}>
+            {s}
+            <svg width="12" height="11" viewBox="-12 -10.4 24 20.8"><polygon points="12,0 6,10.39 -6,10.39 -12,0 -6,-10.39 6,-10.39" /></svg>
+          </span>
+        ))}
+      </div>
+    </div>
+  )}
+</section>
+
+<style>
+  .shop { padding-bottom: 0; }
+  .title { color: var(--plum); }
+  .subtitle { margin-top: 1rem; color: var(--olive); max-width: 30ch; }
+  .cta { color: var(--plum); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    grid-template-rows: 1fr 1fr;
+    gap: clamp(1rem, 2vw, 1.5rem);
+  }
+  .card { display: flex; }
+  .honey {
+    grid-row: span 2;
+    flex-direction: column;
+    background: var(--honey);
+    color: var(--ink);
+  }
+  .honey .body { display: flex; flex-direction: column; gap: 1rem; padding: clamp(1.5rem, 1rem + 2vw, 2.75rem); flex: 1; }
+  .honey .card-title { font-size: clamp(2.5rem, 1.6rem + 3vw, 4.25rem); }
+  .honey .btn { align-self: flex-start; margin-top: auto; }
+  .prices { margin: 0.5rem 0 1.5rem; padding: 0; list-style: none; }
+  .prices li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+    font-variant-numeric: tabular-nums;
+  }
+  .prices .dots { flex: 1; border-bottom: 1px dotted color-mix(in oklab, var(--ink) 45%, transparent); translate: 0 -0.3em; }
+  .prices .size { color: var(--ink-soft); }
+  .prices .price { min-width: 7ch; text-align: right; font-weight: 500; }
+
+  .side {
+    align-items: stretch;
+    gap: 0;
+    color: var(--blush);
+  }
+  .side .body { display: flex; flex-direction: column; gap: 0.9rem; padding: clamp(1.5rem, 1rem + 1.5vw, 2.25rem); flex: 1 1 60%; }
+  .side .btn { align-self: flex-start; margin-top: auto; }
+  .side :global(.thumb) { flex: 0 0 40%; width: 40%; height: 100%; aspect-ratio: auto !important; }
+  .colonies { background: var(--olive); }
+  .hives { background: var(--plum); }
+  .colonies :global(:focus-visible), .hives :global(:focus-visible) { outline-color: var(--honey); }
+
+  .starter {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    grid-template-areas: 'title eq' '. foot';
+    gap: 1.5rem clamp(2rem, 4vw, 4rem);
+    margin-top: clamp(4rem, 3rem + 3vw, 6rem);
+    padding-block: clamp(2rem, 1.5rem + 2vw, 3rem);
+    border-top: 1px solid var(--rule);
+  }
+  .starter-title { grid-area: title; color: var(--plum); }
+  .equation {
+    grid-area: eq;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.2em 0.45em;
+    font-size: clamp(2rem, 1.2rem + 3vw, 4rem);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--plum);
+  }
+  .plus { color: var(--olive); font-weight: 200; }
+  .starter-foot { grid-area: foot; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.25rem 2rem; }
+  .starter-foot p { max-width: 46ch; }
+
+  .seasons { overflow: hidden; margin-top: clamp(3rem, 2rem + 3vw, 5rem); padding-block: 1.25rem; }
+  .track { display: flex; width: max-content; animation: marquee 40s linear infinite; }
+  .item { display: inline-flex; align-items: center; gap: 2.5rem; padding-right: 2.5rem; color: var(--honey); white-space: nowrap; }
+  .item svg { fill: var(--honey); }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  .seasons:hover .track { animation-play-state: paused; }
+  @media (prefers-reduced-motion: reduce) {
+    .track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; }
+    .dup { display: none; }
+  }
+
+  @media (max-width: 560px) {
+    .prices li { flex-wrap: wrap; row-gap: 0.15rem; }
+    .prices .name { flex: 1 0 100%; }
+    .prices .price { min-width: 0; }
+  }
+  @media (max-width: 860px) {
+    .grid { grid-template-columns: 1fr; grid-template-rows: none; }
+    .honey { grid-row: auto; }
+    .side { flex-direction: column-reverse; }
+    .side :global(.thumb) { width: 100%; height: auto; aspect-ratio: 16 / 9 !important; }
+    .starter { grid-template-columns: 1fr; grid-template-areas: 'title' 'eq' 'foot'; }
+  }
+</style>

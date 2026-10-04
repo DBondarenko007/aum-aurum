@@ -1,0 +1,53 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Hero from '../../components/Hero.astro';
+import Concept from '../../components/Concept.astro';
+import Shop from '../../components/Shop.astro';
+import Gallery from '../../components/Gallery.astro';
+import Reviews from '../../components/Reviews.astro';
+import News from '../../components/News.astro';
+import Location from '../../components/Location.astro';
+import Contact from '../../components/Contact.astro';
+import { LOCALES, getHome, getProducts, getNews, getSettings, channelLink, type Locale } from '../../lib/site';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const [home, products, news, { site, reviews, photos }] = await Promise.all([
+  getHome(lang), getProducts(lang), getNews(lang), getSettings(),
+]);
+
+const order = channelLink(site, 'whatsapp', home.ui.order_message);
+const orderHref = order?.href ?? '#contact';
+const contactLinks = home.contact.columns.map((c) => channelLink(site, c.channel));
+const socials = [
+  site.facebook && { href: site.facebook, label: 'Facebook' },
+  site.instagram && { href: site.instagram, label: 'Instagram' },
+].filter(Boolean) as { href: string; label: string }[];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: 'Aum Aurum',
+  description: home.meta.description,
+  address: { '@type': 'PostalAddress', addressLocality: 'Navazi', addressRegion: 'Mtskheta-Mtianeti', addressCountry: 'GE' },
+  geo: { '@type': 'GeoCoordinates', latitude: site.lat, longitude: site.lng },
+  ...(site.phone ? { telephone: site.phone } : {}),
+};
+---
+<Base lang={lang} title={home.meta.title} description={home.meta.description} jsonLd={jsonLd}>
+  <Header lang={lang} nav={home.nav} ui={home.ui} />
+  <main>
+    <Hero hero={home.hero} photoSoon={home.ui.photo_soon} orderHref={orderHref} />
+    <Concept concept={home.concept} photoSoon={home.ui.photo_soon} />
+    <Shop shop={home.shop} products={products} ui={home.ui} orderHref={orderHref} contactHref="#contact" />
+    <Gallery gallery={home.gallery} photos={photos} photoSoon={home.ui.photo_soon} />
+    <Reviews reviews={home.reviews} items={reviews} googleMaps={site.google_maps} />
+    <News lang={lang} title={home.news.title} items={news} ui={home.ui} />
+    <Location location={home.location} lat={site.lat} lng={site.lng} call={channelLink(site, 'phone')} />
+  </main>
+  <Contact lang={lang} contact={home.contact} links={contactLinks} socials={socials} comingSoon={home.ui.coming_soon} />
+</Base>
