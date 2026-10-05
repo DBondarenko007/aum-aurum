@@ -1,10 +1,10 @@
 # Sveltia CMS — admin panel at /admin/
 # Content lives in src/content (see src/content.config.ts). Images go to public/uploads.
-# Before going online: create the GitHub repo and put its name into backend.repo.
+# Live site: https://dbondarenko007.github.io/aum-aurum/ — sign in with GitHub (access token).
 
 backend:
   name: github
-  repo: OWNER/aum-aurum # TODO: real GitHub repo when it exists
+  repo: DBondarenko007/aum-aurum
   branch: main
 
 media_folder: public/uploads
