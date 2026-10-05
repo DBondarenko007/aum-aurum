@@ -44,7 +44,14 @@ decisions; **DESIGN.md is the source of truth for the look** (approved style). R
 - `src/content/home/{ka,ru,en}.yaml` — all page texts by section: meta, nav, ui, hero, story,
   shop, location, news, reviews, gallery (8 polaroid captions + photos), footer (CMS: "Тексты сайта")
 - `src/content/products/<slug>.<locale>.yaml` — products; `src/content/news/<slug>.<locale>.md` — news
-- `src/content/settings/{site,reviews}.yaml` — contacts/map and reviews (not translated)
+- `src/content/settings/{site,reviews}.yaml` — contacts, map, hours, business facts, order channel
+  (`order_channel`, `order_webhook`), Web3Forms key (`forms_key`), reviews (not translated)
+- Home yaml also holds `faq` (Q&A list, `hidden` = draft), `cart`, `privacy`, `notfound` texts
+- Cart: `src/scripts/cart.ts` (localStorage), `src/pages/[lang]/cart.astro` (checkout → WhatsApp /
+  Telegram / e-mail / Apps Script webhook); stage-2 receiver `tools/orders-apps-script.gs`
+- SEO/AI: `src/lib/seo.ts` (schema.org LocalBusiness + Offers + FAQPage), `src/pages/llms.txt.ts`,
+  `sitemap.xml.ts`, `robots.txt.ts` (robots only effective at a custom domain root), `public/og.png`
+- Family guide for orders, review form, FAQ, hours: `docs/ORDERS.md`
 - `src/content.config.ts` — schemas; `src/lib/site.ts` — locale helpers, contact links
 - `src/components/` — Header, BeeRail, Home + Apiary, Shop, Location, News, Reviews, Gallery,
   Footer, Mark (logo); `src/styles/global.css` — design tokens (DESIGN.md)
@@ -58,8 +65,10 @@ decisions; **DESIGN.md is the source of truth for the look** (approved style). R
 - Demos are standalone HTML: open by double click (fonts load from Google Fonts).
 
 ## Next steps
-1. Admin online: sign in with a GitHub fine-grained token; add the sister as a collaborator.
-2. Real content: photos, contacts, prices, family story, Georgian proofreading.
+1. Family fills real facts in the admin (contacts, hours, prices, FAQ answers, photos); then
+   Umami + Google Search Console + Bing Webmaster, Google Business Profile.
+2. Optional: Web3Forms key (review form), Telegram bot + Apps Script (docs/ORDERS.md).
+3. Real content: photos, contacts, prices, family story, Georgian proofreading.
 3. Shop sub-pages (`/shop/honey`, `/shop/bee-colonies`, `/shop/hives`), order forms.
 4. Telegram bot for orders; optional one-click GitHub login for the admin.
 5. Custom domain (then SITE = domain, BASE = '/'). Logo wordmark to outlines (paths) for print.

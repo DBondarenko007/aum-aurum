@@ -81,6 +81,14 @@ use wine or soot. Cream on soot, soot on paper, cream on wine all pass AA.
   over paper — so it never disappears. It faces the scroll direction and flaps while scrolling.
   Hidden below 900px.
 
+- **Reviews & FAQ:** one dark section — quotes, "Leave a review on Google" (gold button) and
+  "Write a review" (ghost button → inline form, moderated by e-mail), then Q&A as `<details>` rows
+  with a gold "+".
+- **Cart:** basket icon in the header with a gold counter; "+" buttons next to honey prices turn
+  olive with a check when added; cart page on paper (rows with − qty +, total, checkout form).
+  Currency is written as a word (лари / ლარი / GEL) — the ₾ sign is missing from the fonts.
+- **Floating contact:** round gold button bottom-right (WhatsApp, else Telegram), only when set.
+
 ## Motion
 Apiary bees, lid lift, frame lift, road draw, polaroid sway, bee rail. All of it stops or becomes
 static under `prefers-reduced-motion`.

@@ -1,0 +1,233 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { LOCALES, CURRENCY, getHome, getProducts, getSettings, orderChannel, formatPrice, url, type Locale } from '../../lib/site';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const [home, products, { site }] = await Promise.all([getHome(lang), getProducts(lang), getSettings()]);
+const c = home.cart;
+const channel = orderChannel(site);
+// Product data for the cart script: titles and prices always come from the current build.
+const catalog = Object.fromEntries(
+  products
+    .filter((p) => p.data.available && p.data.badge !== 'sold_out')
+    .map((p) => [p.slug, { title: p.data.title, size: p.data.size, price: p.data.price, priceLabel: formatPrice(p.data.price, lang) }]),
+);
+const labels = {
+  qty: c.qty, remove: c.remove, total: c.total, onRequest: home.ui.price_on_request, orderTitle: c.order_title,
+  name: c.name, phone: c.phone, delivery: c.delivery, address: c.address, comment: c.comment,
+  sending: c.sending, success: c.success, error: c.error, copied: c.copied, currency: CURRENCY[lang],
+};
+---
+<Base lang={lang} title={`${c.title} — Aum Aurum`} description={home.meta.description} path="cart/">
+  <Header lang={lang} nav={home.nav} ui={home.ui} path="cart/" home={false} />
+  <main class="section paper page">
+    <div class="wrap cart" data-catalog={JSON.stringify(catalog)} data-labels={JSON.stringify(labels)}
+         data-channel={channel ? JSON.stringify(channel) : ''} data-lang={lang}>
+      <h1>{c.title}</h1>
+      <p class="done" role="status" aria-live="polite" hidden></p>
+
+      <div class="empty" hidden>
+        <p>{c.empty}</p>
+        <a class="btn btn--ink" href={url(`/${lang}/#shop`)}>{c.back}</a>
+      </div>
+
+      <div class="filled" hidden>
+        <ul class="items"></ul>
+        <div class="sum">
+          <span>{c.total}</span><strong class="total"></strong>
+        </div>
+        <p class="note" hidden>{c.total_note}</p>
+
+        <form class="checkout">
+          <h2>{c.form_title}</h2>
+          <label><span>{c.name}</span><input name="name" required maxlength="80" autocomplete="name" /></label>
+          <label><span>{c.phone}</span><input name="phone" required maxlength="40" inputmode="tel" autocomplete="tel" /></label>
+          <label><span>{c.delivery}</span>
+            <select name="delivery">{c.delivery_options.map((o) => <option>{o}</option>)}</select>
+          </label>
+          <label><span>{c.address}</span><input name="address" maxlength="200" autocomplete="street-address" /></label>
+          <label class="wide"><span>{c.comment}</span><textarea name="comment" rows="3" maxlength="1000"></textarea></label>
+          <div class="wide row">
+            {channel
+              ? <button class="btn btn--ink" type="submit">{c.submit}</button>
+              : <p class="status">{c.no_channel}</p>}
+            {channel && <p class="via">{c.via} {channel.label}</p>}
+          </div>
+          <p class="wide status" role="status" aria-live="polite"></p>
+        </form>
+        <a class="back" href={url(`/${lang}/#shop`)}>← {c.back}</a>
+      </div>
+    </div>
+  </main>
+  <Footer lang={lang} text={home.footer.text} links={[]} comingSoon={home.ui.coming_soon} privacyLabel={home.ui.privacy} />
+</Base>
+
+<script>
+  import { readCart, setQty, removeFromCart, clearCart } from '../../scripts/cart';
+
+  type Product = { title: string; size: string; price: number | null; priceLabel: string | null };
+  const root = document.querySelector<HTMLElement>('.cart')!;
+  const catalog: Record<string, Product> = JSON.parse(root.dataset.catalog!);
+  const L = JSON.parse(root.dataset.labels!);
+  const channel = root.dataset.channel ? JSON.parse(root.dataset.channel) : null;
+  const lang = root.dataset.lang!;
+  const money = (n: number) => `${new Intl.NumberFormat(lang, { maximumFractionDigits: 2 }).format(n)} ${L.currency}`;
+
+  const list = root.querySelector<HTMLUListElement>('.items')!;
+  const render = () => {
+    const items = readCart().filter((i) => catalog[i.slug]);
+    root.querySelector<HTMLElement>('.empty')!.hidden = items.length > 0;
+    root.querySelector<HTMLElement>('.filled')!.hidden = items.length === 0;
+    list.replaceChildren(...items.map((i) => {
+      const p = catalog[i.slug];
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <span class="t"></span>
+        <span class="q"><button type="button" data-d="-1" aria-label="−">−</button><output></output><button type="button" data-d="1" aria-label="+">+</button></span>
+        <span class="p"></span>
+        <button type="button" class="x"></button>`;
+      li.querySelector('.t')!.textContent = `${p.title}${p.size ? `, ${p.size}` : ''}`;
+      li.querySelector('output')!.textContent = String(i.qty);
+      li.querySelector('.q')!.setAttribute('aria-label', L.qty);
+      li.querySelector('.p')!.textContent = p.price != null ? money(p.price * i.qty) : L.onRequest;
+      const x = li.querySelector<HTMLButtonElement>('.x')!;
+      x.textContent = L.remove;
+      x.addEventListener('click', () => removeFromCart(i.slug));
+      li.querySelectorAll<HTMLButtonElement>('.q button').forEach((b) =>
+        b.addEventListener('click', () => setQty(i.slug, i.qty + Number(b.dataset.d))));
+      return li;
+    }));
+    const total = items.reduce((s, i) => s + (catalog[i.slug].price ?? 0) * i.qty, 0);
+    const unknown = items.some((i) => catalog[i.slug].price == null);
+    root.querySelector('.total')!.textContent = total ? money(total) + (unknown ? ' +' : '') : L.onRequest;
+    root.querySelector<HTMLElement>('.note')!.hidden = !unknown;
+  };
+  render();
+  window.addEventListener('cart:change', render);
+  window.addEventListener('storage', render);
+
+  const form = root.querySelector<HTMLFormElement>('.checkout')!;
+  const status = form.querySelector<HTMLElement>('p.status[role="status"]')!;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!channel) return;
+    const data = Object.fromEntries(new FormData(form)) as Record<string, string>;
+    const items = readCart().filter((i) => catalog[i.slug]).map((i) => {
+      const p = catalog[i.slug];
+      return { title: p.title, size: p.size, qty: i.qty, price: p.price, line: p.price != null ? money(p.price * i.qty) : L.onRequest };
+    });
+    const totalText = root.querySelector('.total')!.textContent;
+    const text = [
+      L.orderTitle,
+      '',
+      ...items.map((i) => `• ${i.title}${i.size ? `, ${i.size}` : ''} × ${i.qty} — ${i.line}`),
+      `${L.total}: ${totalText}`,
+      '',
+      `${L.name}: ${data.name}`,
+      `${L.phone}: ${data.phone}`,
+      `${L.delivery}: ${data.delivery}`,
+      data.address ? `${L.address}: ${data.address}` : null,
+      data.comment ? `${L.comment}: ${data.comment}` : null,
+    ].filter((l) => l !== null).join('\n');
+
+    const doneBox = root.querySelector<HTMLElement>('.done')!;
+    const done = (msg: string) => {
+      status.textContent = '';
+      doneBox.textContent = msg;
+      doneBox.hidden = false;
+      clearCart();
+      form.reset();
+      doneBox.scrollIntoView({ block: 'center' });
+    };
+    try {
+      if (channel.kind === 'webhook') {
+        status.textContent = L.sending;
+        await fetch(channel.target, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: JSON.stringify({ lang, items, total: totalText, ...data, text }),
+        });
+        done(L.success);
+      } else if (channel.kind === 'whatsapp') {
+        window.open(`https://wa.me/${channel.target}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+        done(L.success);
+      } else if (channel.kind === 'telegram') {
+        await navigator.clipboard?.writeText(text).catch(() => {});
+        window.open(`https://t.me/${channel.target}`, '_blank', 'noopener');
+        done(L.copied);
+      } else {
+        location.href = `mailto:${channel.target}?subject=${encodeURIComponent(L.orderTitle)}&body=${encodeURIComponent(text)}`;
+        done(L.success);
+      }
+    } catch {
+      status.textContent = L.error;
+    }
+  });
+</script>
+
+<style>
+  .page { min-height: calc(100svh - var(--header-h) - 120px); }
+  h1 { font: 400 clamp(2.6rem, 1.6rem + 4vw, 4.5rem)/1.04 var(--display); margin-bottom: 2.5rem; }
+  .done { margin-bottom: 2rem; padding: 1.1rem 1.4rem; background: var(--olive); color: var(--paper-2); font-size: 1.1rem; }
+  .done[hidden] { display: none; }
+  .empty { display: grid; gap: 1.5rem; justify-items: start; }
+  .empty[hidden], .filled[hidden] { display: none; }
+  .filled { display: grid; gap: 1.5rem; max-width: 860px; }
+  .items { margin: 0; padding: 0; list-style: none; border-top: 1px solid rgb(20 17 14 / 0.15); }
+  .items :global(li) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto 7.5rem auto;
+    gap: 1rem 1.5rem;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgb(20 17 14 / 0.15);
+  }
+  .items :global(.t) { font: 400 1.25rem/1.3 var(--display); }
+  .items :global(.q) { display: inline-flex; align-items: center; border: 1px solid rgb(20 17 14 / 0.3); }
+  .items :global(.q button) { width: 36px; height: 36px; border: 0; background: none; font: inherit; font-size: 18px; cursor: pointer; color: var(--soot); }
+  .items :global(.q button:hover) { background: rgb(20 17 14 / 0.08); }
+  .items :global(output) { min-width: 2ch; text-align: center; font-variant-numeric: tabular-nums; }
+  .items :global(.p) { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .items :global(.x) { border: 0; background: none; color: var(--wine); font: inherit; font-size: 15px; text-decoration: underline; cursor: pointer; }
+  .sum { display: flex; justify-content: space-between; align-items: baseline; font: 400 1.6rem var(--display); }
+  .note { color: var(--ink-soft); font-size: 15px; }
+  .note[hidden] { display: none; }
+
+  .checkout {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.1rem 1.5rem;
+    margin-top: 1rem;
+    padding: clamp(1.25rem, 1rem + 1.5vw, 2rem);
+    background: var(--paper-2);
+    box-shadow: 0 0 0 1px rgb(20 17 14 / 0.08);
+  }
+  .checkout h2 { grid-column: 1 / -1; font-size: clamp(1.8rem, 1.3rem + 1.5vw, 2.4rem); }
+  .checkout label { display: grid; gap: 0.4rem; font-size: 15px; color: var(--ink-soft); }
+  .checkout .wide { grid-column: 1 / -1; }
+  .checkout input, .checkout select, .checkout textarea {
+    width: 100%;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid rgb(20 17 14 / 0.25);
+    background: #fff;
+    color: var(--soot);
+    font: inherit;
+    font-size: 16px;
+  }
+  .checkout input:focus, .checkout select:focus, .checkout textarea:focus { outline: 2px solid var(--wine); outline-offset: 1px; }
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
+  .via { color: var(--ink-soft); font-size: 15px; }
+  .status { color: var(--wine); }
+  .back { color: var(--wine); font-size: 15px; }
+  @media (max-width: 700px) {
+    .checkout { grid-template-columns: 1fr; }
+    .items :global(li) { grid-template-columns: minmax(0, 1fr) auto; }
+    .items :global(.p) { text-align: left; }
+  }
+</style>

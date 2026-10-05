@@ -75,6 +75,31 @@ export function channelLink(site: Site, channel: string, message = '') {
   }
 }
 
+/** Currency word per language (the ₾ sign is missing from the site fonts). */
+export const CURRENCY: Record<Locale, string> = { ka: 'ლარი', ru: 'лари', en: 'GEL' };
+
+/** Price in GEL, e.g. "25 лари"; null when the price is not set. */
+export function formatPrice(value: number | null | undefined, lang: Locale) {
+  if (value == null) return null;
+  return `${new Intl.NumberFormat(HTML_LANG[lang], { maximumFractionDigits: 2 }).format(value)} ${CURRENCY[lang]}`;
+}
+
+export type OrderChannel = { kind: 'webhook' | 'whatsapp' | 'telegram' | 'email'; label: string; target: string };
+
+/** Where cart orders go, following the admin setting (auto = webhook → WhatsApp → Telegram → e-mail). */
+export function orderChannel(site: Site): OrderChannel | null {
+  const digits = (site.whatsapp ?? '').replace(/[^\d]/g, '');
+  const options: Record<OrderChannel['kind'], OrderChannel | null> = {
+    webhook: site.order_webhook ? { kind: 'webhook', label: 'Telegram / e-mail', target: site.order_webhook } : null,
+    whatsapp: digits ? { kind: 'whatsapp', label: 'WhatsApp', target: digits } : null,
+    telegram: site.telegram ? { kind: 'telegram', label: 'Telegram', target: site.telegram.replace(/^@/, '') } : null,
+    email: site.email ? { kind: 'email', label: 'E-mail', target: site.email } : null,
+  };
+  const pref = site.order_channel ?? 'auto';
+  if (pref !== 'auto' && options[pref]) return options[pref];
+  return options.webhook ?? options.whatsapp ?? options.telegram ?? options.email ?? null;
+}
+
 export function formatDate(d: Date, lang: Locale) {
   return new Intl.DateTimeFormat(HTML_LANG[lang], { day: 'numeric', month: 'long', year: 'numeric' }).format(d);
 }

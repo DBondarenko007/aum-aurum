@@ -9,7 +9,9 @@ import News from '../../components/News.astro';
 import Reviews from '../../components/Reviews.astro';
 import Gallery from '../../components/Gallery.astro';
 import Footer from '../../components/Footer.astro';
-import { LOCALES, getHome, getProducts, getNews, getSettings, channelLink, type Locale } from '../../lib/site';
+import FloatingContact from '../../components/FloatingContact.astro';
+import { LOCALES, getHome, getProducts, getNews, getSettings, channelLink, url, type Locale } from '../../lib/site';
+import { businessJsonLd } from '../../lib/seo';
 
 export function getStaticPaths() {
   return LOCALES.map((lang) => ({ params: { lang } }));
@@ -20,7 +22,6 @@ const [home, products, news, { site, reviews }] = await Promise.all([
   getHome(lang), getProducts(lang), getNews(lang), getSettings(),
 ]);
 
-const orderHref = channelLink(site, 'whatsapp', home.ui.order_message)?.href ?? '#contact';
 const footerLinks = [
   channelLink(site, 'whatsapp'),
   channelLink(site, 'telegram'),
@@ -30,26 +31,25 @@ const footerLinks = [
   site.instagram ? { href: site.instagram, label: 'Instagram' } : null,
 ].filter(Boolean) as { href: string; label: string }[];
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  name: 'Aum Aurum',
-  description: home.meta.description,
-  address: { '@type': 'PostalAddress', addressLocality: 'Navazi', addressRegion: 'Mtskheta-Mtianeti', addressCountry: 'GE' },
-  geo: { '@type': 'GeoCoordinates', latitude: site.lat, longitude: site.lng },
-  ...(site.phone ? { telephone: site.phone } : {}),
-};
+const abs = (p: string) => new URL(url(p), Astro.site).href;
+const jsonLd = businessJsonLd({
+  lang, home, site, products,
+  pageUrl: abs(`/${lang}/`),
+  homeUrl: abs('/'),
+  image: abs('/og.png'),
+});
 ---
 <Base lang={lang} title={home.meta.title} description={home.meta.description} jsonLd={jsonLd}>
   <Header lang={lang} nav={home.nav} ui={home.ui} />
   <BeeRail />
   <main>
-    <Home hero={home.hero} story={home.story} orderHref={orderHref} />
-    <Shop shop={home.shop} products={products} ui={home.ui} orderHref={orderHref} contactHref="#contact" />
+    <Home hero={home.hero} story={home.story} orderHref="#shop" />
+    <Shop shop={home.shop} products={products} ui={home.ui} lang={lang} cartHref={url(`/${lang}/cart/`)} contactHref="#contact" />
     <News lang={lang} title={home.news.title} items={news} ui={home.ui} />
-    <Location location={home.location} lat={site.lat} lng={site.lng} />
-    <Reviews reviews={home.reviews} items={reviews} />
+    <Location location={home.location} hours={site.hours} lat={site.lat} lng={site.lng} />
+    <Reviews reviews={home.reviews} items={reviews} faq={home.faq} googleReviewUrl={site.google_review_url} formsKey={site.forms_key} lang={lang} />
     <Gallery gallery={home.gallery} photoSoon={home.ui.photo_soon} />
   </main>
-  <Footer lang={lang} text={home.footer.text} links={footerLinks} comingSoon={home.ui.coming_soon} />
+  <Footer lang={lang} text={home.footer.text} links={footerLinks} comingSoon={home.ui.coming_soon} privacyLabel={home.ui.privacy} />
+  <FloatingContact whatsapp={site.whatsapp} telegram={site.telegram} label={home.ui.contact_us} />
 </Base>

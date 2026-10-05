@@ -1,4 +1,5 @@
-# Shared settings (not translated). Empty values show as "coming soon" on the site.
+# Shared settings (not translated). Edited in the admin: «Контакты и отзывы → Контакты и карта».
+# Empty values show as "coming soon" on the site and are left out of search markup.
 phone: ""
 whatsapp: ""
 telegram: ""
@@ -6,6 +7,15 @@ email: ""
 facebook: ""
 instagram: ""
 google_maps: ""
+google_review_url: ""
 # Navazi village (OpenStreetMap). Replace with the exact sales point later.
 lat: 41.9818
 lng: 44.7410
+hours: []
+founded: ""
+hives_count: ""
+languages: [ka, ru, en]
+# Where orders go: auto = webhook if set, else WhatsApp, else Telegram, else e-mail
+order_channel: auto
+order_webhook: ""
+forms_key: ""

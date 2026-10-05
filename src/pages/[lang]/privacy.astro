@@ -1,0 +1,32 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { LOCALES, getHome, type Locale } from '../../lib/site';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const home = await getHome(lang);
+const paragraphs = home.privacy.text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+---
+<Base lang={lang} title={`${home.privacy.title} — Aum Aurum`} description={home.meta.description} path="privacy/">
+  <Header lang={lang} nav={home.nav} ui={home.ui} path="privacy/" home={false} />
+  <main class="section paper page">
+    <article class="wrap text">
+      <h1>{home.privacy.title}</h1>
+      {paragraphs.map((p) => <p>{p}</p>)}
+    </article>
+  </main>
+  <Footer lang={lang} text={home.footer.text} links={[]} comingSoon={home.ui.coming_soon} privacyLabel={home.ui.privacy} />
+</Base>
+
+<style>
+  .page { min-height: calc(100svh - var(--header-h) - 120px); }
+  .text { max-width: 860px; }
+  h1 { font: 400 clamp(2.4rem, 1.5rem + 3.5vw, 4rem)/1.05 var(--display); margin-bottom: 2rem; }
+  p { max-width: 65ch; font-size: 1.1rem; line-height: 1.7; }
+  p + p { margin-top: 1em; }
+</style>

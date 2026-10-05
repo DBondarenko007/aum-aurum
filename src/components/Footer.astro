@@ -7,8 +7,9 @@ interface Props {
   text: string;
   links: { href: string; label: string }[];
   comingSoon: string;
+  privacyLabel?: string;
 }
-const { lang, text, links, comingSoon } = Astro.props;
+const { lang, text, links, comingSoon, privacyLabel } = Astro.props;
 const year = new Date().getFullYear();
 ---
 <footer id="contact" class="footer dark">
@@ -20,6 +21,7 @@ const year = new Date().getFullYear();
         ? links.map((l, i) => <>{i > 0 && ' · '}<a href={l.href} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener">{l.label}</a></>)
         : <span>WhatsApp · Telegram — {comingSoon}</span>}
     </p>
+    {privacyLabel && <a class="privacy" href={url(`/${lang}/privacy/`)}>{privacyLabel}</a>}
     <ul class="langs">
       {LOCALES.map((l) => (
         <li><a href={url(`/${l}/`)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{LOCALE_LABEL[l]}</a></li>
@@ -34,6 +36,8 @@ const year = new Date().getFullYear();
   .row p:first-of-type { flex: 1; }
   .links a { color: var(--cream); }
   .links a:hover { color: var(--gold); }
+  .privacy { color: var(--cream-soft); }
+  .privacy:hover { color: var(--gold); }
   .langs { display: flex; gap: 0.25rem; margin: 0; padding: 0; list-style: none; }
   .langs a { padding: 0.4rem 0.55rem; text-decoration: none; }
   .langs a[aria-current='true'] { color: var(--gold); }

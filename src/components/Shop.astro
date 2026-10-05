@@ -1,7 +1,7 @@
 ---
-import { url } from '../lib/site';
+import { url, formatPrice, type Locale } from '../lib/site';
 // Shop: products as hive frames (wood frame, black top bar with lugs, comb photo slot).
-interface Product { slug: string; data: { category: string; title: string; size: string; price: string; available: boolean } }
+interface Product { slug: string; data: { category: string; title: string; size: string; price: number | null; badge: string; available: boolean } }
 interface Props {
   shop: {
     title: string; subtitle: string;
@@ -9,13 +9,15 @@ interface Props {
     colonies_title: string; colonies_text: string; colonies_cta: string; colonies_image?: string | null;
     hives_title: string; hives_text: string; hives_cta: string; hives_image?: string | null;
     starter_title: string; starter_parts: string[]; starter_cta: string;
+    add_to_cart: string; added: string; badges: Record<string, string>;
   };
   products: Product[];
   ui: { photo_soon: string; price_on_request: string; order_honey: string };
-  orderHref: string;
+  lang: Locale;
+  cartHref: string;
   contactHref: string;
 }
-const { shop, products, ui, orderHref, contactHref } = Astro.props;
+const { shop, products, ui, lang, cartHref, contactHref } = Astro.props;
 const honey = products.filter((p) => p.data.category === 'honey' && p.data.available);
 ---
 <section id="shop" class="section paper">
@@ -32,11 +34,26 @@ const honey = products.filter((p) => p.data.category === 'honey' && p.data.avail
           {honey.length > 0 && (
             <ul class="prices">
               {honey.map((p) => (
-                <li><span>{p.data.title}{p.data.size && `, ${p.data.size}`}</span><span class="dots" aria-hidden="true"></span><span>{p.data.price || ui.price_on_request}</span></li>
+                <li>
+                  <span class="name">
+                    {p.data.title}{p.data.size && `, ${p.data.size}`}
+                    {p.data.badge !== 'none' && shop.badges[p.data.badge] && <em class:list={['badge', p.data.badge]}>{shop.badges[p.data.badge]}</em>}
+                  </span>
+                  <span class="dots" aria-hidden="true"></span>
+                  <span class="end">
+                  <span class="price">{formatPrice(p.data.price, lang) ?? ui.price_on_request}</span>
+                  {p.data.badge !== 'sold_out' && (
+                    <button class="add" type="button" data-slug={p.slug} data-added={shop.added} aria-label={`${shop.add_to_cart}: ${p.data.title}, ${p.data.size}`} title={shop.add_to_cart}>
+                      <svg class="i-plus" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+                      <svg class="i-ok" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </button>
+                  )}
+                  </span>
+                </li>
               ))}
             </ul>
           )}
-          <a class="btn btn--ink" href={orderHref}>{ui.order_honey}</a>
+          <a class="btn btn--ink" href={cartHref}>{ui.order_honey}</a>
           </div>
         </div>
       </article>
@@ -73,6 +90,19 @@ const honey = products.filter((p) => p.data.category === 'honey' && p.data.avail
   </div>
 </section>
 
+<script>
+  import { addToCart } from '../scripts/cart';
+  document.querySelectorAll<HTMLButtonElement>('.prices .add').forEach((btn) => {
+    let t: number | undefined;
+    btn.addEventListener('click', () => {
+      addToCart(btn.dataset.slug!);
+      btn.classList.add('done');
+      clearTimeout(t);
+      t = window.setTimeout(() => btn.classList.remove('done'), 1400);
+    });
+  });
+</script>
+
 <style>
   /* Honey spans two rows; colonies and hives share row one, so they are always the same size. */
   .frames { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto 1fr; gap: 0 clamp(1.25rem, 2.5vw, 2.25rem); align-items: start; padding-top: 14px; }
@@ -106,7 +136,29 @@ const honey = products.filter((p) => p.data.category === 'honey' && p.data.avail
   .prices { margin: 0; padding: 0; list-style: none; font-variant-numeric: tabular-nums; }
   .prices li { display: flex; flex-wrap: wrap; gap: 0.1rem 0.7rem; align-items: baseline; padding: 0.55rem 0; border-bottom: 1px solid rgb(20 17 14 / 0.15); }
   .dots { flex: 1 1 1rem; border-bottom: 1px dotted rgb(20 17 14 / 0.4); }
-  .prices li > span:last-child { margin-left: auto; white-space: nowrap; }
+  .prices .end { margin-left: auto; display: inline-flex; align-items: center; gap: 0.6rem; white-space: nowrap; }
+  .badge { display: inline-block; margin-left: 0.4rem; padding: 0 0.45rem; border-radius: 999px; font: italic 400 13px/1.6 var(--text); background: var(--olive); color: var(--paper-2); vertical-align: 2px; }
+  .badge.preorder { background: var(--wood); color: var(--soot); }
+  .badge.sold_out { background: var(--ink-soft); }
+  .add {
+    position: relative;
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    align-self: center;
+    border: 1px solid var(--soot);
+    background: var(--soot);
+    color: var(--cream);
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+  }
+  .add:hover { background: var(--wine); border-color: var(--wine); }
+  .add .i-ok { display: none; }
+  .add.done { background: var(--olive); border-color: var(--olive); }
+  .add.done .i-plus { display: none; }
+  .add.done .i-ok { display: block; }
   .txt { flex: 1; display: flex; flex-direction: column; gap: 0.9rem; padding: 1.25rem 1.35rem 1.4rem; background: var(--paper-2); box-shadow: 0 0 0 1px rgb(20 17 14 / 0.08); }
   .txt .btn { align-self: flex-start; margin-top: auto; min-height: 46px; font-size: 14px; }
   .starter {

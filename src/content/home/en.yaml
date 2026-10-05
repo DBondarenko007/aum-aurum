@@ -6,7 +6,7 @@ nav:
   shop: Shop
   location: Location
   news: News
-  reviews: Reviews
+  reviews: Reviews & FAQ
   gallery: Gallery
 ui:
   order_honey: Order honey
@@ -21,6 +21,9 @@ ui:
   language: Language
   placeholder_note: example
   to_top: Aum Aurum — back to top
+  cart: Cart
+  contact_us: Message us
+  privacy: Personal data
 hero:
   title: Aum Aurum
   lead: Honey, bees and hives from Navazi — a family apiary on the road to Kazbegi.
@@ -47,6 +50,13 @@ shop:
     - a bee colony
     - a consultation
   starter_cta: Get in touch
+  add_to_cart: Add to cart
+  added: Added
+  badges:
+    in_stock: in stock
+    new_harvest: new harvest
+    preorder: pre-order
+    sold_out: sold out
 location:
   title: Visit us on the road to Kazbegi
   address: Navazi village, Mtskheta municipality
@@ -62,11 +72,48 @@ location:
     - Gudauri
     - Kazbegi
   here: we are here
+  hours_title: Opening hours
+  days:
+    - Mon
+    - Tue
+    - Wed
+    - Thu
+    - Fri
+    - Sat
+    - Sun
 news:
   title: News
 reviews:
-  title: What people say
+  title: Reviews & questions
   placeholder: A review from one of our customers will appear here.
+  google_cta: Leave a review on Google
+  write_cta: Write a review
+  faq_title: Questions & answers
+  form:
+    name: Your name
+    city: City or country
+    text: Your review
+    consent: I agree that my review may be published with my name
+    submit: Send review
+    sending: Sending…
+    success: Thank you! We will read your review and publish it on the site.
+    error: Could not send. Please try again or message us.
+faq:
+  - q: Where can I buy honey near Tbilisi?
+    a: Our family apiary is in the village of Navazi, on the road from Tbilisi to Kazbegi, just past Mtskheta. Order honey on the website and we will get in touch to arrange where to pick it up.
+    hidden: false
+  - q: Can we visit the apiary?
+    a: Yes. We are in Navazi, right on the Georgian Military Road. Please call ahead so we can meet you.
+    hidden: false
+  - q: Do you sell bee colonies?
+    a: 'Yes: strong colonies and nucs, pre-ordered for spring. Message us how many colonies you need and when you would like to pick them up.'
+    hidden: false
+  - q: Do you build hives to order?
+    a: Yes, we build hives by hand and test them on our own apiary. Tell us which model and how many you need.
+    hidden: false
+  - q: Do you deliver in Georgia? Can I buy honey as a gift to take home?
+    a: 'TO FILL IN: delivery (where and how), gift sets, taking honey abroad.'
+    hidden: true
 gallery:
   title: Gallery
   text: Life at the apiary, season by season.
@@ -81,3 +128,42 @@ gallery:
     - caption: our family
 footer:
   text: family apiary in Navazi, Georgia
+cart:
+  title: Cart
+  empty: Your cart is empty.
+  back: Back to the shop
+  qty: Quantity
+  remove: Remove
+  total: Total
+  total_note: Items priced "on request" will be confirmed when we confirm your order.
+  form_title: Checkout
+  name: Name
+  phone: Phone or WhatsApp
+  delivery: How to receive
+  delivery_options:
+    - Pick-up in Navazi
+    - Something else — let us talk
+  address: Address (if delivery is needed)
+  comment: Comment
+  submit: Send order
+  via: Your order will reach us via
+  copied: The order text is copied — paste it into the chat.
+  sending: Sending…
+  success: Thank you! Your order is received and we will get in touch.
+  error: Could not send. Please try again or message us.
+  no_channel: Order contacts are coming soon.
+  order_title: Order from the Aum Aurum website
+privacy:
+  title: Personal data
+  text: |-
+    We are Aum Aurum, a family apiary in the village of Navazi, Georgia.
+
+    When you place an order we receive your name, phone, address (if delivery is needed) and comment. When you leave a review — your name, city and the review text. We use this only to fulfil the order, contact you and publish the review (only with your consent).
+
+    The data reaches us by messenger or e-mail. We do not share it with third parties or use it for advertising.
+
+    The site uses no advertising cookies. To have your data or review removed, simply message us.
+notfound:
+  title: Page not found
+  text: This page does not exist — the bees flew the wrong way.
+  cta: Back home

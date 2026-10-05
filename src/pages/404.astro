@@ -1,0 +1,46 @@
+---
+// GitHub Pages serves this for any missing address. Shows all three languages, then sends the
+// visitor home in their language.
+import '@fontsource/forum';
+import '@fontsource/pt-serif/400.css';
+import '@fontsource-variable/noto-serif-georgian';
+import '../styles/global.css';
+import Mark from '../components/Mark.astro';
+import { LOCALES, getHome, url } from '../lib/site';
+
+const homes = await Promise.all(LOCALES.map(async (l) => ({ lang: l, data: await getHome(l) })));
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>404 — Aum Aurum</title>
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+  </head>
+  <body>
+    <main class="nf">
+      <Mark size={72} />
+      <p class="code">404</p>
+      <ul>
+        {homes.map(({ lang, data }) => (
+          <li lang={lang}>
+            <h1>{data.notfound.title}</h1>
+            <p>{data.notfound.text}</p>
+            <a class="btn btn--gold" href={url(`/${lang}/`)}>{data.notfound.cta}</a>
+          </li>
+        ))}
+      </ul>
+    </main>
+    <style>
+      .nf { min-height: 100svh; display: grid; justify-items: center; align-content: center; gap: 1.25rem; padding: 3rem var(--gutter); text-align: center; }
+      .code { font: 500 clamp(3rem, 2rem + 4vw, 5rem)/1 var(--mark); color: var(--gold); letter-spacing: 0.14em; }
+      ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5rem; max-width: 1000px; margin: 1rem 0 0; padding: 0; list-style: none; }
+      li { display: grid; gap: 0.8rem; justify-items: center; }
+      h1 { font: 400 1.6rem/1.2 var(--display); color: var(--cream); }
+      li p { color: var(--cream-soft); font-size: 16px; }
+      @media (max-width: 760px) { ul { grid-template-columns: 1fr; } }
+    </style>
+  </body>
+</html>

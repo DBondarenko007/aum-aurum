@@ -11,6 +11,7 @@
 **Сайт в интернете:** https://dbondarenko007.github.io/aum-aurum/
 **Админка:** https://dbondarenko007.github.io/aum-aurum/admin/
 **Код:** https://github.com/DBondarenko007/aum-aurum
+**Заказы, отзывы, вопросы — как настроить:** [docs/ORDERS.md](docs/ORDERS.md)
 
 ## Как править сайт через админку (с любого компьютера)
 

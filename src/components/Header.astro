@@ -5,7 +5,7 @@ import { LOCALES, LOCALE_LABEL, LOCALE_NAME, url, type Locale } from '../lib/sit
 interface Props {
   lang: Locale;
   nav: Record<'home' | 'shop' | 'location' | 'news' | 'reviews' | 'gallery', string>;
-  ui: { menu: string; close: string; language: string; to_top: string };
+  ui: { menu: string; close: string; language: string; to_top: string; cart: string };
   /** path after the locale for the language switcher, e.g. "" or "news/welcome/" */
   path?: string;
   /** anchors point to the home page when rendered on a sub-page */
@@ -33,6 +33,14 @@ const href = (id: string) => (home ? `#${id}` : url(`/${lang}/#${id}`));
       </ul>
     </nav>
 
+    <a class="cart-link" href={url(`/${lang}/cart/`)} aria-label={ui.cart} title={ui.cart}>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3.5 8.5h17l-1.6 10.2a2 2 0 0 1-2 1.8H7.1a2 2 0 0 1-2-1.8z" />
+        <path d="M8.5 8.5 11 3.5M15.5 8.5 13 3.5M9 12.5v4M12 12.5v4M15 12.5v4" />
+      </svg>
+      <span class="count" hidden>0</span>
+    </a>
+
     <button class="menu-btn" type="button" aria-controls="site-nav" aria-expanded="false" data-open={ui.menu} data-close={ui.close}>
       <span class="menu-icon" aria-hidden="true"></span>
       <span class="menu-text">{ui.menu}</span>
@@ -41,6 +49,19 @@ const href = (id: string) => (home ? `#${id}` : url(`/${lang}/#${id}`));
 </header>
 
 <script>
+  import { cartCount } from '../scripts/cart';
+
+  const count = document.querySelector<HTMLElement>('.cart-link .count');
+  const showCount = () => {
+    if (!count) return;
+    const n = cartCount();
+    count.textContent = String(n);
+    count.hidden = n === 0;
+  };
+  showCount();
+  window.addEventListener('cart:change', showCount);
+  window.addEventListener('storage', showCount);
+
   const btn = document.querySelector<HTMLButtonElement>('.menu-btn');
   const nav = document.getElementById('site-nav');
   const setOpen = (open: boolean) => {
@@ -95,9 +116,33 @@ const href = (id: string) => (home ? `#${id}` : url(`/${lang}/#${id}`));
   .langs a { font-size: 15px; color: var(--cream-soft); }
   .langs a[aria-current='true'] { color: var(--gold); text-decoration: none; }
 
+  .cart-link {
+    position: relative;
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    color: var(--cream);
+    transition: color 0.3s;
+  }
+  .cart-link:hover { color: var(--gold); }
+  .count {
+    position: absolute;
+    top: 2px;
+    right: 0;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: var(--gold);
+    color: var(--soot);
+    font: 700 11px/18px var(--text);
+    text-align: center;
+  }
+  .count[hidden] { display: none; }
   .menu-btn {
     display: none;
-    margin-left: auto;
     align-items: center;
     gap: 0.6rem;
     min-height: 44px;
@@ -117,6 +162,7 @@ const href = (id: string) => (home ? `#${id}` : url(`/${lang}/#${id}`));
 
   @media (max-width: 960px) {
     .menu-btn { display: inline-flex; }
+    .cart-link { margin-left: auto; }
     .nav {
       position: absolute;
       inset: var(--header-h) 0 auto 0;

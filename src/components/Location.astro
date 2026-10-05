@@ -2,11 +2,27 @@
 // Location: mountains by day under a bright gold sun; the road Tbilisi → Navazi → Kazbegi runs along
 // the meadow and a gold line draws up to Navazi when the scene scrolls into view.
 interface Props {
-  location: { title: string; address: string; text: string; visit_note: string; route_cta: string; stops: string[]; here: string };
+  location: { title: string; address: string; text: string; visit_note: string; route_cta: string; stops: string[]; here: string; hours_title: string; days: string[] };
+  hours?: { days: string[]; opens: string; closes: string }[];
   lat?: number;
   lng?: number;
 }
-const { location, lat = 41.9818, lng = 44.741 } = Astro.props;
+const { location, hours = [], lat = 41.9818, lng = 44.741 } = Astro.props;
+// "Mo,Tu,We,Th,Fr" → "Пн–Пт" in the page language
+const ORDER = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+const dayRange = (days: string[]) => {
+  const idx = days.map((d) => ORDER.indexOf(d)).filter((i) => i >= 0).sort((a, b) => a - b);
+  const label = (i: number) => location.days[i] ?? ORDER[i];
+  const parts: string[] = [];
+  for (let k = 0; k < idx.length; ) {
+    let j = k;
+    while (j + 1 < idx.length && idx[j + 1] === idx[j] + 1) j++;
+    parts.push(j - k >= 2 ? `${label(idx[k])}–${label(idx[j])}` : idx.slice(k, j + 1).map(label).join(', '));
+    k = j + 1;
+  }
+  return parts.join(', ');
+};
+const hourLines = hours.filter((h) => h.days.length && h.opens && h.closes).map((h) => `${dayRange(h.days)} ${h.opens}–${h.closes}`);
 const route = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
 const HERE = 2; // Navazi is the third stop
 ---
@@ -16,6 +32,9 @@ const HERE = 2; // Navazi is the third stop
       <h2>{location.title}</h2>
       <div class="info">
         <p><b>{location.address}</b> {location.text} {location.visit_note}</p>
+        {hourLines.length > 0 && (
+          <p class="hours"><b>{location.hours_title}:</b> {hourLines.join('; ')}</p>
+        )}
         <div><a class="btn btn--gold" href={route} target="_blank" rel="noopener">{location.route_cta}</a></div>
       </div>
     </div>

@@ -10,6 +10,17 @@ backend:
 media_folder: public/uploads
 public_folder: /uploads
 
+# Photos are converted to WebP and resized on upload, so phone photos do not slow the site down.
+media_libraries:
+  default:
+    config:
+      transformations:
+        raster_image:
+          format: webp
+          quality: 82
+          width: 2000
+          height: 2000
+
 i18n:
   structure: multiple_files
   locales: [ru, ka, en]
@@ -69,6 +80,9 @@ collections:
               - { name: language, label: Язык, widget: string, i18n: true }
               - { name: placeholder_note, label: Метка «пример», widget: string, i18n: true }
               - { name: to_top, label: Подсказка у логотипа в шапке, widget: string, i18n: true }
+              - { name: cart, label: Корзина (подсказка у иконки), widget: string, i18n: true }
+              - { name: contact_us, label: Кнопка «Написать нам» в углу, widget: string, i18n: true }
+              - { name: privacy, label: Ссылка «Персональные данные» в подвале, widget: string, i18n: true }
           - name: hero
             label: Home — первый экран
             widget: object
@@ -107,6 +121,18 @@ collections:
               - { name: starter_title, label: «Старт пчеловода» — заголовок, widget: string, i18n: true }
               - { name: starter_parts, label: «Старт пчеловода» — состав, widget: list, i18n: true }
               - { name: starter_cta, label: «Старт пчеловода» — кнопка, widget: string, i18n: true }
+              - { name: add_to_cart, label: Кнопка «В корзину», widget: string, i18n: true }
+              - { name: added, label: Надпись «Добавлено», widget: string, i18n: true }
+              - name: badges
+                label: Пометки у товаров
+                widget: object
+                i18n: true
+                collapsed: true
+                fields:
+                  - { name: in_stock, label: В наличии, widget: string, i18n: true }
+                  - { name: new_harvest, label: Новый урожай, widget: string, i18n: true }
+                  - { name: preorder, label: Предзаказ, widget: string, i18n: true }
+                  - { name: sold_out, label: Нет в наличии, widget: string, i18n: true }
           - name: location
             label: Location — как добраться
             widget: object
@@ -119,6 +145,8 @@ collections:
               - { name: route_cta, label: Кнопка маршрута, widget: string, i18n: true }
               - { name: stops, label: Остановки на дороге (3-я — Навази), widget: list, i18n: true }
               - { name: here, label: Подпись «мы здесь», widget: string, i18n: true }
+              - { name: hours_title, label: Заголовок «Часы работы» (сами часы — в «Контакты и карта»), widget: string, i18n: true }
+              - { name: days, label: Дни недели Пн…Вс (7 штук), widget: list, i18n: true }
           - name: news
             label: News — заголовок
             widget: object
@@ -126,12 +154,40 @@ collections:
             fields:
               - { name: title, label: Заголовок, widget: string, i18n: true }
           - name: reviews
-            label: Reviews — заголовки
+            label: Отзывы и вопросы — заголовки и форма
             widget: object
             i18n: true
             fields:
-              - { name: title, label: Заголовок, widget: string, i18n: true }
+              - { name: title, label: Заголовок раздела, widget: string, i18n: true }
               - { name: placeholder, label: Текст-заглушка (пока отзывов нет), widget: string, i18n: true }
+              - { name: google_cta, label: Кнопка «Оставить отзыв в Google», widget: string, i18n: true }
+              - { name: write_cta, label: Кнопка «Написать отзыв», widget: string, i18n: true }
+              - { name: faq_title, label: Заголовок «Вопросы и ответы», widget: string, i18n: true }
+              - name: form
+                label: Форма отзыва
+                widget: object
+                i18n: true
+                collapsed: true
+                fields:
+                  - { name: name, label: Поле «Имя», widget: string, i18n: true }
+                  - { name: city, label: Поле «Город», widget: string, i18n: true }
+                  - { name: text, label: Поле «Отзыв», widget: string, i18n: true }
+                  - { name: consent, label: Галочка согласия, widget: string, i18n: true }
+                  - { name: submit, label: Кнопка отправки, widget: string, i18n: true }
+                  - { name: sending, label: «Отправляем…», widget: string, i18n: true }
+                  - { name: success, label: Сообщение об успехе, widget: string, i18n: true }
+                  - { name: error, label: Сообщение об ошибке, widget: string, i18n: true }
+          - name: faq
+            label: Вопросы и ответы
+            label_singular: Вопрос
+            widget: list
+            i18n: true
+            summary: '{{q}}'
+            hint: Эти ответы видят и посетители, и поисковики с ИИ-помощниками. Пишите конкретно — адрес, цены, сроки.
+            fields:
+              - { name: q, label: Вопрос, widget: string, i18n: true }
+              - { name: a, label: Ответ, widget: text, i18n: true }
+              - { name: hidden, label: Скрыть на сайте (черновик), widget: boolean, default: false, i18n: duplicate }
           - name: gallery
             label: Gallery — полароиды
             widget: object
@@ -147,6 +203,51 @@ collections:
                 fields:
                   - { name: caption, label: Подпись, widget: string, i18n: true }
                   - { name: image, label: Фото, widget: image, required: false, i18n: duplicate }
+          - name: cart
+            label: Корзина и оформление заказа
+            widget: object
+            i18n: true
+            collapsed: true
+            fields:
+              - { name: title, label: Заголовок, widget: string, i18n: true }
+              - { name: empty, label: Корзина пуста, widget: string, i18n: true }
+              - { name: back, label: Вернуться в магазин, widget: string, i18n: true }
+              - { name: qty, label: Количество, widget: string, i18n: true }
+              - { name: remove, label: Удалить, widget: string, i18n: true }
+              - { name: total, label: Итого, widget: string, i18n: true }
+              - { name: total_note, label: Примечание о ценах «по запросу», widget: string, i18n: true }
+              - { name: form_title, label: Заголовок формы, widget: string, i18n: true }
+              - { name: name, label: Поле «Имя», widget: string, i18n: true }
+              - { name: phone, label: Поле «Телефон», widget: string, i18n: true }
+              - { name: delivery, label: Поле «Как получить», widget: string, i18n: true }
+              - { name: delivery_options, label: Варианты получения (самовывоз, доставка…), widget: list, i18n: true }
+              - { name: address, label: Поле «Адрес», widget: string, i18n: true }
+              - { name: comment, label: Поле «Комментарий», widget: string, i18n: true }
+              - { name: submit, label: Кнопка «Отправить заказ», widget: string, i18n: true }
+              - { name: via, label: «Заказ уйдёт нам через», widget: string, i18n: true }
+              - { name: copied, label: Сообщение «текст скопирован» (Telegram), widget: string, i18n: true }
+              - { name: sending, label: «Отправляем…», widget: string, i18n: true }
+              - { name: success, label: Сообщение об успехе, widget: string, i18n: true }
+              - { name: error, label: Сообщение об ошибке, widget: string, i18n: true }
+              - { name: no_channel, label: Нет контактов для заказа, widget: string, i18n: true }
+              - { name: order_title, label: Первая строка текста заказа, widget: string, i18n: true }
+          - name: privacy
+            label: Страница «Персональные данные»
+            widget: object
+            i18n: true
+            collapsed: true
+            fields:
+              - { name: title, label: Заголовок, widget: string, i18n: true }
+              - { name: text, label: Текст (абзацы через пустую строку), widget: text, i18n: true }
+          - name: notfound
+            label: Страница «не найдено» (404)
+            widget: object
+            i18n: true
+            collapsed: true
+            fields:
+              - { name: title, label: Заголовок, widget: string, i18n: true }
+              - { name: text, label: Текст, widget: string, i18n: true }
+              - { name: cta, label: Кнопка, widget: string, i18n: true }
           - name: footer
             label: Подвал
             widget: object
@@ -178,7 +279,18 @@ collections:
       - { name: title, label: Название, widget: string, i18n: true }
       - { name: text, label: Описание, widget: text, i18n: true, required: false }
       - { name: size, label: Объём / размер, widget: string, i18n: true, required: false }
-      - { name: price, label: Цена (пусто = «по запросу»), widget: string, i18n: true, required: false }
+      - { name: price, label: Цена в лари (пусто = «по запросу»), widget: number, value_type: float, min: 0, required: false, i18n: duplicate }
+      - name: badge
+        label: Пометка
+        widget: select
+        default: none
+        i18n: duplicate
+        options:
+          - { label: Нет, value: none }
+          - { label: В наличии, value: in_stock }
+          - { label: Новый урожай, value: new_harvest }
+          - { label: Предзаказ, value: preorder }
+          - { label: Нет в наличии (нельзя заказать), value: sold_out }
       - { name: image, label: Фото, widget: image, i18n: duplicate, required: false }
       - { name: order, label: Порядок, widget: number, value_type: int, default: 10, i18n: duplicate }
       - { name: available, label: В наличии, widget: boolean, default: true, i18n: duplicate }
@@ -219,8 +331,52 @@ collections:
           - { name: facebook, label: Facebook (ссылка), widget: string, required: false }
           - { name: instagram, label: Instagram (ссылка), widget: string, required: false }
           - { name: google_maps, label: Ссылка на карточку в Google Maps, widget: string, required: false }
+          - { name: google_review_url, label: Ссылка «оставить отзыв в Google» (из карточки Google Maps), widget: string, required: false }
           - { name: lat, label: Широта точки продаж, widget: number, value_type: float }
           - { name: lng, label: Долгота точки продаж, widget: number, value_type: float }
+          - name: hours
+            label: Часы работы
+            label_singular: Интервал
+            widget: list
+            required: false
+            summary: '{{opens}}–{{closes}}'
+            fields:
+              - name: days
+                label: Дни
+                widget: select
+                multiple: true
+                options:
+                  - { label: Пн, value: Mo }
+                  - { label: Вт, value: Tu }
+                  - { label: Ср, value: We }
+                  - { label: Чт, value: Th }
+                  - { label: Пт, value: Fr }
+                  - { label: Сб, value: Sa }
+                  - { label: Вс, value: Su }
+              - { name: opens, label: Открыто с (например 09:00), widget: string }
+              - { name: closes, label: До (например 19:00), widget: string }
+          - { name: founded, label: Год основания пасеки, widget: string, required: false }
+          - { name: hives_count, label: Сколько ульев (примерно), widget: string, required: false }
+          - name: languages
+            label: На каких языках общаетесь с покупателями
+            widget: select
+            multiple: true
+            options:
+              - { label: Грузинский, value: ka }
+              - { label: Русский, value: ru }
+              - { label: Английский, value: en }
+          - name: order_channel
+            label: Куда приходят заказы из корзины
+            widget: select
+            default: auto
+            options:
+              - { label: Автоматически (бот, затем WhatsApp, Telegram, почта), value: auto }
+              - { label: WhatsApp, value: whatsapp }
+              - { label: Telegram (текст копируется в чат), value: telegram }
+              - { label: Почта, value: email }
+              - { label: Telegram-бот и таблица (нужна ссылка ниже), value: webhook }
+          - { name: order_webhook, label: Ссылка Google Apps Script для заказов (бот и таблица), widget: string, required: false, hint: 'Инструкция: docs/ORDERS.md' }
+          - { name: forms_key, label: Ключ Web3Forms для формы отзывов (без ключа форма скрыта), widget: string, required: false }
       - name: reviews
         label: Отзывы
         file: src/content/settings/reviews.yaml

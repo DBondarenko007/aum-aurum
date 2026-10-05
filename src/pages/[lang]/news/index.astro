@@ -19,7 +19,7 @@ const [home, news] = await Promise.all([getHome(lang), getNews(lang)]);
   <main class="page">
     <News lang={lang} title={home.news.title} items={news} ui={home.ui} full />
   </main>
-  <Footer lang={lang} text={home.footer.text} links={[]} comingSoon={home.ui.coming_soon} />
+  <Footer lang={lang} text={home.footer.text} links={[]} comingSoon={home.ui.coming_soon} privacyLabel={home.ui.privacy} />
 </Base>
 
 <style>
