@@ -10,7 +10,13 @@ decisions; **DESIGN.md is the source of truth for the look** (approved style). R
 - Site languages: **ka, ru, en** (`/ka/ /ru/ /en/`; `/` redirects by saved choice → browser → en).
 - Stack: **Astro 7 (static) + Sveltia CMS** admin at `/admin/`. Hosting (Cloudflare Pages) and a
   Telegram bot for orders come **later**.
-- **Local git only** (branch `main`, no remote). Commit checkpoints when asked; never push.
+- **Published (2026-10-05):** GitHub repo https://github.com/DBondarenko007/aum-aurum (public,
+  personal account), live site https://dbondarenko007.github.io/aum-aurum/ via GitHub Pages
+  (`.github/workflows/deploy.yml`, every push to `main` redeploys in ~1 min). Astro `base` is
+  `/aum-aurum`; all links go through `url()` in `src/lib/site.ts`. Commit author in this repo:
+  Dmitry Bondarenko <bondarenko.da007@gmail.com> (local git config).
+- **The admin commits straight to GitHub** — always `git pull` before editing locally. Push only
+  with the user's OK.
 - Logo: vector version of the family's 3D render, **gold bars stay** (user's call — do not
   propose removing them again). Files in `assets/logo/`; site uses `src/components/Mark.astro`.
 - **Approved style = demo D** (`demos/d-combined.html`, described in DESIGN.md): soot/gold logo
@@ -52,8 +58,8 @@ decisions; **DESIGN.md is the source of truth for the look** (approved style). R
 - Demos are standalone HTML: open by double click (fonts load from Google Fonts).
 
 ## Next steps
-1. Test the admin locally in Chrome/Edge via "Work with Local Repository".
+1. Admin online: sign in with a GitHub fine-grained token; add the sister as a collaborator.
 2. Real content: photos, contacts, prices, family story, Georgian proofreading.
 3. Shop sub-pages (`/shop/honey`, `/shop/bee-colonies`, `/shop/hives`), order forms.
-4. GitHub repo + Cloudflare Pages + domain + GitHub login for the admin; Telegram bot.
-5. Logo wordmark to outlines (paths) for print.
+4. Telegram bot for orders; optional one-click GitHub login for the admin.
+5. Custom domain (then SITE = domain, BASE = '/'). Logo wordmark to outlines (paths) for print.
