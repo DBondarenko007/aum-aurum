@@ -1,0 +1,88 @@
+---
+// One honey variety as a hive frame with comb: photo, badge, name, text and its sizes with prices.
+import { url, formatPrice, type Locale, type ProductEntry } from '../lib/site';
+
+interface Props {
+  product: ProductEntry;
+  lang: Locale;
+  labels: { add_to_cart: string; added: string; badges: Record<string, string>; price_on_request: string; photo_soon: string };
+}
+const { product: p, lang, labels } = Astro.props;
+const d = p.data;
+const canBuy = d.badge !== 'sold_out';
+---
+<article class="frame">
+  <div class="bar"></div>
+  <div class="cell">
+    {d.image ? <img class="photo" src={url(d.image)} alt={d.title} loading="lazy" /> : <div class="photo empty">{labels.photo_soon}</div>}
+    <div class="txt">
+      {d.badge !== 'none' && labels.badges[d.badge] && <span class:list={['badge', d.badge]}>{labels.badges[d.badge]}</span>}
+      <h3>{d.title}</h3>
+      {d.text && <p>{d.text}</p>}
+      {d.variants.length > 0 && (
+        <ul class="prices">
+          {d.variants.map((v, i) => (
+            <li>
+              <span>{v.size}</span>
+              <span class="dots" aria-hidden="true"></span>
+              <span class="end">
+                <span class:list={['price', { req: v.price == null }]}>{formatPrice(v.price, lang) ?? labels.price_on_request}</span>
+                {canBuy && (
+                  <button class="add" type="button" data-slug={`${p.slug}#${i}`} aria-label={`${labels.add_to_cart}: ${d.title}, ${v.size}`} title={labels.add_to_cart}>
+                    <svg class="i-plus" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+                    <svg class="i-ok" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                  </button>
+                )}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </div>
+</article>
+
+<style>
+  .frame {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 0 14px 14px;
+    background: var(--wood);
+    box-shadow: inset 0 0 0 2px rgb(0 0 0 / 0.12), 0 10px 20px -16px rgb(20 17 14 / 0.6);
+    transition: transform 0.55s var(--ease), box-shadow 0.55s var(--ease);
+  }
+  .frame:hover { transform: translateY(-16px); box-shadow: inset 0 0 0 2px rgb(0 0 0 / 0.12), 0 30px 40px -24px rgb(20 17 14 / 0.55); }
+  .bar { height: 20px; margin: 0 -30px 12px; background: var(--soot); border-radius: 3px; }
+  .cell {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 14px;
+    background-color: #f8e7b4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20.78' height='36'%3E%3Cpath d='M0 6L10.39 0L20.78 6V18L10.39 24L0 18ZM10.39 24V36' fill='none' stroke='%23d2a23e' stroke-width='1.3'/%3E%3C/svg%3E");
+    background-size: 20.78px 36px;
+  }
+  .photo { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; box-shadow: 0 0 0 1px rgb(20 17 14 / 0.08); }
+  .photo.empty { display: grid; place-items: center; background: var(--paper-2); color: var(--ink-soft); font-size: 14px; }
+  .txt { flex: 1; display: flex; flex-direction: column; gap: 0.7rem; padding: 1.25rem 1.35rem 1.4rem; background: var(--paper-2); box-shadow: 0 0 0 1px rgb(20 17 14 / 0.08); }
+  h3 { font-size: clamp(1.8rem, 1.3rem + 1.2vw, 2.4rem); }
+  :lang(ka) h3 { font-size: clamp(1.5rem, 1.1rem + 1vw, 2rem); }
+  p { color: var(--ink-soft); font-size: 16px; }
+  .prices { margin: 0; padding: 0; list-style: none; font-variant-numeric: tabular-nums; }
+  .prices li { display: flex; flex-wrap: wrap; gap: 0.1rem 0.7rem; align-items: baseline; padding: 0.55rem 0; border-bottom: 1px solid rgb(20 17 14 / 0.15); }
+  .dots { flex: 1 1 1rem; border-bottom: 1px dotted rgb(20 17 14 / 0.4); }
+  .end { margin-left: auto; display: inline-flex; align-items: center; gap: 0.6rem; white-space: nowrap; }
+  .price { font-weight: 700; }
+  .price.req { font-weight: 400; font-style: italic; color: var(--ink-soft); }
+  .badge { align-self: flex-start; padding: 0 0.5rem; border-radius: 999px; font: italic 400 13px/1.6 var(--text); background: var(--olive); color: var(--paper-2); }
+  .badge.preorder { background: var(--wood); color: var(--soot); }
+  .badge.sold_out { background: var(--ink-soft); }
+  .add { flex: none; display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--soot); background: var(--soot); color: var(--cream); cursor: pointer; transition: background 0.3s; }
+  .add:hover { background: var(--wine); border-color: var(--wine); }
+  .add .i-ok { display: none; }
+  .add:global(.done) { background: var(--olive); border-color: var(--olive); }
+  .add:global(.done) .i-plus { display: none; }
+  .add:global(.done) .i-ok { display: block; }
+</style>

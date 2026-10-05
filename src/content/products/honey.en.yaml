@@ -1,9 +1,12 @@
 category: honey
 title: Honey 2
 text: ''
-size: '1'
-price: null
+variants:
+  - size: '1'
+    price: null
 badge: sold_out
+action: cart
+cta: ''
 image: ''
 order: 9
 available: false

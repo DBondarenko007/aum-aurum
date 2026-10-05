@@ -4,7 +4,7 @@ import { HTML_LANG, type Locale } from './site';
 
 type Site = Record<string, any>;
 type Home = Record<string, any>;
-type Product = { slug: string; data: { category: string; title: string; text: string; size: string; price: number | null; badge: string; available: boolean } };
+type Product = { slug: string; data: { category: string; title: string; text: string; variants: { size: string; price: number | null }[]; badge: string; available: boolean } };
 
 const DAY = { Mo: 'Monday', Tu: 'Tuesday', We: 'Wednesday', Th: 'Thursday', Fr: 'Friday', Sa: 'Saturday', Su: 'Sunday' } as const;
 
@@ -16,22 +16,16 @@ export function businessJsonLd(opts: { lang: Locale; home: Home; site: Site; pro
   const digits = (site.phone ?? '').replace(/[^\d+]/g, '');
   const offers = products
     .filter((p) => p.data.available && p.data.badge !== 'sold_out')
-    .map((p) => clean({
-      '@type': 'Offer',
-      itemOffered: clean({ '@type': 'Product', name: [p.data.title, p.data.size].filter(Boolean).join(', '), description: p.data.text, category: p.data.category }),
-      price: p.data.price ?? undefined,
-      priceCurrency: p.data.price != null ? 'GEL' : undefined,
-      availability: p.data.badge === 'preorder' ? 'https://schema.org/PreOrder' : 'https://schema.org/InStock',
-    }));
-  // Bee colonies and hives are offered even without a price list.
-  for (const [cat, name, text] of [
-    ['colonies', home.shop.colonies_title, home.shop.colonies_text],
-    ['hives', home.shop.hives_title, home.shop.hives_text],
-  ]) {
-    if (!products.some((p) => p.data.category === cat)) {
-      offers.push(clean({ '@type': 'Offer', itemOffered: clean({ '@type': 'Product', name, description: text, category: cat }) }) as any);
-    }
-  }
+    .flatMap((p) => {
+      const sizes = p.data.variants.length ? p.data.variants : [{ size: '', price: null }];
+      return sizes.map((v) => clean({
+        '@type': 'Offer',
+        itemOffered: clean({ '@type': 'Product', name: [p.data.title, v.size].filter(Boolean).join(', '), description: p.data.text, category: p.data.category }),
+        price: v.price ?? undefined,
+        priceCurrency: v.price != null ? 'GEL' : undefined,
+        availability: p.data.badge === 'preorder' || p.data.category === 'colonies' ? 'https://schema.org/PreOrder' : 'https://schema.org/InStock',
+      }));
+    });
 
   const business = clean({
     '@type': ['LocalBusiness', 'Store'],

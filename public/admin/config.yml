@@ -102,27 +102,32 @@ collections:
               - { name: number, label: Число, widget: string, i18n: true }
               - { name: text, label: Текст (слово Aurum выделится курсивом), widget: text, i18n: true }
           - name: shop
-            label: Shop — рамки
+            label: Shop — магазин (сами товары — в разделе «Товары»)
             widget: object
             i18n: true
             fields:
               - { name: title, label: Заголовок, widget: string, i18n: true }
               - { name: subtitle, label: Подзаголовок, widget: text, i18n: true }
-              - { name: honey_title, label: Мёд — заголовок (цены — в разделе «Товары»), widget: string, i18n: true }
-              - { name: honey_image, label: Мёд — фото, widget: image, required: false, i18n: duplicate }
-              - { name: colonies_title, label: Пчелосемьи — заголовок, widget: string, i18n: true }
-              - { name: colonies_text, label: Пчелосемьи — текст, widget: text, i18n: true }
-              - { name: colonies_cta, label: Пчелосемьи — кнопка, widget: string, i18n: true }
-              - { name: colonies_image, label: Пчелосемьи — фото, widget: image, required: false, i18n: duplicate }
-              - { name: hives_title, label: Ульи — заголовок, widget: string, i18n: true }
-              - { name: hives_text, label: Ульи — текст, widget: text, i18n: true }
-              - { name: hives_cta, label: Ульи — кнопка, widget: string, i18n: true }
-              - { name: hives_image, label: Ульи — фото, widget: image, required: false, i18n: duplicate }
-              - { name: starter_title, label: «Старт пчеловода» — заголовок, widget: string, i18n: true }
-              - { name: starter_parts, label: «Старт пчеловода» — состав, widget: list, i18n: true }
-              - { name: starter_cta, label: «Старт пчеловода» — кнопка, widget: string, i18n: true }
-              - { name: add_to_cart, label: Кнопка «В корзину», widget: string, i18n: true }
+              - { name: all_products, label: Ссылка «Все товары», widget: string, i18n: true }
+              - { name: page_title, label: Страница «Все товары» — заголовок, widget: string, i18n: true }
+              - { name: page_text, label: Страница «Все товары» — текст, widget: string, i18n: true }
+              - { name: add_to_cart, label: Кнопка «В корзину» (подсказка), widget: string, i18n: true }
               - { name: added, label: Надпись «Добавлено», widget: string, i18n: true }
+              - { name: preorder, label: Кнопка «Предзаказ» (по умолчанию), widget: string, i18n: true }
+              - { name: order, label: Кнопка «Заказать» (по умолчанию), widget: string, i18n: true }
+              - { name: message, label: Начало сообщения при предзаказе / заказе, widget: string, i18n: true }
+              - { name: prev, label: Стрелка «Назад» (для незрячих), widget: string, i18n: true }
+              - { name: next, label: Стрелка «Вперёд» (для незрячих), widget: string, i18n: true }
+              - name: categories
+                label: Названия типов товаров
+                widget: object
+                i18n: true
+                collapsed: true
+                fields:
+                  - { name: honey, label: Мёд, widget: string, i18n: true }
+                  - { name: colonies, label: Пчелосемьи, widget: string, i18n: true }
+                  - { name: hives, label: Ульи, widget: string, i18n: true }
+                  - { name: other, label: Прочее, widget: string, i18n: true }
               - name: badges
                 label: Пометки у товаров
                 widget: object
@@ -133,6 +138,9 @@ collections:
                   - { name: new_harvest, label: Новый урожай, widget: string, i18n: true }
                   - { name: preorder, label: Предзаказ, widget: string, i18n: true }
                   - { name: sold_out, label: Нет в наличии, widget: string, i18n: true }
+              - { name: starter_title, label: «Старт пчеловода» — заголовок, widget: string, i18n: true }
+              - { name: starter_parts, label: «Старт пчеловода» — состав, widget: list, i18n: true }
+              - { name: starter_cta, label: «Старт пчеловода» — кнопка, widget: string, i18n: true }
           - name: location
             label: Location — как добраться
             widget: object
@@ -265,21 +273,42 @@ collections:
     format: yaml
     create: true
     i18n: true
-    summary: '{{title}} — {{size}}'
-    sortable_fields: [order, title]
+    summary: '{{title}}'
+    sortable_fields: [order, title, category]
+    description: Мёд показывается рамками с сотами (одна рамка = один сорт). Пчелосемьи, ульи и прочее — общей лентой карточек-ульев.
     fields:
       - name: category
-        label: Раздел
+        label: Тип товара
         widget: select
         i18n: duplicate
         options:
-          - { label: Мёд, value: honey }
+          - { label: Мёд (рамка с сотами), value: honey }
           - { label: Пчелосемьи, value: colonies }
           - { label: Ульи, value: hives }
-      - { name: title, label: Название, widget: string, i18n: true }
+          - { label: Прочее, value: other }
+      - { name: title, label: Название (сорт), widget: string, i18n: true }
       - { name: text, label: Описание, widget: text, i18n: true, required: false }
-      - { name: size, label: Объём / размер, widget: string, i18n: true, required: false }
-      - { name: price, label: Цена в лари (пусто = «по запросу»), widget: number, value_type: float, min: 0, required: false, i18n: duplicate }
+      - name: variants
+        label: Объёмы и цены
+        label_singular: Объём
+        widget: list
+        i18n: true
+        required: false
+        summary: '{{size}} — {{price}}'
+        hint: У мёда — каждый объём своей строкой (0,5 кг, 1 кг…). Цена в лари; пусто = «по запросу».
+        fields:
+          - { name: size, label: Объём / размер, widget: string, i18n: true, required: false }
+          - { name: price, label: Цена в лари, widget: number, value_type: float, min: 0, required: false, i18n: duplicate }
+      - name: action
+        label: Кнопка на карточке
+        widget: select
+        default: cart
+        i18n: duplicate
+        options:
+          - { label: «+» — в корзину, value: cart }
+          - { label: Предзаказ (сообщение нам), value: preorder }
+          - { label: Заказать (сообщение нам), value: order }
+      - { name: cta, label: Своя надпись на кнопке (необязательно), widget: string, i18n: true, required: false, hint: 'Например: Заказать улей' }
       - name: badge
         label: Пометка
         widget: select
@@ -292,8 +321,8 @@ collections:
           - { label: Предзаказ, value: preorder }
           - { label: Нет в наличии (нельзя заказать), value: sold_out }
       - { name: image, label: Фото, widget: image, i18n: duplicate, required: false }
-      - { name: order, label: Порядок, widget: number, value_type: int, default: 10, i18n: duplicate }
-      - { name: available, label: В наличии, widget: boolean, default: true, i18n: duplicate }
+      - { name: order, label: Порядок (меньше — левее), widget: number, value_type: int, default: 10, i18n: duplicate }
+      - { name: available, label: Показывать на сайте, widget: boolean, default: true, i18n: duplicate }
 
   # ---------------------------------------------------------------- News
   - name: news

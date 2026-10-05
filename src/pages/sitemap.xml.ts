@@ -4,7 +4,7 @@ import { LOCALES, HTML_LANG, getNews, url } from '../lib/site';
 
 export const GET: APIRoute = async ({ site }) => {
   const abs = (p: string) => new URL(url(p), site).href;
-  const paths = ['', 'news/', 'privacy/'];
+  const paths = ['', 'shop/', 'news/', 'privacy/'];
   const slugs = new Set<string>();
   for (const lang of LOCALES) for (const n of await getNews(lang)) slugs.add(n.slug);
   for (const s of slugs) paths.push(`news/${s}/`);

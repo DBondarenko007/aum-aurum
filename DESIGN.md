@@ -62,6 +62,15 @@ use wine or soot. Cream on soot, soot on paper, cream on wine all pass AA.
   slate-blue) with copper roofs, earth ground with a grass line. ~16 bees fly between entrances
   and the sky; hover / click / Enter on a hive lifts its lid and releases a swarm. Scene height
   leaves sky above the tallest hive so the lifted lid is never clipped (height `max(210px, 18vw)`, no cap).
+- **Shop layout:** two ribbons. (1) Honey — one hive frame per variety, with its sizes and prices
+  listed inside. (2) Everything else (bee colonies, hives, other) — one ribbon of equal "hive body"
+  cards. Both show ← → arrows (top right) only when there are more than three cards; three per view
+  on desktop, swipe on phones. "All products" (`/<lang>/shop/`) shows every product in a plain grid,
+  grouped Honey / Bee colonies / Hives / Other, empty groups hidden.
+- **Hive-body card:** body painted in the category colour (colonies olive, hives wine, other
+  gold-deep), copper lid drawn on top (no animation), hand-hold slot, entrance slot at the bottom,
+  cream inner card: photo, small category label, title, text, price line, then the button set per
+  product — "+" (cart) or "Pre-order" / "Order" (opens a message to us with the product name).
 - **Shop frames:** wooden hive frame (14px) with a black top bar (lugs stick out); the inside of the
   frame is wax `#F8E7B4` with a hexagon honeycomb line pattern. The photo slot and a text panel sit
   on the comb as light cream blocks (comb shows as a 14px band around them), so text never lies on

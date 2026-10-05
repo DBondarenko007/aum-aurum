@@ -27,12 +27,11 @@ const home = defineCollection({
     story: z.object({ number: text, text: text }),
     shop: z.object({
       title: text, subtitle: text,
-      honey_title: text, honey_image: image,
-      colonies_title: text, colonies_text: text, colonies_cta: text, colonies_image: image,
-      hives_title: text, hives_text: text, hives_cta: text, hives_image: image,
       starter_title: text, starter_parts: list, starter_cta: text,
-      add_to_cart: text, added: text,
+      add_to_cart: text, added: text, preorder: text, order: text, message: text,
+      all_products: text, page_title: text, page_text: text, prev: text, next: text,
       badges: z.object({ in_stock: text, new_harvest: text, preorder: text, sold_out: text }).default({}),
+      categories: z.object({ honey: text, colonies: text, hives: text, other: text }).default({}),
     }),
     location: z.object({
       title: text, address: text, text: text, visit_note: text, route_cta: text,
@@ -71,15 +70,18 @@ const price = z
   .nullable()
   .transform((v) => (typeof v === 'number' ? v : v && !Number.isNaN(Number(v)) ? Number(v) : null));
 
+// One card per variety; honey lists its sizes (0.5 kg, 1 kg…) with a price each.
+// action: cart = "+" add to cart, preorder / order = button that opens a message to us.
 const products = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/products', generateId: keepId }),
   schema: z.object({
-    category: z.enum(['honey', 'colonies', 'hives']),
+    category: z.enum(['honey', 'colonies', 'hives', 'other']),
     title: text,
     text: text,
-    size: text,
-    price,
+    variants: z.array(z.object({ size: z.coerce.string().default(''), price })).default([]),
     badge: z.enum(['none', 'in_stock', 'new_harvest', 'preorder', 'sold_out']).default('none'),
+    action: z.enum(['cart', 'preorder', 'order']).default('cart'),
+    cta: text,
     image,
     order: z.number().default(10),
     available: z.boolean().default(true),

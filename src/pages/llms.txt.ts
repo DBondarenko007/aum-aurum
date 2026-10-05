@@ -36,10 +36,11 @@ export const GET: APIRoute = async ({ site: siteUrl }) => {
   push('## Products', '');
   const products = await getProducts('en');
   for (const p of products.filter((p) => p.data.available)) {
-    push(`- ${p.data.title}${p.data.size ? `, ${p.data.size}` : ''}: ${formatPrice(p.data.price, 'en') ?? 'price on request'}${p.data.badge !== 'none' ? ` (${p.data.badge.replace('_', ' ')})` : ''}`);
+    const sizes = p.data.variants.map((v) => `${v.size ? `${v.size} ` : ''}${formatPrice(v.price, 'en') ?? 'price on request'}`).join('; ');
+    const note = p.data.badge !== 'none' ? ` (${p.data.badge.replace('_', ' ')})` : '';
+    push(`- ${en.shop.categories[p.data.category]}: ${p.data.title}${p.data.text ? ` — ${p.data.text}` : ''}${sizes ? ` — ${sizes}` : ' — price on request'}${note}`);
   }
-  push(`- ${en.shop.colonies_title}: ${en.shop.colonies_text}`);
-  push(`- ${en.shop.hives_title}: ${en.shop.hives_text}`, '');
+  push(`- All products: ${abs('/en/shop/')}`, '');
 
   for (const lang of LOCALES) {
     const home = lang === 'en' ? en : await getHome(lang);

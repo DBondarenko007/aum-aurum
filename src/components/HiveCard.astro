@@ -1,0 +1,87 @@
+---
+// Everything that is not honey (bee colonies, hives, other) as a painted hive body in the category colour.
+// The button follows the product's "action": "+" to the cart, or "pre-order" / "order" as a message to us.
+import { url, formatPrice, type Locale, type ProductEntry } from '../lib/site';
+
+interface Props {
+  product: ProductEntry;
+  lang: Locale;
+  labels: {
+    add_to_cart: string; preorder: string; order: string; price_on_request: string; photo_soon: string;
+    badges: Record<string, string>; categories: Record<string, string>;
+  };
+  message: { href: string; external: boolean };
+}
+const { product: p, lang, labels, message } = Astro.props;
+const d = p.data;
+const v = d.variants;
+const priceLine = v.length === 1
+  ? `${v[0].size ? `${v[0].size} · ` : ''}${formatPrice(v[0].price, lang) ?? labels.price_on_request}`
+  : v.length > 1
+    ? v.map((x) => `${x.size}: ${formatPrice(x.price, lang) ?? labels.price_on_request}`).join(' · ')
+    : labels.price_on_request;
+const known = v.some((x) => x.price != null);
+const canCart = d.action === 'cart' && d.badge !== 'sold_out' && v.length > 0;
+const label = d.cta || (d.action === 'preorder' ? labels.preorder : labels.order);
+---
+<article class:list={['box', d.category]}>
+  <div class="inner">
+    {d.image ? <img class="photo" src={url(d.image)} alt={d.title} loading="lazy" /> : <div class="photo empty">{labels.photo_soon}</div>}
+    <span class="kind">{labels.categories[d.category]}</span>
+    {d.badge !== 'none' && labels.badges[d.badge] && <span class:list={['badge', d.badge]}>{labels.badges[d.badge]}</span>}
+    <h3>{d.title}</h3>
+    {d.text && <p>{d.text}</p>}
+    <div class="buy">
+      <span class:list={['price', { req: !known }]}>{priceLine}</span>
+      {canCart ? (
+        <button class="add" type="button" data-slug={`${p.slug}#0`} aria-label={`${labels.add_to_cart}: ${d.title}`} title={labels.add_to_cart}>
+          <svg class="i-plus" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+          <svg class="i-ok" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </button>
+      ) : d.badge !== 'sold_out' && (
+        <a class="btn btn--line" href={message.href} target={message.external ? '_blank' : undefined} rel="noopener">{label}</a>
+      )}
+    </div>
+  </div>
+  <div class="entrance" aria-hidden="true"></div>
+</article>
+
+<style>
+  .box {
+    --c: var(--gold-deep);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-top: 12px;
+    padding: 30px 12px 14px;
+    background: var(--c);
+    border-radius: 3px;
+    box-shadow: 0 10px 20px -16px rgb(20 17 14 / 0.6);
+  }
+  .box.colonies { --c: var(--olive); }
+  .box.hives { --c: var(--wine); }
+  .box.other { --c: var(--gold-deep); }
+  .box::before { content: ''; position: absolute; top: 9px; left: 50%; width: 64px; height: 11px; translate: -50% 0; border-radius: 6px; background: rgb(0 0 0 / 0.25); }
+  .box::after { content: ''; position: absolute; left: -8px; right: -8px; top: -12px; height: 14px; background: #b8692f; border-radius: 2px; box-shadow: inset 0 3px 0 #f0a862, inset 0 -4px 0 #8c4a1e; }
+  .inner { flex: 1; display: flex; flex-direction: column; gap: 0.6rem; padding: 12px; background: var(--paper-2); }
+  .photo { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; margin-bottom: 0.3rem; box-shadow: 0 0 0 1px rgb(20 17 14 / 0.08); }
+  .photo.empty { display: grid; place-items: center; background: var(--paper-2); color: var(--ink-soft); font-size: 14px; }
+  .kind { align-self: flex-start; font: 400 12px var(--display); letter-spacing: var(--track); text-transform: uppercase; color: var(--c); }
+  :lang(ka) .kind { text-transform: none; font-size: 13px; }
+  .badge { align-self: flex-start; padding: 0 0.5rem; border-radius: 999px; font: italic 400 13px/1.6 var(--text); background: var(--olive); color: var(--paper-2); }
+  .badge.preorder { background: var(--wood); color: var(--soot); }
+  .badge.sold_out { background: var(--ink-soft); }
+  h3 { font-size: 1.55rem; }
+  p { color: var(--ink-soft); font-size: 15px; }
+  .buy { margin-top: auto; padding-top: 0.6rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem 0.75rem; border-top: 1px dotted rgb(20 17 14 / 0.35); font-variant-numeric: tabular-nums; }
+  .price { font-weight: 700; font-size: 16px; }
+  .price.req { font-weight: 400; font-style: italic; color: var(--ink-soft); }
+  .buy .btn { min-height: 40px; padding: 0 1rem; font-size: 13px; }
+  .add { margin-left: auto; flex: none; display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--soot); background: var(--soot); color: var(--cream); cursor: pointer; transition: background 0.3s; }
+  .add:hover { background: var(--wine); border-color: var(--wine); }
+  .add .i-ok { display: none; }
+  .add:global(.done) { background: var(--olive); border-color: var(--olive); }
+  .add:global(.done) .i-plus { display: none; }
+  .add:global(.done) .i-ok { display: block; }
+  .entrance { height: 8px; width: 46%; margin: 10px auto 0; border-radius: 4px; background: rgb(0 0 0 / 0.45); }
+</style>

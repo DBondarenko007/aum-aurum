@@ -100,6 +100,17 @@ export function orderChannel(site: Site): OrderChannel | null {
   return options.webhook ?? options.whatsapp ?? options.telegram ?? options.email ?? null;
 }
 
+/** Link for "pre-order" / "order" buttons: a message to us with the product name, else the contacts block. */
+export function messageLink(site: Site, text: string, fallback: string) {
+  const digits = (site.whatsapp ?? '').replace(/[^\d]/g, '');
+  if (digits) return { href: `https://wa.me/${digits}?text=${encodeURIComponent(text)}`, external: true };
+  if (site.telegram) return { href: `https://t.me/${site.telegram.replace(/^@/, '')}`, external: true };
+  if (site.email) return { href: `mailto:${site.email}?subject=${encodeURIComponent('Aum Aurum')}&body=${encodeURIComponent(text)}`, external: false };
+  return { href: fallback, external: false };
+}
+
+export type ProductEntry = Awaited<ReturnType<typeof getProducts>>[number];
+
 export function formatDate(d: Date, lang: Locale) {
   return new Intl.DateTimeFormat(HTML_LANG[lang], { day: 'numeric', month: 'long', year: 'numeric' }).format(d);
 }

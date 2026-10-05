@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aum Aurum — демо F «Магазин: рамки мёда + лента ульев»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Forum&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  /* Demo F — Shop with two ribbons.
+     1) Honey only: the current comb frames, one frame per honey product (added/removed in the admin).
+     2) Everything else (bee colonies, hives, other) in ONE ribbon of equal "hive body" cards.
+     Both ribbons get ← → arrows when they hold more than three cards. Data below is EXAMPLE data. */
+  :root {
+    --soot: #14110e; --gold: #e7b649; --gold-deep: #c9932e; --wood: #b98535;
+    --cream: #ede1c7; --paper: #f6f0e2; --paper-2: #fbf6ea; --ink-soft: #4a4036;
+    --wine: #6e1f2e; --olive: #55693a; --copper: #b8692f;
+    --display: 'Forum', serif; --text: 'PT Serif', Georgia, serif;
+    --gutter: clamp(16px, 4vw, 56px); --ease: cubic-bezier(.16, 1, .3, 1);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--soot); font: 400 18px/1.6 var(--text); }
+  h2, h3, p { margin: 0; }
+  h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1.05; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 var(--gutter); }
+  section { padding: clamp(4rem, 3rem + 5vw, 7rem) 0; }
+  .head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1.5rem; margin-bottom: 2.5rem; }
+  .head h2 { font-size: clamp(2.6rem, 1.6rem + 4vw, 5.25rem); }
+  .head p { max-width: 36ch; color: var(--ink-soft); }
+  .btn { display: inline-flex; align-items: center; min-height: 46px; padding: 0 1.3rem; border: 1px solid var(--soot); background: transparent; font: 400 14px var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--soot); text-decoration: none; cursor: pointer; transition: background .3s, color .3s; }
+  .btn:hover { background: var(--soot); color: var(--cream); }
+
+  /* Ribbon + arrows --------------------------------------------------------- */
+  .ribbon + .ribbon { margin-top: clamp(3rem, 2rem + 3vw, 4.5rem); }
+  .arrows { display: flex; justify-content: flex-end; gap: .5rem; margin-bottom: 1rem; }
+  .arrows[hidden] { display: none; }
+  .arrow { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid var(--soot); background: transparent; color: var(--soot); font-size: 18px; cursor: pointer; transition: background .3s, color .3s, opacity .3s; }
+  .arrow:hover:not(:disabled) { background: var(--soot); color: var(--cream); }
+  .arrow:disabled { opacity: .3; cursor: default; }
+  .track { --per: 3; --gap: clamp(1.25rem, 2.5vw, 2.25rem);
+    display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - (var(--per) - 1) * var(--gap)) / var(--per));
+    gap: var(--gap); align-items: stretch; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+    padding: 24px 16px 30px; margin: -24px -16px -30px; scroll-padding-inline: 16px; scrollbar-width: none; }
+  .track::-webkit-scrollbar { display: none; }
+  .track > * { scroll-snap-align: start; }
+
+  /* 1) Honey frame — same as the live site ---------------------------------- */
+  .frame { position: relative; display: flex; flex-direction: column; padding: 0 14px 14px; background: var(--wood);
+    box-shadow: inset 0 0 0 2px rgb(0 0 0 / .12), 0 10px 20px -16px rgb(20 17 14 / .6); transition: transform .55s var(--ease), box-shadow .55s var(--ease); }
+  .frame:hover { transform: translateY(-16px); box-shadow: inset 0 0 0 2px rgb(0 0 0 / .12), 0 30px 40px -24px rgb(20 17 14 / .55); }
+  .frame .bar { height: 20px; margin: 0 -30px 12px; background: var(--soot); border-radius: 3px; }
+  .frame .cell { flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 14px; background-color: #f8e7b4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20.78' height='36'%3E%3Cpath d='M0 6L10.39 0L20.78 6V18L10.39 24L0 18ZM10.39 24V36' fill='none' stroke='%23d2a23e' stroke-width='1.3'/%3E%3C/svg%3E"); background-size: 20.78px 36px; }
+  .photo { aspect-ratio: 4 / 3; display: grid; place-items: center; background: var(--paper-2); color: var(--ink-soft); font-size: 14px; box-shadow: 0 0 0 1px rgb(20 17 14 / .08); }
+  .txt { flex: 1; display: flex; flex-direction: column; gap: .7rem; padding: 1.25rem 1.35rem 1.4rem; background: var(--paper-2); box-shadow: 0 0 0 1px rgb(20 17 14 / .08); }
+  .txt h3 { font-size: clamp(1.8rem, 1.3rem + 1.2vw, 2.4rem); }
+  .txt p { color: var(--ink-soft); font-size: 16px; }
+  .prices { margin: 0; padding: 0; list-style: none; font-variant-numeric: tabular-nums; }
+  .prices li { display: flex; flex-wrap: wrap; gap: .1rem .7rem; align-items: baseline; padding: .55rem 0; border-bottom: 1px solid rgb(20 17 14 / .15); }
+  .dots { flex: 1 1 1rem; border-bottom: 1px dotted rgb(20 17 14 / .4); }
+  .end { margin-left: auto; display: inline-flex; align-items: center; gap: .6rem; white-space: nowrap; }
+  .req { font-style: italic; color: var(--ink-soft); }
+  .add { width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid var(--soot); background: var(--soot); color: var(--cream); font-size: 20px; line-height: 1; cursor: pointer; transition: background .3s; }
+  .add:hover { background: var(--wine); border-color: var(--wine); }
+  .badge { align-self: flex-start; padding: 0 .5rem; border-radius: 999px; font: italic 400 13px/1.6 var(--text); background: var(--olive); color: var(--paper-2); }
+  .badge.pre { background: var(--wood); color: var(--soot); }
+  .txt .btn { align-self: flex-start; margin-top: auto; }
+
+  /* 2) Hive-body card — everything that is not honey -------------------------- */
+  .box { position: relative; display: flex; flex-direction: column; padding: 30px 12px 14px; background: var(--c); border-radius: 3px; box-shadow: 0 10px 20px -16px rgb(20 17 14 / .6); }
+  .box::before { content: ''; position: absolute; top: 9px; left: 50%; width: 64px; height: 11px; translate: -50% 0; border-radius: 6px; background: rgb(0 0 0 / .25); }
+  .box::after { content: ''; position: absolute; left: -8px; right: -8px; top: -12px; height: 14px; background: var(--copper); border-radius: 2px; box-shadow: inset 0 3px 0 #f0a862, inset 0 -4px 0 #8c4a1e; }
+  .box .inner { flex: 1; display: flex; flex-direction: column; gap: .6rem; padding: 12px; background: var(--paper-2); }
+  .box .photo { margin-bottom: .3rem; }
+  .kind { align-self: flex-start; font: 400 12px var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--c); }
+  .box h3 { font-size: 1.55rem; }
+  .box p { color: var(--ink-soft); font-size: 15px; }
+  .box .buy { margin-top: auto; padding-top: .6rem; display: flex; align-items: center; justify-content: space-between; gap: .75rem; border-top: 1px dotted rgb(20 17 14 / .35); font-variant-numeric: tabular-nums; }
+  .box .buy strong { font-weight: 700; }
+  .box .entrance { height: 8px; width: 46%; margin: 10px auto 0; border-radius: 4px; background: rgb(0 0 0 / .45); }
+  .colonies { --c: var(--olive); }
+  .hives { --c: var(--wine); }
+  .other { --c: var(--gold-deep); }
+
+  .starter { margin-top: clamp(3rem, 2rem + 3vw, 4.5rem); display: flex; flex-wrap: wrap; gap: 1.25rem 2rem; align-items: center; justify-content: space-between; padding: 1.75rem 2.25rem; background: var(--soot); color: var(--cream); }
+  .starter strong { font: 400 clamp(1.5rem, 1rem + 1.6vw, 2.4rem)/1.1 var(--display); }
+  .starter span { color: var(--gold); }
+  .starter .btn { border-color: var(--gold); background: var(--gold); color: var(--soot); }
+
+  .note { position: fixed; right: 12px; bottom: 12px; z-index: 5; background: var(--soot); color: var(--gold); font: 400 13px var(--display); letter-spacing: .1em; text-transform: uppercase; padding: .45rem .9rem; }
+  @media (max-width: 900px) { .track { --per: 1.2; } .arrows { display: none; } }
+  @media (min-width: 901px) and (max-width: 1100px) { .track { --per: 2.2; } }
+</style>
+</head>
+<body>
+<section id="shop">
+  <div class="wrap">
+    <div class="head">
+      <h2>Из нашего улья</h2>
+      <p>Мёд — главное. А ещё пчелосемьи на весну и ульи, которые мы строим сами и проверяем на своих пчёлах.</p>
+    </div>
+
+    <!-- 1) HONEY: one frame per honey product -->
+    <div class="ribbon" data-ribbon>
+      <div class="arrows"><button class="arrow" data-dir="-1" aria-label="Назад">&#8592;</button><button class="arrow" data-dir="1" aria-label="Вперёд">&#8594;</button></div>
+      <div class="track">
+        <article class="frame"><div class="bar"></div><div class="cell"><div class="photo">фото</div><div class="txt">
+          <span class="badge">новый урожай</span><h3>Разнотравье</h3><p>Летний мёд с горных лугов Навази.</p>
+          <ul class="prices"><li><span>0,5 кг</span><span class="dots"></span><span class="end">25 лари <button class="add" aria-label="В корзину">+</button></span></li><li><span>1 кг</span><span class="dots"></span><span class="end">45 лари <button class="add" aria-label="В корзину">+</button></span></li></ul>
+        </div></div></article>
+        <article class="frame"><div class="bar"></div><div class="cell"><div class="photo">фото</div><div class="txt">
+          <h3>Мёд в сотах</h3><p>Целая рамка или кусочки сот.</p>
+          <ul class="prices"><li><span>рамка</span><span class="dots"></span><span class="end"><span class="req">по запросу</span> <button class="add" aria-label="В корзину">+</button></span></li></ul>
+        </div></div></article>
+        <article class="frame"><div class="bar"></div><div class="cell"><div class="photo">фото</div><div class="txt">
+          <h3>Горный мёд</h3><p>Сбор с высокогорья.</p>
+          <ul class="prices"><li><span>0,5 кг</span><span class="dots"></span><span class="end">30 лари <button class="add" aria-label="В корзину">+</button></span></li></ul>
+        </div></div></article>
+        <article class="frame"><div class="bar"></div><div class="cell"><div class="photo">фото</div><div class="txt">
+          <span class="badge pre">предзаказ</span><h3>Подарочный набор</h3><p>Три баночки разных сортов.</p>
+          <ul class="prices"><li><span>3 × 250 г</span><span class="dots"></span><span class="end"><span class="req">по запросу</span> <button class="add" aria-label="В корзину">+</button></span></li></ul>
+        </div></div></article>
+      </div>
+    </div>
+
+    <!-- 2) EVERYTHING ELSE: one ribbon of equal hive-body cards -->
+    <div class="ribbon" data-ribbon>
+      <div class="arrows"><button class="arrow" data-dir="-1" aria-label="Назад">&#8592;</button><button class="arrow" data-dir="1" aria-label="Вперёд">&#8594;</button></div>
+      <div class="track">
+        <article class="box colonies"><div class="inner"><div class="photo">фото</div><span class="kind">пчелосемьи</span><h3>Отводок на 4 рамках</h3><p>Молодая семья с плодной маткой. Предзаказ на весну.</p><div class="buy"><span class="req">по запросу</span><button class="add" aria-label="В корзину">+</button></div></div><div class="entrance"></div></article>
+        <article class="box colonies"><div class="inner"><div class="photo">фото</div><span class="kind">пчелосемьи</span><h3>Семья на 10 рамках</h3><p>Сильная семья, готовая к сезону.</p><div class="buy"><span class="req">по запросу</span><button class="add" aria-label="В корзину">+</button></div></div><div class="entrance"></div></article>
+        <article class="box hives"><div class="inner"><div class="photo">фото</div><span class="kind">ульи</span><h3>Улей Дадан</h3><p>12 рамок, ручная работа.</p><div class="buy"><strong>180 лари</strong><button class="add" aria-label="В корзину">+</button></div></div><div class="entrance"></div></article>
+        <article class="box hives"><div class="inner"><div class="photo">фото</div><span class="kind">ульи</span><h3>Улей Лангстрот</h3><p>10 рамок, два корпуса.</p><div class="buy"><strong>200 лари</strong><button class="add" aria-label="В корзину">+</button></div></div><div class="entrance"></div></article>
+        <article class="box other"><div class="inner"><div class="photo">фото</div><span class="kind">прочее</span><h3>Свечи из воска</h3><p>Ручная работа, набор из 3 штук.</p><div class="buy"><span class="req">по запросу</span><button class="add" aria-label="В корзину">+</button></div></div><div class="entrance"></div></article>
+      </div>
+    </div>
+
+    <div class="starter"><strong>Старт пчеловода: <span>улей + пчелосемья + консультация</span></strong><a class="btn" href="#">Связаться</a></div>
+  </div>
+</section>
+<div class="note">Демо F · данные — пример</div>
+
+<script>
+  // Arrows appear only when a ribbon holds more cards than fit; they scroll by one card.
+  document.querySelectorAll('[data-ribbon]').forEach((ribbon) => {
+    const track = ribbon.querySelector('.track');
+    const arrows = ribbon.querySelector('.arrows');
+    const [prev, next] = arrows.querySelectorAll('.arrow');
+    const step = () => track.firstElementChild.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap);
+    const update = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      arrows.hidden = max <= 12;
+      prev.disabled = track.scrollLeft <= 4;
+      next.disabled = track.scrollLeft >= max - 4;
+    };
+    prev.addEventListener('click', () => track.scrollBy({ left: -step() }));
+    next.addEventListener('click', () => track.scrollBy({ left: step() }));
+    track.addEventListener('scroll', update, { passive: true });
+    addEventListener('resize', update);
+    update();
+  });
+</script>
+</body>
+</html>

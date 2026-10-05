@@ -1,7 +1,14 @@
 category: honey
 title: სეზონური თაფლი
 text: ჩვენი სკებიდან. ჯიში სეზონზეა დამოკიდებული.
-size: 1 კგ
-price: ""
-order: 2
+variants:
+  - size: 0,5 კგ
+    price: null
+  - size: 1 კგ
+    price: null
+badge: none
+action: cart
+cta: ''
+image: ''
+order: 1
 available: true

@@ -47,6 +47,9 @@ decisions; **DESIGN.md is the source of truth for the look** (approved style). R
 - `src/content/settings/{site,reviews}.yaml` — contacts, map, hours, business facts, order channel
   (`order_channel`, `order_webhook`), Web3Forms key (`forms_key`), reviews (not translated)
 - Home yaml also holds `faq` (Q&A list, `hidden` = draft), `cart`, `privacy`, `notfound` texts
+- Products: `category` honey | colonies | hives | other; `variants` [{size, price}] (one honey card
+  = one variety); `action` cart | preorder | order; `cta` custom button text. Cart keys are
+  `<slug>#<variant index>`. Components: HoneyFrame, HiveCard, Ribbon; page `src/pages/[lang]/shop.astro`
 - Cart: `src/scripts/cart.ts` (localStorage), `src/pages/[lang]/cart.astro` (checkout → WhatsApp /
   Telegram / e-mail / Apps Script webhook); stage-2 receiver `tools/orders-apps-script.gs`
 - SEO/AI: `src/lib/seo.ts` (schema.org LocalBusiness + Offers + FAQPage), `src/pages/llms.txt.ts`,

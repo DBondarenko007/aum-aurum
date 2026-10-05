@@ -1,7 +1,14 @@
 category: honey
 title: Сезонный мёд
 text: С наших ульев. Сорт зависит от сезона.
-size: 1 кг
-price: ""
-order: 2
+variants:
+  - size: 0,5 кг
+    price: null
+  - size: 1 кг
+    price: null
+badge: none
+action: cart
+cta: ''
+image: ''
+order: 1
 available: true

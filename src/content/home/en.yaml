@@ -37,13 +37,6 @@ story:
 shop:
   title: From our hives
   subtitle: Honey comes first. We also raise bee colonies for spring and build hives ourselves, tested on our own bees.
-  honey_title: Honey
-  colonies_title: Bee colonies
-  colonies_text: Strong colonies and nucs. Pre-order for spring.
-  colonies_cta: Pre-order
-  hives_title: Hives
-  hives_text: Handmade, tested on our own apiary.
-  hives_cta: Order a hive
   starter_title: 'Start beekeeping:'
   starter_parts:
     - a hive
@@ -57,6 +50,19 @@ shop:
     new_harvest: new harvest
     preorder: pre-order
     sold_out: sold out
+  all_products: All products
+  preorder: Pre-order
+  order: Order
+  message: 'Hello! I would like to order:'
+  page_title: All products
+  page_text: Honey, bee colonies, hives and everything else from our apiary.
+  categories:
+    honey: Honey
+    colonies: Bee colonies
+    hives: Hives
+    other: Other
+  prev: Previous
+  next: Next
 location:
   title: Visit us on the road to Kazbegi
   address: Navazi village, Mtskheta municipality

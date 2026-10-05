@@ -44,7 +44,7 @@ const jsonLd = businessJsonLd({
   <BeeRail />
   <main>
     <Home hero={home.hero} story={home.story} orderHref="#shop" />
-    <Shop shop={home.shop} products={products} ui={home.ui} lang={lang} cartHref={url(`/${lang}/cart/`)} contactHref="#contact" />
+    <Shop shop={home.shop} products={products} ui={home.ui} lang={lang} site={site} contactHref="#contact" />
     <News lang={lang} title={home.news.title} items={news} ui={home.ui} />
     <Location location={home.location} hours={site.hours} lat={site.lat} lng={site.lng} />
     <Reviews reviews={home.reviews} items={reviews} faq={home.faq} googleReviewUrl={site.google_review_url} formsKey={site.forms_key} lang={lang} />

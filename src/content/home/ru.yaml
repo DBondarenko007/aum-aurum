@@ -37,13 +37,6 @@ story:
 shop:
   title: Из нашего улья
   subtitle: Мёд — главное. А ещё пчелосемьи на весну и ульи, которые мы строим сами и проверяем на своих пчёлах.
-  honey_title: Мёд
-  colonies_title: Пчелосемьи
-  colonies_text: Сильные семьи и отводки. Предзаказ на весну.
-  colonies_cta: Предзаказ
-  hives_title: Ульи
-  hives_text: Ручная работа, проверены на нашей пасеке.
-  hives_cta: Заказать улей
   starter_title: 'Старт пчеловода:'
   starter_parts:
     - улей
@@ -57,6 +50,19 @@ shop:
     new_harvest: новый урожай
     preorder: предзаказ
     sold_out: нет в наличии
+  all_products: Все товары
+  preorder: Предзаказ
+  order: Заказать
+  message: 'Здравствуйте! Хочу заказать:'
+  page_title: Все товары
+  page_text: Мёд, пчелосемьи, ульи и всё остальное с нашей пасеки.
+  categories:
+    honey: Мёд
+    colonies: Пчелосемьи
+    hives: Ульи
+    other: Прочее
+  prev: Назад
+  next: Вперёд
 location:
   title: Заезжайте по пути в Казбеги
   address: Село Навази, Мцхетский муниципалитет

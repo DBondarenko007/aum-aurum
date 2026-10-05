@@ -13,10 +13,14 @@ const [home, products, { site }] = await Promise.all([getHome(lang), getProducts
 const c = home.cart;
 const channel = orderChannel(site);
 // Product data for the cart script: titles and prices always come from the current build.
+// Cart keys are "<product>#<size index>".
 const catalog = Object.fromEntries(
   products
-    .filter((p) => p.data.available && p.data.badge !== 'sold_out')
-    .map((p) => [p.slug, { title: p.data.title, size: p.data.size, price: p.data.price, priceLabel: formatPrice(p.data.price, lang) }]),
+    .filter((p) => p.data.available && p.data.badge !== 'sold_out' && p.data.action === 'cart')
+    .flatMap((p) => p.data.variants.map((v, i) => [
+      `${p.slug}#${i}`,
+      { title: p.data.title, size: v.size, price: v.price, priceLabel: formatPrice(v.price, lang) },
+    ])),
 );
 const labels = {
   qty: c.qty, remove: c.remove, total: c.total, onRequest: home.ui.price_on_request, orderTitle: c.order_title,
@@ -34,7 +38,7 @@ const labels = {
 
       <div class="empty" hidden>
         <p>{c.empty}</p>
-        <a class="btn btn--ink" href={url(`/${lang}/#shop`)}>{c.back}</a>
+        <a class="btn btn--ink" href={url(`/${lang}/shop/`)}>{c.back}</a>
       </div>
 
       <div class="filled" hidden>
@@ -61,7 +65,7 @@ const labels = {
           </div>
           <p class="wide status" role="status" aria-live="polite"></p>
         </form>
-        <a class="back" href={url(`/${lang}/#shop`)}>← {c.back}</a>
+        <a class="back" href={url(`/${lang}/shop/`)}>← {c.back}</a>
       </div>
     </div>
   </main>

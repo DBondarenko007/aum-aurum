@@ -1,7 +1,14 @@
 category: honey
 title: Seasonal honey
 text: From our own hives. The variety depends on the season.
-size: 0.5 kg
-price: ""
+variants:
+  - size: 0.5 kg
+    price: null
+  - size: 1 kg
+    price: null
+badge: none
+action: cart
+cta: ''
+image: ''
 order: 1
 available: true
