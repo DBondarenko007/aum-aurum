@@ -1,4 +1,5 @@
 ---
+import { url } from '../lib/site';
 // Gallery: polaroids pinned to two strings (four per string, three on phones).
 interface Props {
   gallery: { title: string; text: string; photos: { caption: string; image?: string | null }[] };
@@ -27,7 +28,7 @@ const curves = ['M-2 4 Q50 20 102 3', 'M-2 3 Q50 21 102 5'];
             <figure class="pol" style={`--x:${slot.x}%;--y:${slot.y}px;--r:${slot.r}deg;--d:${(-i * 0.85).toFixed(2)}s`}>
               <span class="pin" aria-hidden="true"></span>
               {p.image
-                ? <img class="ph" src={p.image} alt={p.caption} loading="lazy" />
+                ? <img class="ph" src={url(p.image)} alt={p.caption} loading="lazy" />
                 : <div class="ph" style={`background:${tones[i]}`}>{photoSoon}</div>}
               <figcaption>{p.caption}</figcaption>
             </figure>

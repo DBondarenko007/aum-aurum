@@ -1,4 +1,6 @@
 ---
+import { url } from '../lib/site';
+const base = url('/');
 // Root: send the visitor to their language (saved choice → browser language → English).
 ---
 <!doctype html>
@@ -7,11 +9,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Aum Aurum</title>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="alternate" hreflang="ka" href="/ka/" />
-    <link rel="alternate" hreflang="ru" href="/ru/" />
-    <link rel="alternate" hreflang="en" href="/en/" />
-    <script is:inline>
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+    <link rel="alternate" hreflang="ka" href={url('/ka/')} />
+    <link rel="alternate" hreflang="ru" href={url('/ru/')} />
+    <link rel="alternate" hreflang="en" href={url('/en/')} />
+    <script is:inline define:vars={{ base }}>
       (function () {
         var supported = ['ka', 'ru', 'en'];
         var saved = null;
@@ -22,16 +24,16 @@
           var code = (wanted[i] || '').slice(0, 2).toLowerCase();
           if (supported.indexOf(code) !== -1) { lang = code; break; }
         }
-        location.replace('/' + lang + '/');
+        location.replace(base + lang + '/');
       })();
     </script>
-    <noscript><meta http-equiv="refresh" content="0; url=/en/" /></noscript>
+    <noscript><meta http-equiv="refresh" content={`0; url=${url('/en/')}`} /></noscript>
     <style>
       body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #14110e; color: #ede1c7; font-family: Georgia, serif; }
       a { color: #e7b649; margin: 0 0.5rem; }
     </style>
   </head>
   <body>
-    <p><a href="/ka/" lang="ka">ქართული</a> <a href="/ru/" lang="ru">Русский</a> <a href="/en/">English</a></p>
+    <p><a href={url('/ka/')} lang="ka">ქართული</a> <a href={url('/ru/')} lang="ru">Русский</a> <a href={url('/en/')}>English</a></p>
   </body>
 </html>

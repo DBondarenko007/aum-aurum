@@ -1,5 +1,9 @@
 import { getCollection, getEntry } from 'astro:content';
 
+/** Site-relative URL with the deploy base (e.g. "/aum-aurum") in front; external links pass through. */
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+export const url = (p = '/') => (/^(https?:|mailto:|tel:|#|data:)/.test(p) ? p : `${BASE}/${p.replace(/^\//, '')}`);
+
 export const LOCALES = ['ka', 'ru', 'en'] as const;
 export type Locale = (typeof LOCALES)[number];
 

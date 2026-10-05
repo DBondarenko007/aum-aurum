@@ -1,6 +1,6 @@
 ---
 import Mark from './Mark.astro';
-import { LOCALES, LOCALE_LABEL, LOCALE_NAME, type Locale } from '../lib/site';
+import { LOCALES, LOCALE_LABEL, LOCALE_NAME, url, type Locale } from '../lib/site';
 
 interface Props {
   lang: Locale;
@@ -13,7 +13,7 @@ interface Props {
 }
 const { lang, nav, ui, path = '', home = true } = Astro.props;
 const items = ['home', 'shop', 'news', 'location', 'reviews', 'gallery'] as const;
-const href = (id: string) => (home ? `#${id}` : `/${lang}/#${id}`);
+const href = (id: string) => (home ? `#${id}` : url(`/${lang}/#${id}`));
 ---
 <header class="site-header">
   <div class="bar">
@@ -26,7 +26,7 @@ const href = (id: string) => (home ? `#${id}` : `/${lang}/#${id}`);
       <ul class="langs" aria-label={ui.language}>
         {LOCALES.map((l) => (
           <li>
-            <a href={`/${l}/${path}`} hreflang={l} lang={l} title={LOCALE_NAME[l]} data-lang={l}
+            <a href={url(`/${l}/${path}`)} hreflang={l} lang={l} title={LOCALE_NAME[l]} data-lang={l}
                aria-current={l === lang ? 'true' : undefined}>{LOCALE_LABEL[l]}</a>
           </li>
         ))}

@@ -6,7 +6,7 @@ import '@fontsource/pt-serif/700.css';
 import '@fontsource/cinzel/500.css';
 import '@fontsource-variable/noto-serif-georgian';
 import '../styles/global.css';
-import { LOCALES, HTML_LANG, type Locale } from '../lib/site';
+import { LOCALES, HTML_LANG, url as withBase, type Locale } from '../lib/site';
 
 interface Props {
   lang: Locale;
@@ -18,7 +18,7 @@ interface Props {
 }
 const { lang, title, description, path = '', jsonLd } = Astro.props;
 const site = Astro.site!;
-const url = (l: Locale) => new URL(`/${l}/${path}`, site).href;
+const url = (l: Locale) => new URL(withBase(`/${l}/${path}`), site).href;
 ---
 <!doctype html>
 <html lang={HTML_LANG[lang]}>
@@ -27,10 +27,10 @@ const url = (l: Locale) => new URL(`/${l}/${path}`, site).href;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
     <link rel="canonical" href={url(lang)} />
     {LOCALES.map((l) => <link rel="alternate" hreflang={HTML_LANG[l]} href={url(l)} />)}
-    <link rel="alternate" hreflang="x-default" href={new URL('/', site).href} />
+    <link rel="alternate" hreflang="x-default" href={new URL(withBase('/'), site).href} />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />

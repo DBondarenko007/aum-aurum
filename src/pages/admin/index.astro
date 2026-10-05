@@ -1,4 +1,5 @@
 ---
+import { url } from '../../lib/site';
 // Sveltia CMS admin. Reads /admin/config.yml (public/admin/config.yml).
 ---
 <!doctype html>
@@ -8,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
     <title>Aum Aurum — админка</title>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
   </head>
   <body>
     <script>

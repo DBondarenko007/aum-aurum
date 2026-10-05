@@ -1,5 +1,5 @@
 ---
-import type { Locale } from '../lib/site';
+import { url, type Locale } from '../lib/site';
 
 interface Props {
   lang: Locale;
@@ -18,12 +18,12 @@ const Heading = full ? 'h1' : 'h2';
   <div class="wrap">
     <div class="head">
       <Heading class="title">{title}</Heading>
-      {!full && <a class="all" href={`/${lang}/news/`}>{ui.all_news} →</a>}
+      {!full && <a class="all" href={url(`/${lang}/news/`)}>{ui.all_news} →</a>}
     </div>
     <ul>
       {list.map((n) => (
         <li>
-          <a href={`/${lang}/news/${n.slug}/`}>
+          <a href={url(`/${lang}/news/${n.slug}/`)}>
             <time datetime={n.data.date.toISOString().slice(0, 10)}>{fmt(n.data.date)}</time>
             <div><h3>{n.data.title}</h3><p>{n.data.excerpt}</p></div>
             {n.data.example ? <span class="tag">{ui.placeholder_note}</span> : <span></span>}

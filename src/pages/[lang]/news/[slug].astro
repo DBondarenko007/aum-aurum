@@ -4,7 +4,7 @@ import Base from '../../../layouts/Base.astro';
 import Header from '../../../components/Header.astro';
 import BeeRail from '../../../components/BeeRail.astro';
 import Footer from '../../../components/Footer.astro';
-import { LOCALES, getHome, getNews, type Locale } from '../../../lib/site';
+import { LOCALES, getHome, getNews, url, type Locale } from '../../../lib/site';
 
 export async function getStaticPaths() {
   const paths = [];
@@ -25,13 +25,13 @@ const date = post.data.date.toLocaleDateString('ru-RU', { day: '2-digit', month:
   <BeeRail />
   <main class="section paper page">
     <article class="wrap post">
-      <a class="back" href={`/${lang}/news/`}>← {home.ui.all_news}</a>
+      <a class="back" href={url(`/${lang}/news/`)}>← {home.ui.all_news}</a>
       <div class="meta">
         <time datetime={post.data.date.toISOString().slice(0, 10)}>{date}</time>
         {post.data.example && <span class="tag">{home.ui.placeholder_note}</span>}
       </div>
       <h1>{post.data.title}</h1>
-      {post.data.image && <img class="cover" src={post.data.image} alt={post.data.title} />}
+      {post.data.image && <img class="cover" src={url(post.data.image)} alt={post.data.title} />}
       <div class="body"><Content /></div>
     </article>
   </main>

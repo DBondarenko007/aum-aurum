@@ -1,4 +1,5 @@
 ---
+import { url } from '../lib/site';
 // Shop: products as hive frames (wood frame, black top bar with lugs, comb photo slot).
 interface Product { slug: string; data: { category: string; title: string; size: string; price: string; available: boolean } }
 interface Props {
@@ -25,7 +26,7 @@ const honey = products.filter((p) => p.data.category === 'honey' && p.data.avail
       <article class="frame">
         <div class="bar"></div>
         <div class="cell">
-          {shop.honey_image ? <img class="photo" src={shop.honey_image} alt={shop.honey_title} loading="lazy" /> : <div class="comb"><span>{ui.photo_soon}</span></div>}
+          {shop.honey_image ? <img class="photo" src={url(shop.honey_image)} alt={shop.honey_title} loading="lazy" /> : <div class="comb"><span>{ui.photo_soon}</span></div>}
           <div class="txt">
             <h3>{shop.honey_title}</h3>
           {honey.length > 0 && (
@@ -43,7 +44,7 @@ const honey = products.filter((p) => p.data.category === 'honey' && p.data.avail
       <article class="frame">
         <div class="bar"></div>
         <div class="cell">
-          {shop.colonies_image ? <img class="photo" src={shop.colonies_image} alt={shop.colonies_title} loading="lazy" /> : <div class="comb"><span>{ui.photo_soon}</span></div>}
+          {shop.colonies_image ? <img class="photo" src={url(shop.colonies_image)} alt={shop.colonies_title} loading="lazy" /> : <div class="comb"><span>{ui.photo_soon}</span></div>}
           <div class="txt">
             <h3>{shop.colonies_title}</h3>
           <p>{shop.colonies_text}</p>
@@ -55,7 +56,7 @@ const honey = products.filter((p) => p.data.category === 'honey' && p.data.avail
       <article class="frame">
         <div class="bar"></div>
         <div class="cell">
-          {shop.hives_image ? <img class="photo" src={shop.hives_image} alt={shop.hives_title} loading="lazy" /> : <div class="comb"><span>{ui.photo_soon}</span></div>}
+          {shop.hives_image ? <img class="photo" src={url(shop.hives_image)} alt={shop.hives_title} loading="lazy" /> : <div class="comb"><span>{ui.photo_soon}</span></div>}
           <div class="txt">
             <h3>{shop.hives_title}</h3>
           <p>{shop.hives_text}</p>
