@@ -1,12 +1,12 @@
 category: honey
 title: Горный мёд
-text: Сбор с высокогорья.
+text: Сбор с высокогорья. (тест)
 variants:
   - size: 0,5 кг
     price: 30
-badge: none
 action: cart
 cta: ''
+badge: none
 image: ''
 order: 4
 available: true

@@ -4,9 +4,9 @@ text: მაღალმთიანეთის მოსავალი.
 variants:
   - size: 0,5 კგ
     price: 30
-badge: none
 action: cart
 cta: ''
+badge: none
 image: ''
 order: 4
 available: true
