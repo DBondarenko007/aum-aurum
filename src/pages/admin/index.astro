@@ -1,6 +1,7 @@
 ---
 import { url } from '../../lib/site';
 // Sveltia CMS admin. Reads /admin/config.yml (public/admin/config.yml).
+// polyfills.js runs first so the admin also works in older Safari / iPad browsers.
 ---
 <!doctype html>
 <html lang="ru">
@@ -10,6 +11,7 @@ import { url } from '../../lib/site';
     <meta name="robots" content="noindex" />
     <title>Aum Aurum — админка</title>
     <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+    <script is:inline src={url('/admin/polyfills.js')}></script>
   </head>
   <body>
     <script>

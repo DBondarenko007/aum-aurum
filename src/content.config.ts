@@ -6,7 +6,7 @@ import { z } from 'astro/zod';
 // which is the layout Sveltia CMS writes with i18n structure "multiple_files".
 const keepId = ({ entry }: { entry: string }) => entry.replace(/\.(ya?ml|md)$/, '');
 
-const text = z.string().default('');
+const text = z.string().nullish().transform((v) => v ?? '');
 const image = z.string().optional().nullable();
 const list = z.array(text).default([]);
 
@@ -45,7 +45,7 @@ const home = defineCollection({
         sending: text, success: text, error: text,
       }).default({}),
     }),
-    faq: z.array(z.object({ q: text, a: text, hidden: z.boolean().default(false) })).default([]),
+    faq: z.array(z.object({ q: text, a: text, hidden: z.boolean().catch(false) })).default([]),
     gallery: z.object({
       title: text, text: text,
       photos: z.array(z.object({ caption: text, image })).default([]),
@@ -75,16 +75,16 @@ const price = z
 const products = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/products', generateId: keepId }),
   schema: z.object({
-    category: z.enum(['honey', 'colonies', 'hives', 'other']),
+    category: z.enum(['honey', 'colonies', 'hives', 'other']).catch('other'),
     title: text,
     text: text,
     variants: z.array(z.object({ size: z.coerce.string().default(''), price })).default([]),
-    badge: z.enum(['none', 'in_stock', 'new_harvest', 'preorder', 'sold_out']).default('none'),
-    action: z.enum(['cart', 'preorder', 'order']).default('cart'),
+    badge: z.enum(['none', 'in_stock', 'new_harvest', 'preorder', 'sold_out']).catch('none'),
+    action: z.enum(['cart', 'preorder', 'order']).catch('cart'),
     cta: text,
     image,
-    order: z.number().default(10),
-    available: z.boolean().default(true),
+    order: z.coerce.number().catch(10),
+    available: z.boolean().catch(true),
   }),
 });
 
@@ -92,10 +92,10 @@ const news = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/news', generateId: keepId }),
   schema: z.object({
     title: text,
-    date: z.coerce.date(),
+    date: z.coerce.date().catch(() => new Date()),
     excerpt: text,
     image,
-    example: z.boolean().default(false),
+    example: z.boolean().catch(false),
   }),
 });
 
@@ -111,11 +111,11 @@ const settings = defineCollection({
     instagram: z.string().optional(),
     google_maps: z.string().optional(),
     google_review_url: z.string().optional(),
-    lat: z.number().optional(),
-    lng: z.number().optional(),
+    lat: z.number().optional().catch(undefined),
+    lng: z.number().optional().catch(undefined),
     // site.yaml — business facts (search engines, AI assistants)
     hours: z.array(z.object({
-      days: z.array(z.enum(['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'])).default([]),
+      days: z.array(z.enum(['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'])).catch([]),
       opens: z.string().default(''),
       closes: z.string().default(''),
     })).optional(),
@@ -123,7 +123,7 @@ const settings = defineCollection({
     hives_count: z.string().optional(),
     languages: z.array(z.string()).optional(),
     // site.yaml — orders and forms
-    order_channel: z.enum(['auto', 'whatsapp', 'telegram', 'email', 'webhook']).optional(),
+    order_channel: z.enum(['auto', 'whatsapp', 'telegram', 'email', 'webhook']).optional().catch('auto'),
     order_webhook: z.string().optional(),
     forms_key: z.string().optional(),
     // reviews.yaml
