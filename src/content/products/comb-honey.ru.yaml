@@ -1,0 +1,12 @@
+category: honey
+title: Мёд в сотах
+text: Целая рамка или кусочки сот.
+variants:
+  - size: рамка
+    price: null
+badge: none
+action: cart
+cta: ''
+image: ''
+order: 3
+available: true

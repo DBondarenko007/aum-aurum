@@ -1,0 +1,12 @@
+category: honey
+title: Горный мёд
+text: Сбор с высокогорья.
+variants:
+  - size: 0,5 кг
+    price: 30
+badge: none
+action: cart
+cta: ''
+image: ''
+order: 4
+available: true

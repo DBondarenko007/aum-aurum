@@ -1,0 +1,12 @@
+category: honey
+title: Comb honey
+text: A whole frame or pieces of comb.
+variants:
+  - size: frame
+    price: null
+badge: none
+action: cart
+cta: ''
+image: ''
+order: 3
+available: true

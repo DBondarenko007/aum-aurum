@@ -1,0 +1,14 @@
+category: honey
+title: Разнотравье
+text: Летний мёд с горных лугов Навази.
+variants:
+  - size: 0,5 кг
+    price: 25
+  - size: 1 кг
+    price: 45
+badge: new_harvest
+action: cart
+cta: ''
+image: ''
+order: 2
+available: true

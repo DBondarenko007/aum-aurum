@@ -1,0 +1,12 @@
+category: honey
+title: Mountain honey
+text: Harvested high in the mountains.
+variants:
+  - size: 0.5 kg
+    price: 30
+badge: none
+action: cart
+cta: ''
+image: ''
+order: 4
+available: true

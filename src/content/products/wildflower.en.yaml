@@ -1,0 +1,14 @@
+category: honey
+title: Wildflower honey
+text: Summer honey from the mountain meadows of Navazi.
+variants:
+  - size: 0.5 kg
+    price: 25
+  - size: 1 kg
+    price: 45
+badge: new_harvest
+action: cart
+cta: ''
+image: ''
+order: 2
+available: true

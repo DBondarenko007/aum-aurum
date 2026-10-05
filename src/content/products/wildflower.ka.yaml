@@ -1,0 +1,14 @@
+category: honey
+title: მრავალყვავილა
+text: ზაფხულის თაფლი ნავაზის მთის მდელოებიდან.
+variants:
+  - size: 0,5 კგ
+    price: 25
+  - size: 1 კგ
+    price: 45
+badge: new_harvest
+action: cart
+cta: ''
+image: ''
+order: 2
+available: true
