@@ -14,7 +14,7 @@ const fmt = (d: Date) => d.toLocaleDateString('ru-RU', { day: '2-digit', month: 
 const list = full ? items : items.slice(0, 3);
 const Heading = full ? 'h1' : 'h2';
 ---
-<section id="news" class="section paper news">
+<section id="news" class="section dark news">
   <div class="wrap">
     <div class="head">
       <Heading class="title">{title}</Heading>
@@ -36,12 +36,13 @@ const Heading = full ? 'h1' : 'h2';
 
 <style>
   .title { font-family: var(--display); font-weight: 400; line-height: 1.04; font-size: clamp(2.6rem, 1.6rem + 4vw, 5.25rem); }
-  .all { color: var(--wine); }
-  ul { margin: 0; padding: 0; list-style: none; border-bottom: 1px solid rgb(20 17 14 / 0.15); }
-  li a { display: grid; grid-template-columns: 11rem 1fr auto; gap: 2rem; align-items: baseline; padding: 1.75rem 0; border-top: 1px solid rgb(20 17 14 / 0.15); text-decoration: none; }
-  li a:hover h3 { color: var(--wine); }
-  time { color: var(--wine); font: 400 17px var(--display); letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
+  .all { color: var(--gold); }
+  ul { margin: 0; padding: 0; list-style: none; border-bottom: 1px solid rgb(237 225 199 / 0.15); }
+  li a { display: grid; grid-template-columns: 11rem 1fr auto; gap: 2rem; align-items: baseline; padding: 1.75rem 0; border-top: 1px solid rgb(237 225 199 / 0.15); text-decoration: none; }
+  li a:hover h3 { color: var(--gold); }
+  time { color: var(--gold); font: 400 17px var(--display); letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
   h3 { font-size: clamp(1.5rem, 1.2rem + 1vw, 2.1rem); transition: color 0.3s; }
-  p { margin-top: 0.35rem; color: var(--ink-soft); }
+  p { margin-top: 0.35rem; color: var(--cream-soft); }
+  .tag { border-color: rgb(237 225 199 / 0.4); color: var(--cream-soft); }
   @media (max-width: 900px) { li a { grid-template-columns: 1fr; gap: 0.4rem; } }
 </style>

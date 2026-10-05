@@ -135,7 +135,7 @@ const { label, openLabel } = Astro.props;
 </script>
 
 <style>
-  .apiary { display: block; width: 100%; height: clamp(210px, 18vw, 270px); margin-top: clamp(0.25rem, 0.2rem + 0.5vw, 0.75rem); }
+  .apiary { display: block; width: 100%; height: max(210px, 18vw); margin-top: clamp(0.25rem, 0.2rem + 0.5vw, 0.75rem); }
   .apiary :global(.hive) { cursor: pointer; outline: none; }
   .apiary :global(.hive:focus-visible rect:first-of-type) { stroke: #e7b649; }
   .apiary :global(.lid) { transition: transform 0.5s var(--ease); }

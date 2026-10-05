@@ -17,7 +17,7 @@ decisions; **DESIGN.md is the source of truth for the look** (approved style). R
   world, Cinzel wordmark, apiary animation, hive-frame shop, night mountain + road to Navazi,
   bee scroll rail, polaroid gallery. The sister-draft look (blush/olive/plum, Inter Light) and
   pottery1.com layout are **retired**. Demos A–C stay in `demos/` as history.
-- Sections: **Home, Shop, Location, News, Reviews, Gallery** (in that order); the family story
+- Sections: **Home, Shop, News, Location, Reviews, Gallery** (in that order); the family story
   ("5 500 years") lives in Home, contacts in the footer.
 - **The Astro site in `src/` is built in style D** (2026-10-04). Demos A–C were deleted (they
   remain in git history); only `demos/d-combined.html` is kept as the visual reference.

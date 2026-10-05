@@ -1,5 +1,5 @@
 ---
-// Location: night mountain with a crescent moon; the road Tbilisi → Navazi → Kazbegi runs along
+// Location: mountains by day under a bright gold sun; the road Tbilisi → Navazi → Kazbegi runs along
 // the meadow and a gold line draws up to Navazi when the scene scrolls into view.
 interface Props {
   location: { title: string; address: string; text: string; visit_note: string; route_cta: string; stops: string[]; here: string };
@@ -10,7 +10,7 @@ const { location, lat = 41.9818, lng = 44.741 } = Astro.props;
 const route = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
 const HERE = 2; // Navazi is the third stop
 ---
-<section id="location" class="section dark loc">
+<section id="location" class="section paper loc">
   <div class="wrap">
     <div class="top">
       <h2>{location.title}</h2>
@@ -23,18 +23,13 @@ const HERE = 2; // Navazi is the third stop
 
   <div class="scene">
     <svg class="landscape" viewBox="0 0 1440 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-      <g fill="#EDE1C7">
-        <circle cx="180" cy="60" r="1.6" opacity=".7" /><circle cx="420" cy="34" r="1.2" opacity=".5" />
-        <circle cx="700" cy="80" r="1.4" opacity=".6" /><circle cx="880" cy="28" r="1.2" opacity=".5" />
-        <circle cx="1180" cy="40" r="1.6" opacity=".7" /><circle cx="1010" cy="140" r="1" opacity=".4" />
-        <circle cx="300" cy="130" r="1" opacity=".4" />
-      </g>
-      <circle cx="1290" cy="96" r="40" fill="#EDE1C7" />
-      <circle cx="1307" cy="84" r="36" fill="#14110E" />
-      <polygon points="0,290 160,220 330,250 480,150 640,220 760,190 900,240 1080,170 1250,230 1440,180 1440,420 0,420" fill="#2F2821" />
-      <polygon points="0,330 220,230 360,280 600,170 760,230 860,160 1040,40 1240,210 1440,140 1440,420 0,420" fill="#4D4436" />
-      <polygon points="980,100 1040,40 1100,108 1076,100 1060,120 1040,98 1018,120 1004,104" fill="#EDE1C7" />
-      <polygon points="568,186 600,170 626,190 612,186 600,196 588,186" fill="#EDE1C7" />
+      <circle cx="1250" cy="92" r="84" fill="#F5B820" opacity=".18" />
+      <circle cx="1250" cy="92" r="66" fill="#F5B820" opacity=".3" />
+      <circle cx="1250" cy="92" r="50" fill="#F5B820" />
+      <polygon points="0,290 160,220 330,250 480,150 640,220 760,190 900,240 1080,170 1250,230 1440,180 1440,420 0,420" fill="#D6C7A6" />
+      <polygon points="0,330 220,230 360,280 600,170 760,230 860,160 1040,40 1240,210 1440,140 1440,420 0,420" fill="#8A7254" />
+      <polygon points="980,100 1040,40 1100,108 1076,100 1060,120 1040,98 1018,120 1004,104" fill="#FFFDF7" />
+      <polygon points="568,186 600,170 626,190 612,186 600,196 588,186" fill="#FFFDF7" />
       <polygon points="0,360 240,300 520,340 760,280 1040,330 1280,280 1440,310 1440,420 0,420" fill="#55693A" />
       <rect x="0" y="372" width="1440" height="48" fill="#3F4F2B" />
     </svg>
@@ -60,6 +55,13 @@ const HERE = 2; // Navazi is the third stop
 </section>
 
 <script>
+  // On narrow screens keep the right part of the scene (peak + sun) in frame.
+  const land = document.querySelector('.landscape');
+  const mq = matchMedia('(max-width: 900px)');
+  const fit = () => land?.setAttribute('preserveAspectRatio', mq.matches ? 'xMaxYMax slice' : 'xMidYMax slice');
+  mq.addEventListener('change', fit);
+  fit();
+
   const road = document.querySelector('.road');
   if (road && 'IntersectionObserver' in window) {
     const io = new IntersectionObserver((es) => {
@@ -74,10 +76,10 @@ const HERE = 2; // Navazi is the third stop
   .top { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(2rem, 5vw, 5rem); align-items: end; }
   h2 { font-size: clamp(2.6rem, 1.6rem + 4vw, 5rem); }
   :lang(ka) h2 { font-size: clamp(2rem, 1.3rem + 2.8vw, 3.6rem); }
-  .info { display: grid; gap: 1.25rem; color: var(--cream-soft); }
-  .info b { color: var(--cream); font-weight: 400; }
+  .info { display: grid; gap: 1.25rem; color: var(--ink-soft); }
+  .info b { color: var(--soot); font-weight: 700; }
   .scene { position: relative; margin-top: clamp(2rem, 1rem + 3vw, 3.5rem); }
-  .landscape { display: block; width: 100%; height: clamp(260px, 30vw, 420px); }
+  .landscape { display: block; width: 100%; height: max(260px, 29.17vw); }
   .road { position: absolute; left: 0; right: 0; bottom: clamp(18px, 2.4vw, 34px); }
   ol { position: relative; display: grid; grid-template-columns: repeat(var(--count), minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; }
   ol::before, ol::after { content: ''; position: absolute; top: 22px; left: calc(50% / var(--count)); height: 3px; }
@@ -96,6 +98,7 @@ const HERE = 2; // Navazi is the third stop
   @media (prefers-reduced-motion: reduce) { ol::after { transform: none; } }
   @media (max-width: 900px) {
     .top { grid-template-columns: 1fr; }
+    .landscape { height: 240px; }
     li { font-size: 12px; }
     li:not(.here) .name { writing-mode: vertical-rl; rotate: 180deg; }
     .here .name { font-size: 18px; }

@@ -12,7 +12,7 @@ interface Props {
   home?: boolean;
 }
 const { lang, nav, ui, path = '', home = true } = Astro.props;
-const items = ['home', 'shop', 'location', 'news', 'reviews', 'gallery'] as const;
+const items = ['home', 'shop', 'news', 'location', 'reviews', 'gallery'] as const;
 const href = (id: string) => (home ? `#${id}` : `/${lang}/#${id}`);
 ---
 <header class="site-header">

@@ -26,7 +26,8 @@ const honey = products.filter((p) => p.data.category === 'honey' && p.data.avail
         <div class="bar"></div>
         <div class="cell">
           {shop.honey_image ? <img class="photo" src={shop.honey_image} alt={shop.honey_title} loading="lazy" /> : <div class="comb"><span>{ui.photo_soon}</span></div>}
-          <h3>{shop.honey_title}</h3>
+          <div class="txt">
+            <h3>{shop.honey_title}</h3>
           {honey.length > 0 && (
             <ul class="prices">
               {honey.map((p) => (
@@ -35,6 +36,7 @@ const honey = products.filter((p) => p.data.category === 'honey' && p.data.avail
             </ul>
           )}
           <a class="btn btn--ink" href={orderHref}>{ui.order_honey}</a>
+          </div>
         </div>
       </article>
 
@@ -42,9 +44,11 @@ const honey = products.filter((p) => p.data.category === 'honey' && p.data.avail
         <div class="bar"></div>
         <div class="cell">
           {shop.colonies_image ? <img class="photo" src={shop.colonies_image} alt={shop.colonies_title} loading="lazy" /> : <div class="comb"><span>{ui.photo_soon}</span></div>}
-          <h3>{shop.colonies_title}</h3>
+          <div class="txt">
+            <h3>{shop.colonies_title}</h3>
           <p>{shop.colonies_text}</p>
           <a class="btn btn--line" href={contactHref}>{shop.colonies_cta}</a>
+          </div>
         </div>
       </article>
 
@@ -52,9 +56,11 @@ const honey = products.filter((p) => p.data.category === 'honey' && p.data.avail
         <div class="bar"></div>
         <div class="cell">
           {shop.hives_image ? <img class="photo" src={shop.hives_image} alt={shop.hives_title} loading="lazy" /> : <div class="comb"><span>{ui.photo_soon}</span></div>}
-          <h3>{shop.hives_title}</h3>
+          <div class="txt">
+            <h3>{shop.hives_title}</h3>
           <p>{shop.hives_text}</p>
           <a class="btn btn--line" href={contactHref}>{shop.hives_cta}</a>
+          </div>
         </div>
       </article>
     </div>
@@ -67,34 +73,41 @@ const honey = products.filter((p) => p.data.category === 'honey' && p.data.avail
 </section>
 
 <style>
-  .frames { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: clamp(1.25rem, 2.5vw, 2.25rem); align-items: start; padding-top: 14px; }
+  /* Honey spans two rows; colonies and hives share row one, so they are always the same size. */
+  .frames { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto 1fr; gap: 0 clamp(1.25rem, 2.5vw, 2.25rem); align-items: start; padding-top: 14px; }
+  .frame:first-child { grid-row: span 2; }
+  .frame:not(:first-child) { align-self: stretch; display: flex; flex-direction: column; }
+  .frame:not(:first-child) .cell { flex: 1; }
   .frame {
     position: relative;
-    padding: 0 12px 12px;
+    padding: 0 14px 14px;
     background: var(--wood);
-    box-shadow: 0 10px 20px -16px rgb(20 17 14 / 0.6);
+    box-shadow: inset 0 0 0 2px rgb(0 0 0 / 0.12), 0 10px 20px -16px rgb(20 17 14 / 0.6);
     transition: transform 0.55s var(--ease), box-shadow 0.55s var(--ease);
   }
   .frame:hover { transform: translateY(-16px); box-shadow: 0 30px 40px -24px rgb(20 17 14 / 0.55); }
   .bar { height: 20px; margin: 0 -30px 12px; background: var(--soot); border-radius: 3px; }
-  .cell { display: grid; gap: 0.9rem; padding: 1.5rem; background: var(--paper-2); }
+  .cell { display: flex; flex-direction: column; gap: 14px; padding: 14px; background-color: #f8e7b4; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20.78' height='36'%3E%3Cpath d='M0 6L10.39 0L20.78 6V18L10.39 24L0 18ZM10.39 24V36' fill='none' stroke='%23d2a23e' stroke-width='1.3'/%3E%3C/svg%3E"); background-size: 20.78px 36px; }
   h3 { font-size: clamp(2rem, 1.4rem + 1.6vw, 2.9rem); }
+  .frame:not(:first-child) h3 { font-size: clamp(1.7rem, 1.2rem + 1.1vw, 2.3rem); }
   :lang(ka) h3 { font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.3rem); }
   .comb, .photo { aspect-ratio: 4 / 3; width: 100%; object-fit: cover; }
   .comb {
     display: grid;
+    box-shadow: 0 0 0 1px rgb(20 17 14 / 0.08);
     place-items: center;
-    background-color: #f2c75c;
-    background-image: radial-gradient(circle, var(--gold-deep) 0 30%, transparent 32%);
-    background-size: 24px 21px;
+    background: var(--paper-2);
+    outline: 1px solid rgb(20 17 14 / 0.12);
+    outline-offset: -1px;
+    color: var(--ink-soft);
     font-size: 14px;
   }
-  .comb span { background: var(--paper-2); padding: 0.15rem 0.7rem; border-radius: 999px; }
   .prices { margin: 0; padding: 0; list-style: none; font-variant-numeric: tabular-nums; }
-  .prices li { display: flex; gap: 0.7rem; align-items: baseline; padding: 0.55rem 0; border-bottom: 1px solid rgb(20 17 14 / 0.15); }
-  .dots { flex: 1; min-width: 0.5rem; border-bottom: 1px dotted rgb(20 17 14 / 0.4); }
-  .prices li > span:first-child, .prices li > span:last-child { white-space: nowrap; }
-  .cell .btn { justify-self: start; min-height: 46px; font-size: 14px; }
+  .prices li { display: flex; flex-wrap: wrap; gap: 0.1rem 0.7rem; align-items: baseline; padding: 0.55rem 0; border-bottom: 1px solid rgb(20 17 14 / 0.15); }
+  .dots { flex: 1 1 1rem; border-bottom: 1px dotted rgb(20 17 14 / 0.4); }
+  .prices li > span:last-child { margin-left: auto; white-space: nowrap; }
+  .txt { flex: 1; display: flex; flex-direction: column; gap: 0.9rem; padding: 1.25rem 1.35rem 1.4rem; background: var(--paper-2); box-shadow: 0 0 0 1px rgb(20 17 14 / 0.08); }
+  .txt .btn { align-self: flex-start; margin-top: auto; min-height: 46px; font-size: 14px; }
   .starter {
     display: flex;
     flex-wrap: wrap;
@@ -109,12 +122,9 @@ const honey = products.filter((p) => p.data.category === 'honey' && p.data.avail
   .starter strong { font: 400 clamp(1.5rem, 1rem + 1.6vw, 2.4rem)/1.1 var(--display); }
   .starter strong span { color: var(--gold); }
   @media (max-width: 900px) {
-    .frames { grid-template-columns: 1fr; }
+    .frames { grid-template-columns: 1fr; grid-template-rows: none; row-gap: clamp(1.25rem, 2.5vw, 2.25rem); }
+    .frame:first-child { grid-row: auto; }
     .bar { margin: 0 -14px 12px; }
     .starter { padding: 1.5rem; }
-  }
-  @media (max-width: 560px) {
-    .prices li { flex-wrap: wrap; row-gap: 0.1rem; }
-    .prices li > span:first-child { flex: 1 0 100%; white-space: normal; }
   }
 </style>

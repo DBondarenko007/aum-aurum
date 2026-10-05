@@ -7,9 +7,9 @@
   <svg class="bee" viewBox="-17 -17 34 34">
     <g transform="rotate(-25 -6 -2)"><ellipse class="wing l" cx="-6" cy="-7" rx="5" ry="8" /></g>
     <g transform="rotate(25 6 -2)"><ellipse class="wing r" cx="6" cy="-7" rx="5" ry="8" /></g>
-    <ellipse cx="0" cy="3" rx="6.5" ry="10" fill="#E7B649" />
+    <ellipse class="body" cx="0" cy="3" rx="6.5" ry="10" />
     <path d="M-6.2 0h12.4M-6.4 5h12.8M-5 9.5h10" stroke="#14110E" stroke-width="2.4" stroke-linecap="round" />
-    <circle cx="0" cy="-8.5" r="4" fill="#14110E" />
+    <circle class="head" cx="0" cy="-8.5" r="4" />
   </svg>
 </div>
 
@@ -23,6 +23,10 @@
       rail.style.setProperty('--p', `${max > 0 ? (scrollY / max) * 100 : 0}%`);
       if (scrollY !== lastY) rail.classList.toggle('up', scrollY < lastY);
       lastY = scrollY;
+      // Outline follows the background under the bee: light on dark sections, dark on paper.
+      const bee = rail.querySelector('.bee')!.getBoundingClientRect();
+      const under = document.elementFromPoint(bee.left + bee.width / 2, bee.top + bee.height / 2);
+      rail.classList.toggle('on-light', !!under?.closest('.paper'));
       rail.classList.add('flying');
       clearTimeout(stop);
       stop = window.setTimeout(() => rail.classList.remove('flying'), 180);
@@ -40,10 +44,10 @@
     bottom: 36px;
     z-index: 15;
     width: 2px;
-    background: repeating-linear-gradient(180deg, rgb(201 190 166 / 0.4) 0 6px, transparent 6px 12px);
+    background: repeating-linear-gradient(180deg, rgb(201 147 46 / 0.7) 0 6px, transparent 6px 12px);
     pointer-events: none;
   }
-  .rail i { position: absolute; inset: 0 0 auto; height: var(--p, 0%); background: var(--gold); }
+  .rail i { position: absolute; inset: 0 0 auto; height: var(--p, 0%); background: var(--gold-deep); }
   .bee {
     position: absolute;
     left: 50%;
@@ -53,10 +57,14 @@
     translate: -50% -50%;
     rotate: 180deg;
     transition: rotate 0.35s var(--ease);
-    filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.5));
   }
   .rail.up .bee { rotate: 0deg; }
-  .wing { fill: #ede1c7; opacity: 0.85; transform-box: fill-box; transform-origin: 50% 100%; }
+  .bee { --edge: #ede1c7; }
+  .rail.on-light .bee { --edge: #14110e; }
+  .wing { fill: #ede1c7; fill-opacity: 0.85; stroke: var(--edge); stroke-width: 1.1; transform-box: fill-box; transform-origin: 50% 100%; }
+  .body { fill: #e7b649; stroke: var(--edge); stroke-width: 1.2; }
+  .head { fill: #14110e; stroke: var(--edge); stroke-width: 1.2; }
+  .wing, .body, .head { transition: stroke 0.3s; }
   .rail.flying .wing.l { animation: flap 0.08s linear infinite alternate; }
   .rail.flying .wing.r { animation: flap 0.08s linear infinite alternate-reverse; }
   @keyframes flap { from { transform: scaleY(1); } to { transform: scaleY(0.35); } }
