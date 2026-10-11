@@ -29,626 +29,351 @@ slug:
   encoding: ascii
   clean_accents: true
 collections:
-  - name: home
+  - name: texts
     label: Тексты сайта
     icon: home
     files:
-      - name: home
-        label: Тексты сайта (все разделы)
-        file: src/content/home/{{locale}}.yaml
+      - name: hero
+        label: 1. Главная — первый экран
+        file: src/content/texts/hero.{{locale}}.yaml
         format: yaml
         i18n: true
+        editor:
+          preview: false
         fields:
-          - name: meta
-            label: Поиск (Google)
-            widget: object
+          - name: title
+            label: Название
+            widget: string
             i18n: true
-            collapsed: true
-            fields:
-              - name: title
-                label: Заголовок вкладки
-                widget: string
-                i18n: true
-                required: false
-              - name: description
-                label: Описание для Google
-                widget: text
-                i18n: true
-                required: false
             required: false
-          - name: nav
-            label: Меню
-            widget: object
+            hint: Пишется шрифтом логотипа.
+          - name: lead
+            label: Подзаголовок
+            widget: text
             i18n: true
-            collapsed: true
-            fields:
-              - name: home
-                label: Главная
-                widget: string
-                i18n: true
-                required: false
-              - name: shop
-                label: Магазин
-                widget: string
-                i18n: true
-                required: false
-              - name: location
-                label: Как добраться
-                widget: string
-                i18n: true
-                required: false
-              - name: news
-                label: Новости
-                widget: string
-                i18n: true
-                required: false
-              - name: reviews
-                label: Отзывы
-                widget: string
-                i18n: true
-                required: false
-              - name: gallery
-                label: Галерея
-                widget: string
-                i18n: true
-                required: false
             required: false
-          - name: ui
-            label: Кнопки и служебные надписи
-            widget: object
+          - name: cta_primary
+            label: Главная кнопка
+            widget: string
             i18n: true
-            collapsed: true
-            fields:
-              - name: order_honey
-                label: Кнопка «Заказать мёд»
-                widget: string
-                i18n: true
-                required: false
-              - name: order_message
-                label: Текст сообщения в WhatsApp при заказе
-                widget: string
-                i18n: true
-                required: false
-              - name: photo_soon
-                label: Надпись вместо фото
-                widget: string
-                i18n: true
-                required: false
-              - name: all_news
-                label: Все новости
-                widget: string
-                i18n: true
-                required: false
-              - name: back
-                label: Назад
-                widget: string
-                i18n: true
-                required: false
-              - name: menu
-                label: Меню (кнопка на телефоне)
-                widget: string
-                i18n: true
-                required: false
-              - name: close
-                label: Закрыть
-                widget: string
-                i18n: true
-                required: false
-              - name: coming_soon
-                label: «Скоро» (контакты не заполнены)
-                widget: string
-                i18n: true
-                required: false
-              - name: price_on_request
-                label: Цена не указана
-                widget: string
-                i18n: true
-                required: false
-              - name: language
-                label: Язык
-                widget: string
-                i18n: true
-                required: false
-              - name: placeholder_note
-                label: Метка «пример»
-                widget: string
-                i18n: true
-                required: false
-              - name: to_top
-                label: Подсказка у логотипа в шапке
-                widget: string
-                i18n: true
-                required: false
-              - name: cart
-                label: Корзина (подсказка у иконки)
-                widget: string
-                i18n: true
-                required: false
-              - name: contact_us
-                label: Кнопка «Написать нам» в углу
-                widget: string
-                i18n: true
-                required: false
-              - name: privacy
-                label: Ссылка «Персональные данные» в подвале
-                widget: string
-                i18n: true
-                required: false
             required: false
-          - name: hero
-            label: Home — первый экран
+          - name: cta_secondary
+            label: Вторая кнопка
+            widget: string
+            i18n: true
+            required: false
+          - name: apiary_label
+            label: Описание анимации ульев (для незрячих)
+            widget: string
+            i18n: true
+            required: false
+          - name: open_hive
+            label: Подсказка «открыть улей»
+            widget: string
+            i18n: true
+            required: false
+      - name: story
+        label: 1. Главная — полоса с числом
+        file: src/content/texts/story.{{locale}}.yaml
+        format: yaml
+        i18n: true
+        editor:
+          preview: false
+        fields:
+          - name: number
+            label: Число
+            widget: string
+            i18n: true
+            required: false
+            hint: Крупно, золотом. Например «5 500».
+          - name: text
+            label: Текст (слово Aurum выделится курсивом)
+            widget: text
+            i18n: true
+            required: false
+            hint: Идёт сразу после числа. Слово Aurum выделится курсивом.
+      - name: shop
+        label: 2. Магазин — надписи (сами товары — в «Товары»)
+        file: src/content/texts/shop.{{locale}}.yaml
+        format: yaml
+        i18n: true
+        editor:
+          preview: false
+        fields:
+          - name: title
+            label: Заголовок
+            widget: string
+            i18n: true
+            required: false
+          - name: subtitle
+            label: Подзаголовок
+            widget: text
+            i18n: true
+            required: false
+          - name: all_products
+            label: Ссылка «Все товары»
+            widget: string
+            i18n: true
+            required: false
+          - name: page_title
+            label: Страница «Все товары» — заголовок
+            widget: string
+            i18n: true
+            required: false
+          - name: page_text
+            label: Страница «Все товары» — текст
+            widget: string
+            i18n: true
+            required: false
+          - name: add_to_cart
+            label: Кнопка «В корзину» (подсказка)
+            widget: string
+            i18n: true
+            required: false
+          - name: added
+            label: Надпись «Добавлено»
+            widget: string
+            i18n: true
+            required: false
+          - name: preorder
+            label: Кнопка «Предзаказ» (по умолчанию)
+            widget: string
+            i18n: true
+            required: false
+          - name: order
+            label: Кнопка «Заказать» (по умолчанию)
+            widget: string
+            i18n: true
+            required: false
+          - name: message
+            label: Начало сообщения при предзаказе / заказе
+            widget: string
+            i18n: true
+            required: false
+            hint: С этих слов начинается сообщение нам, когда покупатель жмёт «Предзаказ» или «Заказать».
+          - name: prev
+            label: Стрелка «Назад» (для незрячих)
+            widget: string
+            i18n: true
+            required: false
+          - name: next
+            label: Стрелка «Вперёд» (для незрячих)
+            widget: string
+            i18n: true
+            required: false
+          - name: categories
+            label: Названия типов товаров
             widget: object
             i18n: true
             fields:
-              - name: title
-                label: Название (шрифтом логотипа)
+              - name: honey
+                label: Мёд
                 widget: string
                 i18n: true
                 required: false
-              - name: lead
-                label: Подзаголовок
-                widget: text
-                i18n: true
-                required: false
-              - name: cta_primary
-                label: Главная кнопка
+              - name: colonies
+                label: Пчелосемьи
                 widget: string
                 i18n: true
                 required: false
-              - name: cta_secondary
-                label: Вторая кнопка
+              - name: hives
+                label: Ульи
                 widget: string
                 i18n: true
                 required: false
-              - name: apiary_label
-                label: Описание анимации ульев (для незрячих)
-                widget: string
-                i18n: true
-                required: false
-              - name: open_hive
-                label: Подсказка «открыть улей»
+              - name: other
+                label: Прочее
                 widget: string
                 i18n: true
                 required: false
             required: false
-          - name: story
-            label: Home — полоса «5 500 лет»
+          - name: badges
+            label: Пометки у товаров
             widget: object
             i18n: true
             fields:
-              - name: number
-                label: Число
+              - name: in_stock
+                label: В наличии
                 widget: string
                 i18n: true
                 required: false
-              - name: text
-                label: Текст (слово Aurum выделится курсивом)
-                widget: text
-                i18n: true
-                required: false
-            required: false
-          - name: shop
-            label: Shop — магазин (сами товары — в разделе «Товары»)
-            widget: object
-            i18n: true
-            fields:
-              - name: title
-                label: Заголовок
-                widget: string
-                i18n: true
-                required: false
-              - name: subtitle
-                label: Подзаголовок
-                widget: text
-                i18n: true
-                required: false
-              - name: all_products
-                label: Ссылка «Все товары»
-                widget: string
-                i18n: true
-                required: false
-              - name: page_title
-                label: Страница «Все товары» — заголовок
-                widget: string
-                i18n: true
-                required: false
-              - name: page_text
-                label: Страница «Все товары» — текст
-                widget: string
-                i18n: true
-                required: false
-              - name: add_to_cart
-                label: Кнопка «В корзину» (подсказка)
-                widget: string
-                i18n: true
-                required: false
-              - name: added
-                label: Надпись «Добавлено»
+              - name: new_harvest
+                label: Новый урожай
                 widget: string
                 i18n: true
                 required: false
               - name: preorder
-                label: Кнопка «Предзаказ» (по умолчанию)
+                label: Предзаказ
                 widget: string
                 i18n: true
                 required: false
-              - name: order
-                label: Кнопка «Заказать» (по умолчанию)
-                widget: string
-                i18n: true
-                required: false
-              - name: message
-                label: Начало сообщения при предзаказе / заказе
-                widget: string
-                i18n: true
-                required: false
-              - name: prev
-                label: Стрелка «Назад» (для незрячих)
-                widget: string
-                i18n: true
-                required: false
-              - name: next
-                label: Стрелка «Вперёд» (для незрячих)
-                widget: string
-                i18n: true
-                required: false
-              - name: categories
-                label: Названия типов товаров
-                widget: object
-                i18n: true
-                collapsed: true
-                fields:
-                  - name: honey
-                    label: Мёд
-                    widget: string
-                    i18n: true
-                    required: false
-                  - name: colonies
-                    label: Пчелосемьи
-                    widget: string
-                    i18n: true
-                    required: false
-                  - name: hives
-                    label: Ульи
-                    widget: string
-                    i18n: true
-                    required: false
-                  - name: other
-                    label: Прочее
-                    widget: string
-                    i18n: true
-                    required: false
-                required: false
-              - name: badges
-                label: Пометки у товаров
-                widget: object
-                i18n: true
-                collapsed: true
-                fields:
-                  - name: in_stock
-                    label: В наличии
-                    widget: string
-                    i18n: true
-                    required: false
-                  - name: new_harvest
-                    label: Новый урожай
-                    widget: string
-                    i18n: true
-                    required: false
-                  - name: preorder
-                    label: Предзаказ
-                    widget: string
-                    i18n: true
-                    required: false
-                  - name: sold_out
-                    label: Нет в наличии
-                    widget: string
-                    i18n: true
-                    required: false
-                required: false
-              - name: starter_title
-                label: «Старт пчеловода» — заголовок
-                widget: string
-                i18n: true
-                required: false
-              - name: starter_parts
-                label: «Старт пчеловода» — состав
-                widget: list
-                i18n: true
-                required: false
-              - name: starter_cta
-                label: «Старт пчеловода» — кнопка
+              - name: sold_out
+                label: Нет в наличии
                 widget: string
                 i18n: true
                 required: false
             required: false
-          - name: location
-            label: Location — как добраться
-            widget: object
+          - name: starter_title
+            label: «Старт пчеловода» — заголовок
+            widget: string
             i18n: true
-            fields:
-              - name: title
-                label: Заголовок
-                widget: string
-                i18n: true
-                required: false
-              - name: address
-                label: Адрес (выделяется)
-                widget: string
-                i18n: true
-                required: false
-              - name: text
-                label: Текст после адреса
-                widget: string
-                i18n: true
-                required: false
-              - name: visit_note
-                label: Примечание к визиту
-                widget: string
-                i18n: true
-                required: false
-              - name: route_cta
-                label: Кнопка маршрута
-                widget: string
-                i18n: true
-                required: false
-              - name: stops
-                label: Остановки на дороге (3-я — Навази)
-                widget: list
-                i18n: true
-                required: false
-              - name: here
-                label: Подпись «мы здесь»
-                widget: string
-                i18n: true
-                required: false
-              - name: hours_title
-                label: Заголовок «Часы работы» (сами часы — в «Контакты и карта»)
-                widget: string
-                i18n: true
-                required: false
-              - name: days
-                label: Дни недели Пн…Вс (7 штук)
-                widget: list
-                i18n: true
-                required: false
             required: false
-          - name: news
-            label: News — заголовок
-            widget: object
-            i18n: true
-            fields:
-              - name: title
-                label: Заголовок
-                widget: string
-                i18n: true
-                required: false
-            required: false
-          - name: reviews
-            label: Отзывы и вопросы — заголовки и форма
-            widget: object
-            i18n: true
-            fields:
-              - name: title
-                label: Заголовок раздела
-                widget: string
-                i18n: true
-                required: false
-              - name: placeholder
-                label: Текст-заглушка (пока отзывов нет)
-                widget: string
-                i18n: true
-                required: false
-              - name: google_cta
-                label: Кнопка «Оставить отзыв в Google»
-                widget: string
-                i18n: true
-                required: false
-              - name: write_cta
-                label: Кнопка «Написать отзыв»
-                widget: string
-                i18n: true
-                required: false
-              - name: faq_title
-                label: Заголовок «Вопросы и ответы»
-                widget: string
-                i18n: true
-                required: false
-              - name: form
-                label: Форма отзыва
-                widget: object
-                i18n: true
-                collapsed: true
-                fields:
-                  - name: name
-                    label: Поле «Имя»
-                    widget: string
-                    i18n: true
-                    required: false
-                  - name: city
-                    label: Поле «Город»
-                    widget: string
-                    i18n: true
-                    required: false
-                  - name: text
-                    label: Поле «Отзыв»
-                    widget: string
-                    i18n: true
-                    required: false
-                  - name: consent
-                    label: Галочка согласия
-                    widget: string
-                    i18n: true
-                    required: false
-                  - name: submit
-                    label: Кнопка отправки
-                    widget: string
-                    i18n: true
-                    required: false
-                  - name: sending
-                    label: «Отправляем…»
-                    widget: string
-                    i18n: true
-                    required: false
-                  - name: success
-                    label: Сообщение об успехе
-                    widget: string
-                    i18n: true
-                    required: false
-                  - name: error
-                    label: Сообщение об ошибке
-                    widget: string
-                    i18n: true
-                    required: false
-                required: false
-            required: false
-          - name: faq
-            label: Вопросы и ответы
-            label_singular: Вопрос
+          - name: starter_parts
+            label: «Старт пчеловода» — состав
             widget: list
             i18n: true
-            summary: '{{q}}'
-            hint: Эти ответы видят и посетители, и поисковики с ИИ-помощниками. Пишите конкретно — адрес, цены, сроки.
-            fields:
-              - name: q
-                label: Вопрос
-                widget: string
-                i18n: true
-                required: false
-              - name: a
-                label: Ответ
-                widget: text
-                i18n: true
-                required: false
-              - name: hidden
-                label: Скрыть на сайте (черновик)
-                widget: boolean
-                default: false
-                i18n: duplicate
-                required: false
             required: false
-          - name: gallery
-            label: Gallery — полароиды
+          - name: starter_cta
+            label: «Старт пчеловода» — кнопка
+            widget: string
+            i18n: true
+            required: false
+      - name: news
+        label: 3. Новости — заголовок (сами новости — в «Новости»)
+        file: src/content/texts/news.{{locale}}.yaml
+        format: yaml
+        i18n: true
+        editor:
+          preview: false
+        fields:
+          - name: title
+            label: Заголовок
+            widget: string
+            i18n: true
+            required: false
+      - name: location
+        label: 4. Как добраться
+        file: src/content/texts/location.{{locale}}.yaml
+        format: yaml
+        i18n: true
+        editor:
+          preview: false
+        fields:
+          - name: title
+            label: Заголовок
+            widget: string
+            i18n: true
+            required: false
+          - name: address
+            label: Адрес (выделяется)
+            widget: string
+            i18n: true
+            required: false
+          - name: text
+            label: Текст после адреса
+            widget: string
+            i18n: true
+            required: false
+          - name: visit_note
+            label: Примечание к визиту
+            widget: string
+            i18n: true
+            required: false
+          - name: route_cta
+            label: Кнопка маршрута
+            widget: string
+            i18n: true
+            required: false
+          - name: stops
+            label: Остановки на дороге (3-я — Навази)
+            widget: list
+            i18n: true
+            required: false
+            hint: Названия остановок на нарисованной дороге, слева направо. Третья — Навази.
+            allow_add: false
+            allow_remove: false
+            allow_reorder: false
+            field:
+              name: word
+              label: Слово
+              widget: string
+              i18n: true
+              required: false
+          - name: here
+            label: Подпись «мы здесь»
+            widget: string
+            i18n: true
+            required: false
+          - name: hours_title
+            label: Заголовок «Часы работы» (сами часы — в «Контакты и карта»)
+            widget: string
+            i18n: true
+            required: false
+          - name: days
+            label: Дни недели Пн…Вс (7 штук)
+            widget: list
+            i18n: true
+            required: false
+            hint: Сокращения дней недели, с понедельника по воскресенье.
+            allow_add: false
+            allow_remove: false
+            allow_reorder: false
+            field:
+              name: word
+              label: Слово
+              widget: string
+              i18n: true
+              required: false
+      - name: reviews
+        label: 5. Отзывы — заголовки и форма (сами отзывы — в «Контакты и отзывы»)
+        file: src/content/texts/reviews.{{locale}}.yaml
+        format: yaml
+        i18n: true
+        editor:
+          preview: false
+        fields:
+          - name: title
+            label: Заголовок раздела
+            widget: string
+            i18n: true
+            required: false
+          - name: placeholder
+            label: Текст-заглушка (пока отзывов нет)
+            widget: string
+            i18n: true
+            required: false
+          - name: google_cta
+            label: Кнопка «Оставить отзыв в Google»
+            widget: string
+            i18n: true
+            required: false
+          - name: write_cta
+            label: Кнопка «Написать отзыв»
+            widget: string
+            i18n: true
+            required: false
+          - name: faq_title
+            label: Заголовок «Вопросы и ответы»
+            widget: string
+            i18n: true
+            required: false
+          - name: form
+            label: Форма отзыва
             widget: object
             i18n: true
             fields:
-              - name: title
-                label: Заголовок
-                widget: string
-                i18n: true
-                required: false
-              - name: text
-                label: Текст
-                widget: string
-                i18n: true
-                required: false
-              - name: photos
-                label: Фото (до 8, по 4 на верёвочке)
-                widget: list
-                i18n: true
-                max: 8
-                fields:
-                  - name: caption
-                    label: Подпись
-                    widget: string
-                    i18n: true
-                    required: false
-                  - name: image
-                    label: Фото
-                    widget: image
-                    required: false
-                    i18n: duplicate
-                required: false
-            required: false
-          - name: cart
-            label: Корзина и оформление заказа
-            widget: object
-            i18n: true
-            collapsed: true
-            fields:
-              - name: title
-                label: Заголовок
-                widget: string
-                i18n: true
-                required: false
-              - name: empty
-                label: Корзина пуста
-                widget: string
-                i18n: true
-                required: false
-              - name: back
-                label: Вернуться в магазин
-                widget: string
-                i18n: true
-                required: false
-              - name: qty
-                label: Количество
-                widget: string
-                i18n: true
-                required: false
-              - name: remove
-                label: Удалить
-                widget: string
-                i18n: true
-                required: false
-              - name: total
-                label: Итого
-                widget: string
-                i18n: true
-                required: false
-              - name: total_note
-                label: Примечание о ценах «по запросу»
-                widget: string
-                i18n: true
-                required: false
-              - name: form_title
-                label: Заголовок формы
-                widget: string
-                i18n: true
-                required: false
               - name: name
                 label: Поле «Имя»
                 widget: string
                 i18n: true
                 required: false
-              - name: phone
-                label: Поле «Телефон»
+              - name: city
+                label: Поле «Город»
                 widget: string
                 i18n: true
                 required: false
-              - name: delivery
-                label: Поле «Как получить»
+              - name: text
+                label: Поле «Отзыв»
                 widget: string
                 i18n: true
                 required: false
-              - name: delivery_options
-                label: Варианты получения (самовывоз
-                доставка…): null
-                widget: list
-                i18n: true
-                required: false
-              - name: address
-                label: Поле «Адрес»
-                widget: string
-                i18n: true
-                required: false
-              - name: comment
-                label: Поле «Комментарий»
+              - name: consent
+                label: Галочка согласия
                 widget: string
                 i18n: true
                 required: false
               - name: submit
-                label: Кнопка «Отправить заказ»
-                widget: string
-                i18n: true
-                required: false
-              - name: via
-                label: «Заказ уйдёт нам через»
-                widget: string
-                i18n: true
-                required: false
-              - name: copied
-                label: Сообщение «текст скопирован» (Telegram)
+                label: Кнопка отправки
                 widget: string
                 i18n: true
                 required: false
@@ -667,67 +392,388 @@ collections:
                 widget: string
                 i18n: true
                 required: false
-              - name: no_channel
-                label: Нет контактов для заказа
-                widget: string
-                i18n: true
-                required: false
-              - name: order_title
-                label: Первая строка текста заказа
-                widget: string
-                i18n: true
-                required: false
             required: false
-          - name: privacy
-            label: Страница «Персональные данные»
-            widget: object
+      - name: faq
+        label: 5. Вопросы и ответы
+        file: src/content/texts/faq.{{locale}}.yaml
+        format: yaml
+        i18n: true
+        editor:
+          preview: false
+        fields:
+          - name: items
+            label: Вопросы
+            label_singular: Вопрос
+            widget: list
             i18n: true
-            collapsed: true
+            summary: '{{q}}'
             fields:
-              - name: title
-                label: Заголовок
+              - name: q
+                label: Вопрос
                 widget: string
                 i18n: true
                 required: false
-              - name: text
-                label: Текст (абзацы через пустую строку)
+              - name: a
+                label: Ответ
                 widget: text
                 i18n: true
                 required: false
+              - name: hidden
+                label: Скрыть на сайте (черновик)
+                widget: boolean
+                default: false
+                i18n: duplicate
+                required: false
             required: false
-          - name: notfound
-            label: Страница «не найдено» (404)
-            widget: object
+            hint: Эти ответы видят и посетители, и поисковики с ИИ-помощниками. Пишите конкретно — адрес, цены, сроки. Чтобы спрятать вопрос, пока ответа нет, включите «Скрыть на сайте».
+      - name: gallery
+        label: 6. Галерея
+        file: src/content/texts/gallery.{{locale}}.yaml
+        format: yaml
+        i18n: true
+        editor:
+          preview: false
+        fields:
+          - name: title
+            label: Заголовок
+            widget: string
             i18n: true
-            collapsed: true
-            fields:
-              - name: title
-                label: Заголовок
-                widget: string
-                i18n: true
-                required: false
-              - name: text
-                label: Текст
-                widget: string
-                i18n: true
-                required: false
-              - name: cta
-                label: Кнопка
-                widget: string
-                i18n: true
-                required: false
             required: false
-          - name: footer
-            label: Подвал
-            widget: object
+          - name: text
+            label: Текст
+            widget: string
             i18n: true
+            required: false
+          - name: photos
+            label: Фото (до 8, по 4 на верёвочке)
+            widget: list
+            i18n: true
+            max: 8
             fields:
-              - name: text
-                label: Текст после «© Aum Aurum»
+              - name: caption
+                label: Подпись
                 widget: string
                 i18n: true
                 required: false
+              - name: image
+                label: Фото
+                widget: image
+                required: false
+                i18n: duplicate
             required: false
+      - name: nav
+        label: Меню вверху страницы
+        file: src/content/texts/nav.{{locale}}.yaml
+        format: yaml
+        i18n: true
+        editor:
+          preview: false
+        fields:
+          - name: home
+            label: Главная
+            widget: string
+            i18n: true
+            required: false
+          - name: shop
+            label: Магазин
+            widget: string
+            i18n: true
+            required: false
+          - name: location
+            label: Как добраться
+            widget: string
+            i18n: true
+            required: false
+          - name: news
+            label: Новости
+            widget: string
+            i18n: true
+            required: false
+          - name: reviews
+            label: Отзывы
+            widget: string
+            i18n: true
+            required: false
+          - name: gallery
+            label: Галерея
+            widget: string
+            i18n: true
+            required: false
+      - name: footer
+        label: Подвал (низ страницы)
+        file: src/content/texts/footer.{{locale}}.yaml
+        format: yaml
+        i18n: true
+        editor:
+          preview: false
+        fields:
+          - name: text
+            label: Текст после «© Aum Aurum»
+            widget: string
+            i18n: true
+            required: false
+      - name: ui
+        label: Мелкие кнопки и подсказки
+        file: src/content/texts/ui.{{locale}}.yaml
+        format: yaml
+        i18n: true
+        editor:
+          preview: false
+        fields:
+          - name: order_honey
+            label: Кнопка «Заказать мёд»
+            widget: string
+            i18n: true
+            required: false
+          - name: order_message
+            label: Текст сообщения в WhatsApp при заказе
+            widget: string
+            i18n: true
+            required: false
+          - name: photo_soon
+            label: Надпись вместо фото
+            widget: string
+            i18n: true
+            required: false
+          - name: all_news
+            label: Все новости
+            widget: string
+            i18n: true
+            required: false
+          - name: back
+            label: Назад
+            widget: string
+            i18n: true
+            required: false
+          - name: menu
+            label: Меню (кнопка на телефоне)
+            widget: string
+            i18n: true
+            required: false
+          - name: close
+            label: Закрыть
+            widget: string
+            i18n: true
+            required: false
+          - name: coming_soon
+            label: «Скоро» (контакты не заполнены)
+            widget: string
+            i18n: true
+            required: false
+          - name: price_on_request
+            label: Цена не указана
+            widget: string
+            i18n: true
+            required: false
+          - name: language
+            label: Язык
+            widget: string
+            i18n: true
+            required: false
+          - name: placeholder_note
+            label: Метка «пример»
+            widget: string
+            i18n: true
+            required: false
+          - name: to_top
+            label: Подсказка у логотипа в шапке
+            widget: string
+            i18n: true
+            required: false
+          - name: cart
+            label: Корзина (подсказка у иконки)
+            widget: string
+            i18n: true
+            required: false
+          - name: contact_us
+            label: Кнопка «Написать нам» в углу
+            widget: string
+            i18n: true
+            required: false
+          - name: privacy
+            label: Ссылка «Персональные данные» в подвале
+            widget: string
+            i18n: true
+            required: false
+      - name: cart
+        label: Корзина и оформление заказа
+        file: src/content/texts/cart.{{locale}}.yaml
+        format: yaml
+        i18n: true
+        editor:
+          preview: false
+        fields:
+          - name: title
+            label: Заголовок
+            widget: string
+            i18n: true
+            required: false
+          - name: empty
+            label: Корзина пуста
+            widget: string
+            i18n: true
+            required: false
+          - name: back
+            label: Вернуться в магазин
+            widget: string
+            i18n: true
+            required: false
+          - name: qty
+            label: Количество
+            widget: string
+            i18n: true
+            required: false
+          - name: remove
+            label: Удалить
+            widget: string
+            i18n: true
+            required: false
+          - name: total
+            label: Итого
+            widget: string
+            i18n: true
+            required: false
+          - name: total_note
+            label: Примечание о ценах «по запросу»
+            widget: string
+            i18n: true
+            required: false
+          - name: form_title
+            label: Заголовок формы
+            widget: string
+            i18n: true
+            required: false
+          - name: name
+            label: Поле «Имя»
+            widget: string
+            i18n: true
+            required: false
+          - name: phone
+            label: Поле «Телефон»
+            widget: string
+            i18n: true
+            required: false
+          - name: delivery
+            label: Поле «Как получить»
+            widget: string
+            i18n: true
+            required: false
+          - name: delivery_options
+            label: Варианты получения (самовывоз, доставка…)
+            widget: list
+            i18n: true
+            required: false
+          - name: address
+            label: Поле «Адрес»
+            widget: string
+            i18n: true
+            required: false
+          - name: comment
+            label: Поле «Комментарий»
+            widget: string
+            i18n: true
+            required: false
+          - name: submit
+            label: Кнопка «Отправить заказ»
+            widget: string
+            i18n: true
+            required: false
+          - name: via
+            label: «Заказ уйдёт нам через»
+            widget: string
+            i18n: true
+            required: false
+          - name: copied
+            label: Сообщение «текст скопирован» (Telegram)
+            widget: string
+            i18n: true
+            required: false
+          - name: sending
+            label: «Отправляем…»
+            widget: string
+            i18n: true
+            required: false
+          - name: success
+            label: Сообщение об успехе
+            widget: string
+            i18n: true
+            required: false
+          - name: error
+            label: Сообщение об ошибке
+            widget: string
+            i18n: true
+            required: false
+          - name: no_channel
+            label: Нет контактов для заказа
+            widget: string
+            i18n: true
+            required: false
+          - name: order_title
+            label: Первая строка текста заказа
+            widget: string
+            i18n: true
+            required: false
+      - name: meta
+        label: Google — название и описание сайта
+        file: src/content/texts/meta.{{locale}}.yaml
+        format: yaml
+        i18n: true
+        editor:
+          preview: false
+        fields:
+          - name: title
+            label: Заголовок вкладки
+            widget: string
+            i18n: true
+            required: false
+          - name: description
+            label: Описание для Google
+            widget: text
+            i18n: true
+            required: false
+      - name: privacy
+        label: Страница «Персональные данные»
+        file: src/content/texts/privacy.{{locale}}.yaml
+        format: yaml
+        i18n: true
+        editor:
+          preview: false
+        fields:
+          - name: title
+            label: Заголовок
+            widget: string
+            i18n: true
+            required: false
+          - name: text
+            label: Текст (абзацы через пустую строку)
+            widget: text
+            i18n: true
+            required: false
+      - name: notfound
+        label: Страница «не найдено» (404)
+        file: src/content/texts/notfound.{{locale}}.yaml
+        format: yaml
+        i18n: true
+        editor:
+          preview: false
+        fields:
+          - name: title
+            label: Заголовок
+            widget: string
+            i18n: true
+            required: false
+          - name: text
+            label: Текст
+            widget: string
+            i18n: true
+            required: false
+          - name: cta
+            label: Кнопка
+            widget: string
+            i18n: true
+            required: false
+    description: Каждый пункт — один раздел страницы, сверху вниз. Язык переключается вверху формы (Русский / ქართული / English); пустое поле на сайте останется пустым.
+    i18n: true
   - name: products
     label: Товары
     label_singular: Товар
@@ -900,8 +946,7 @@ collections:
         format: yaml
         fields:
           - name: phone
-            label: Телефон (с кодом страны
-            +995…): null
+            label: Телефон (с кодом страны, +995…)
             widget: string
             required: false
           - name: whatsapp
@@ -1002,10 +1047,7 @@ collections:
             widget: select
             default: auto
             options:
-              - label: Автоматически (бот
-                затем WhatsApp: null
-                Telegram: null
-                почта): null
+              - label: Автоматически (бот, затем WhatsApp, Telegram, почта)
                 value: auto
               - label: WhatsApp
                 value: whatsapp

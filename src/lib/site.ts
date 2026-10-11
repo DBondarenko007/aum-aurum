@@ -1,4 +1,5 @@
 import { getCollection, getEntry } from 'astro:content';
+import { homeSchema } from '../content.config';
 
 /** Site-relative URL with the deploy base (e.g. "/aum-aurum") in front; external links pass through. */
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -16,10 +17,17 @@ const splitId = (id: string) => {
   return { slug: id.slice(0, dot), locale: id.slice(dot + 1) };
 };
 
+/** All site texts for one locale, merged from src/content/texts/<section>.<locale>.yaml.
+ *  A section file missing in that locale falls back to English; "faq" keeps its list under "items". */
 export async function getHome(lang: Locale) {
-  const entry = (await getEntry('home', lang)) ?? (await getEntry('home', 'en'));
-  if (!entry) throw new Error('src/content/home/en.yaml is missing');
-  return entry.data;
+  const sections: Record<string, unknown> = {};
+  for (const e of await getCollection('texts')) {
+    const { slug, locale } = splitId(e.id);
+    if (locale === lang || (locale === 'en' && !(slug in sections))) {
+      sections[slug] = slug === 'faq' ? (e.data as { items?: unknown } | null)?.items : e.data;
+    }
+  }
+  return homeSchema.parse(sections);
 }
 
 /** Entries for one locale; a slug missing in that locale falls back to English. */

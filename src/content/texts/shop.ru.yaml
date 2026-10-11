@@ -1,0 +1,28 @@
+title: Из нашего улья
+subtitle: Мёд — главное. А ещё пчелосемьи на весну и ульи, которые мы строим сами и проверяем на своих пчёлах.
+starter_title: 'Старт пчеловода:'
+starter_parts:
+  - улей
+  - пчелосемья
+  - консультация
+starter_cta: Связаться
+add_to_cart: В корзину
+added: Добавлено
+badges:
+  in_stock: в наличии
+  new_harvest: новый урожай
+  preorder: предзаказ
+  sold_out: нет в наличии
+all_products: Все товары
+preorder: Предзаказ
+order: Заказать
+message: 'Здравствуйте! Хочу заказать:'
+page_title: Все товары
+page_text: Мёд, пчелосемьи, ульи и всё остальное с нашей пасеки.
+categories:
+  honey: Мёд
+  colonies: Пчелосемьи
+  hives: Ульи
+  other: Прочее
+prev: Назад
+next: Вперёд

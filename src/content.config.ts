@@ -8,59 +8,66 @@ const keepId = ({ entry }: { entry: string }) => entry.replace(/\.(ya?ml|md)$/, 
 
 const text = z.string().nullish().transform((v) => v ?? '');
 const image = z.string().optional().nullable();
-const list = z.array(text).default([]);
+// A section or list the admin saved as empty (null) reads as {} / [] instead of breaking the build.
+const orEmpty = <T extends z.ZodTypeAny>(fallback: unknown, schema: T) => z.preprocess((v) => v ?? fallback, schema);
+const list = orEmpty([], z.array(text));
+const section = <S extends z.ZodRawShape>(shape: S) => orEmpty({}, z.object(shape));
 
-const home = defineCollection({
-  loader: glob({ pattern: '*.yaml', base: './src/content/home', generateId: keepId }),
-  schema: z.object({
-    meta: z.object({ title: text, description: text }),
-    nav: z.object({ home: text, shop: text, location: text, news: text, reviews: text, gallery: text }),
-    ui: z.object({
-      order_honey: text, order_message: text, photo_soon: text, all_news: text, back: text,
-      menu: text, close: text, coming_soon: text, price_on_request: text, language: text,
-      placeholder_note: text, to_top: text, cart: text, contact_us: text, privacy: text,
-    }),
-    hero: z.object({
-      title: text, lead: text, cta_primary: text, cta_secondary: text,
-      apiary_label: text, open_hive: text,
-    }),
-    story: z.object({ number: text, text: text }),
-    shop: z.object({
-      title: text, subtitle: text,
-      starter_title: text, starter_parts: list, starter_cta: text,
-      add_to_cart: text, added: text, preorder: text, order: text, message: text,
-      all_products: text, page_title: text, page_text: text, prev: text, next: text,
-      badges: z.object({ in_stock: text, new_harvest: text, preorder: text, sold_out: text }).default({}),
-      categories: z.object({ honey: text, colonies: text, hives: text, other: text }).default({}),
-    }),
-    location: z.object({
-      title: text, address: text, text: text, visit_note: text, route_cta: text,
-      stops: list, here: text, hours_title: text, days: list,
-    }),
-    news: z.object({ title: text }),
-    reviews: z.object({
-      title: text, placeholder: text, google_cta: text, write_cta: text, faq_title: text,
-      form: z.object({
-        name: text, city: text, text: text, consent: text, submit: text,
-        sending: text, success: text, error: text,
-      }).default({}),
-    }),
-    faq: z.array(z.object({ q: text, a: text, hidden: z.boolean().catch(false) })).default([]),
-    gallery: z.object({
-      title: text, text: text,
-      photos: z.array(z.object({ caption: text, image })).default([]),
-    }),
-    cart: z.object({
-      title: text, empty: text, back: text, qty: text, remove: text, total: text,
-      total_note: text, form_title: text, name: text, phone: text, delivery: text,
-      delivery_options: list, address: text, comment: text, submit: text,
-      via: text, copied: text, sending: text, success: text, error: text,
-      no_channel: text, order_title: text,
-    }).default({}),
-    privacy: z.object({ title: text, text: text }).default({}),
-    notfound: z.object({ title: text, text: text, cta: text }).default({}),
-    footer: z.object({ text: text }),
+// Site texts: one file per page section and locale, src/content/texts/<section>.<locale>.yaml
+// (CMS "Тексты сайта"). getHome() in src/lib/site.ts merges them and checks them with homeSchema.
+const texts = defineCollection({
+  loader: glob({ pattern: '*.yaml', base: './src/content/texts', generateId: keepId }),
+  schema: z.record(z.string(), z.unknown()).nullish(),
+});
+
+export const homeSchema = z.object({
+  meta: section({ title: text, description: text }),
+  nav: section({ home: text, shop: text, location: text, news: text, reviews: text, gallery: text }),
+  ui: section({
+    order_honey: text, order_message: text, photo_soon: text, all_news: text, back: text,
+    menu: text, close: text, coming_soon: text, price_on_request: text, language: text,
+    placeholder_note: text, to_top: text, cart: text, contact_us: text, privacy: text,
   }),
+  hero: section({
+    title: text, lead: text, cta_primary: text, cta_secondary: text,
+    apiary_label: text, open_hive: text,
+  }),
+  story: section({ number: text, text: text }),
+  shop: section({
+    title: text, subtitle: text,
+    starter_title: text, starter_parts: list, starter_cta: text,
+    add_to_cart: text, added: text, preorder: text, order: text, message: text,
+    all_products: text, page_title: text, page_text: text, prev: text, next: text,
+    badges: section({ in_stock: text, new_harvest: text, preorder: text, sold_out: text }),
+    categories: section({ honey: text, colonies: text, hives: text, other: text }),
+  }),
+  location: section({
+    title: text, address: text, text: text, visit_note: text, route_cta: text,
+    stops: list, here: text, hours_title: text, days: list,
+  }),
+  news: section({ title: text }),
+  reviews: section({
+    title: text, placeholder: text, google_cta: text, write_cta: text, faq_title: text,
+    form: section({
+      name: text, city: text, text: text, consent: text, submit: text,
+      sending: text, success: text, error: text,
+    }),
+  }),
+  faq: orEmpty([], z.array(section({ q: text, a: text, hidden: z.boolean().catch(false) }))),
+  gallery: section({
+    title: text, text: text,
+    photos: orEmpty([], z.array(section({ caption: text, image }))),
+  }),
+  cart: section({
+    title: text, empty: text, back: text, qty: text, remove: text, total: text,
+    total_note: text, form_title: text, name: text, phone: text, delivery: text,
+    delivery_options: list, address: text, comment: text, submit: text,
+    via: text, copied: text, sending: text, success: text, error: text,
+    no_channel: text, order_title: text,
+  }),
+  privacy: section({ title: text, text: text }),
+  notfound: section({ title: text, text: text, cta: text }),
+  footer: section({ text: text }),
 });
 
 // Price is a number in GEL; empty means "price on request".
@@ -133,4 +140,4 @@ const settings = defineCollection({
   }),
 });
 
-export const collections = { home, products, news, settings };
+export const collections = { texts, products, news, settings };

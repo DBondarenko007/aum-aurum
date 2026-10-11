@@ -1,0 +1,24 @@
+title: Cart
+empty: Your cart is empty.
+back: Back to the shop
+qty: Quantity
+remove: Remove
+total: Total
+total_note: Items priced "on request" will be confirmed when we confirm your order.
+form_title: Checkout
+name: Name
+phone: Phone or WhatsApp
+delivery: How to receive
+delivery_options:
+  - Pick-up in Navazi
+  - Something else — let us talk
+address: Address (if delivery is needed)
+comment: Comment
+submit: Send order
+via: Your order will reach us via
+copied: The order text is copied — paste it into the chat.
+sending: Sending…
+success: Thank you! Your order is received and we will get in touch.
+error: Could not send. Please try again or message us.
+no_channel: Order contacts are coming soon.
+order_title: Order from the Aum Aurum website

@@ -41,12 +41,15 @@ decisions; **DESIGN.md is the source of truth for the look** (approved style). R
 - Package versions are pinned (`--save-exact`); ask before installing or upgrading anything.
 
 ## Structure
-- `src/content/home/{ka,ru,en}.yaml` — all page texts by section: meta, nav, ui, hero, story,
-  shop, location, news, reviews, gallery (8 polaroid captions + photos), footer (CMS: "Тексты сайта")
+- `src/content/texts/<section>.<locale>.yaml` — page texts, one file per section and locale (hero,
+  story, shop, news, location, reviews, faq, gallery, nav, footer, ui, cart, meta, privacy, notfound);
+  CMS "Тексты сайта" has one entry per section. `getHome()` merges them and validates with
+  `homeSchema` (content.config.ts); `faq` keeps its list under `items`. CMS gotcha: a file
+  collection needs `i18n: true` on the collection itself, or `{{locale}}` becomes `_default`.
 - `src/content/products/<slug>.<locale>.yaml` — products; `src/content/news/<slug>.<locale>.md` — news
 - `src/content/settings/{site,reviews}.yaml` — contacts, map, hours, business facts, order channel
   (`order_channel`, `order_webhook`), Web3Forms key (`forms_key`), reviews (not translated)
-- Home yaml also holds `faq` (Q&A list, `hidden` = draft), `cart`, `privacy`, `notfound` texts
+- `faq` = Q&A list (`hidden` = draft); `cart`, `privacy`, `notfound` = cart and service-page texts
 - Products: `category` honey | colonies | hives | other; `variants` [{size, price}] (one honey card
   = one variety); `action` cart | preorder | order; `cta` custom button text. Cart keys are
   `<slug>#<variant index>`. Components: HoneyFrame, HiveCard, Ribbon; page `src/pages/[lang]/shop.astro`

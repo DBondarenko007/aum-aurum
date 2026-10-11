@@ -1,0 +1,16 @@
+items:
+  - q: Where can I buy honey near Tbilisi?
+    a: Our family apiary is in the village of Navazi, on the road from Tbilisi to Kazbegi, just past Mtskheta. Order honey on the website and we will get in touch to arrange where to pick it up.
+    hidden: false
+  - q: Can we visit the apiary?
+    a: Yes. We are in Navazi, right on the Georgian Military Road. Please call ahead so we can meet you.
+    hidden: false
+  - q: Do you sell bee colonies?
+    a: 'Yes: strong colonies and nucs, pre-ordered for spring. Message us how many colonies you need and when you would like to pick them up.'
+    hidden: false
+  - q: Do you build hives to order?
+    a: Yes, we build hives by hand and test them on our own apiary. Tell us which model and how many you need.
+    hidden: false
+  - q: Do you deliver in Georgia? Can I buy honey as a gift to take home?
+    a: 'TO FILL IN: delivery (where and how), gift sets, taking honey abroad.'
+    hidden: true

@@ -1,0 +1,14 @@
+title: Reviews & questions
+placeholder: A review from one of our customers will appear here.
+google_cta: Leave a review on Google
+write_cta: Write a review
+faq_title: Questions & answers
+form:
+  name: Your name
+  city: City or country
+  text: Your review
+  consent: I agree that my review may be published with my name
+  submit: Send review
+  sending: Sending…
+  success: Thank you! We will read your review and publish it on the site.
+  error: Could not send. Please try again or message us.
