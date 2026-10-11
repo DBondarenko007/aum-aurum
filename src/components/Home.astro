@@ -8,7 +8,7 @@ interface Props {
   orderHref: string;
 }
 const { hero, story, orderHref } = Astro.props;
-// Number cards under the hives: one card = number beside its text, 2–4 = a row of cards.
+// Number cards under the hives (up to 4 in a row); a wide card puts the number beside its text.
 const cards = story.items.filter((c) => c.number.trim() && !c.hidden).slice(0, 4);
 // "Aurum" in a card text is set in italics.
 const parts = (t: string) => t.split(/(Aurum)/);
@@ -28,11 +28,13 @@ const parts = (t: string) => t.split(/(Aurum)/);
 
   <div class="wrap">
     {cards.length > 0 && (
-      <ul class:list={['story', cards.length === 1 && 'story--one']} style={`--n: ${cards.length}`}>
+      <ul class="story" style={`--n: ${cards.length}`}>
         {cards.map((c) => (
           <li>
-            <strong>{c.number}</strong>
-            <p>{parts(c.text).map((p) => (p === 'Aurum' ? <em>{p}</em> : p))}</p>
+            <div class="card">
+              <strong>{c.number}</strong>
+              <p>{parts(c.text).map((p) => (p === 'Aurum' ? <em>{p}</em> : p))}</p>
+            </div>
           </li>
         ))}
       </ul>
@@ -58,22 +60,26 @@ const parts = (t: string) => t.split(/(Aurum)/);
     list-style: none;
     display: grid;
     grid-template-columns: repeat(var(--n), minmax(0, 1fr));
-    max-width: calc(var(--n) * 270px);
+    max-width: min(100%, calc(var(--n) * 560px));
     margin: 0 auto;
-    padding: 1rem 0 clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
+    padding: 0.75rem 0 clamp(1.25rem, 0.9rem + 1vw, 1.75rem);
   }
-  .story li { padding: 0.4rem clamp(0.9rem, 0.5rem + 1vw, 1.6rem); }
+  .story li { container-type: inline-size; padding: 0.3rem clamp(0.9rem, 0.5rem + 1vw, 1.75rem); }
   .story li + li { border-left: 1px solid var(--soot-3); }
-  .story strong { display: block; font: 400 clamp(2.2rem, 1.6rem + 2vw, 3.4rem)/1 var(--display); color: var(--gold); white-space: nowrap; }
-  .story p { margin-top: 0.5rem; color: var(--cream-soft); font-size: 15px; line-height: 1.5; }
+  .story .card { display: grid; justify-items: center; gap: 0.5rem; }
+  .story strong { font: 400 clamp(2.2rem, 1.6rem + 2vw, 3.4rem)/1 var(--display); color: var(--gold); white-space: nowrap; }
+  .story p { max-width: 46ch; color: var(--cream-soft); font-size: 15px; line-height: 1.5; text-wrap: pretty; }
   .story em { color: var(--cream); }
-  /* One card: the number beside its text, as a single line of story. */
-  .story--one { max-width: 780px; }
-  .story--one li { display: grid; grid-template-columns: auto 1fr; gap: 1.5rem; align-items: center; text-align: left; }
-  .story--one p { margin-top: 0; font-size: 16px; line-height: 1.55; }
+  /* A wide card puts the number beside its text, so a long caption stays a few lines tall. */
+  @container (min-width: 400px) {
+    .story .card { grid-template-columns: auto minmax(0, 1fr); align-items: center; justify-items: start; gap: 1.25rem; text-align: left; }
+  }
   @media (max-width: 900px) {
-    .story:not(.story--one) { grid-template-columns: repeat(min(var(--n), 2), minmax(0, 1fr)); max-width: 560px; row-gap: 1.2rem; }
-    .story:not(.story--one) li:nth-child(odd) { border-left: 0; }
-    .story--one li { grid-template-columns: 1fr; gap: 0.5rem; text-align: center; }
+    .story { grid-template-columns: repeat(min(var(--n), 2), minmax(0, 1fr)); row-gap: 1.2rem; }
+    .story li:nth-child(odd) { border-left: 0; }
+  }
+  /* Phones show only the first two cards, side by side. */
+  @media (max-width: 600px) {
+    .story li:nth-child(n + 3) { display: none; }
   }
 </style>
