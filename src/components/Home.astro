@@ -4,12 +4,14 @@ import Apiary from './Apiary.astro';
 
 interface Props {
   hero: { title: string; lead: string; cta_primary: string; cta_secondary: string; apiary_label: string; open_hive: string };
-  story: { number: string; text: string };
+  story: { items: { number: string; text: string; hidden: boolean }[] };
   orderHref: string;
 }
 const { hero, story, orderHref } = Astro.props;
-// "Aurum" in the story is set in italics.
-const parts = story.text.split(/(Aurum)/);
+// Number cards under the hives: one card = number beside its text, 2–4 = a row of cards.
+const cards = story.items.filter((c) => c.number.trim() && !c.hidden).slice(0, 4);
+// "Aurum" in a card text is set in italics.
+const parts = (t: string) => t.split(/(Aurum)/);
 ---
 <section id="home" class="home dark">
   <div class="wrap">
@@ -25,10 +27,16 @@ const parts = story.text.split(/(Aurum)/);
   <Apiary label={hero.apiary_label} openLabel={hero.open_hive} />
 
   <div class="wrap">
-    <div class="story">
-      <strong>{story.number}</strong>
-      <p>{parts.map((p) => (p === 'Aurum' ? <em>{p}</em> : p))}</p>
-    </div>
+    {cards.length > 0 && (
+      <ul class:list={['story', cards.length === 1 && 'story--one']} style={`--n: ${cards.length}`}>
+        {cards.map((c) => (
+          <li>
+            <strong>{c.number}</strong>
+            <p>{parts(c.text).map((p) => (p === 'Aurum' ? <em>{p}</em> : p))}</p>
+          </li>
+        ))}
+      </ul>
+    )}
   </div>
 </section>
 
@@ -47,19 +55,25 @@ const parts = story.text.split(/(Aurum)/);
   .actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; }
   .actions .btn { min-height: 46px; padding: 0 1.4rem; font-size: 15px; }
   .story {
+    list-style: none;
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1.5rem;
-    align-items: center;
-    max-width: 780px;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    max-width: calc(var(--n) * 270px);
     margin: 0 auto;
     padding: 1rem 0 clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
-    text-align: left;
   }
-  .story strong { font: 400 clamp(2.2rem, 1.6rem + 2vw, 3.4rem)/1 var(--display); color: var(--gold); white-space: nowrap; }
-  .story p { color: var(--cream-soft); font-size: 16px; line-height: 1.55; }
+  .story li { padding: 0.4rem clamp(0.9rem, 0.5rem + 1vw, 1.6rem); }
+  .story li + li { border-left: 1px solid var(--soot-3); }
+  .story strong { display: block; font: 400 clamp(2.2rem, 1.6rem + 2vw, 3.4rem)/1 var(--display); color: var(--gold); white-space: nowrap; }
+  .story p { margin-top: 0.5rem; color: var(--cream-soft); font-size: 15px; line-height: 1.5; }
   .story em { color: var(--cream); }
+  /* One card: the number beside its text, as a single line of story. */
+  .story--one { max-width: 780px; }
+  .story--one li { display: grid; grid-template-columns: auto 1fr; gap: 1.5rem; align-items: center; text-align: left; }
+  .story--one p { margin-top: 0; font-size: 16px; line-height: 1.55; }
   @media (max-width: 900px) {
-    .story { grid-template-columns: 1fr; gap: 0.5rem; }
+    .story:not(.story--one) { grid-template-columns: repeat(min(var(--n), 2), minmax(0, 1fr)); max-width: 560px; row-gap: 1.2rem; }
+    .story:not(.story--one) li:nth-child(odd) { border-left: 0; }
+    .story--one li { grid-template-columns: 1fr; gap: 0.5rem; text-align: center; }
   }
 </style>

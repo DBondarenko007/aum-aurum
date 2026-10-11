@@ -73,25 +73,41 @@ collections:
             i18n: true
             required: false
       - name: story
-        label: 1. Главная — полоса с числом
+        label: 1. Главная — карточки с числами
         file: src/content/texts/story.{{locale}}.yaml
         format: yaml
         i18n: true
         editor:
           preview: false
         fields:
-          - name: number
-            label: Число
-            widget: string
+          - name: items
+            label: Карточки
+            label_singular: Карточку
+            widget: list
             i18n: true
             required: false
-            hint: Крупно, золотом. Например «5 500».
-          - name: text
-            label: Текст (слово Aurum выделится курсивом)
-            widget: text
-            i18n: true
-            required: false
-            hint: Идёт сразу после числа. Слово Aurum выделится курсивом.
+            max: 4
+            summary: '{{number}} — {{text}}'
+            hint: Тёмная полоса под ульями, до 4 карточек в ряд. Одна карточка — число слева, текст справа; несколько — в ряд, текст лучше короткий (до ~100 знаков). Карточка без числа или со «Скрыть» на сайте не видна.
+            fields:
+              - name: number
+                label: Число
+                widget: string
+                i18n: true
+                required: false
+                hint: Крупно, золотом. Например «5 500» или «25».
+              - name: text
+                label: Подпись
+                widget: text
+                i18n: true
+                required: false
+                hint: Идёт под числом. Слово Aurum выделится курсивом.
+              - name: hidden
+                label: Скрыть на сайте (черновик)
+                widget: boolean
+                default: false
+                i18n: duplicate
+                required: false
       - name: shop
         label: 2. Магазин — надписи (сами товары — в «Товары»)
         file: src/content/texts/shop.{{locale}}.yaml

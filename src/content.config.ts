@@ -32,7 +32,8 @@ export const homeSchema = z.object({
     title: text, lead: text, cta_primary: text, cta_secondary: text,
     apiary_label: text, open_hive: text,
   }),
-  story: section({ number: text, text: text }),
+  // Number cards in the band under the hives (up to 4); a card without a number or hidden is not shown.
+  story: section({ items: orEmpty([], z.array(section({ number: text, text: text, hidden: z.boolean().catch(false) }))) }),
   shop: section({
     title: text, subtitle: text,
     starter_title: text, starter_parts: list, starter_cta: text,

@@ -42,7 +42,7 @@ decisions; **DESIGN.md is the source of truth for the look** (approved style). R
 
 ## Structure
 - `src/content/texts/<section>.<locale>.yaml` — page texts, one file per section and locale (hero,
-  story, shop, news, location, reviews, faq, gallery, nav, footer, ui, cart, meta, privacy, notfound);
+  story (number cards: `items` [{number, text, hidden}], max 4), shop, news, location, reviews, faq, gallery, nav, footer, ui, cart, meta, privacy, notfound);
   CMS "Тексты сайта" has one entry per section. `getHome()` merges them and validates with
   `homeSchema` (content.config.ts); `faq` keeps its list under `items`. CMS gotcha: a file
   collection needs `i18n: true` on the collection itself, or `{{locale}}` becomes `_default`.

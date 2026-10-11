@@ -1,2 +1,13 @@
-number: 5,500
-text: years — the age of the oldest honey known in the world. It was found in Georgia, near Borjomi. Aurum is Latin for gold, and that is what we call what our bees make.
+items:
+  - hidden: false
+    number: 5,500
+    text: years — the age of the oldest honey known in the world. It was found in Georgia, near Borjomi. Aurum is Latin for gold, and that is what we call what our bees make.
+  - hidden: false
+    number: '25'
+    text: hives at our apiary
+  - hidden: true
+    number: ''
+    text: 'TO FILL: e.g. how many years our apiary has been running'
+  - hidden: true
+    number: ''
+    text: 'TO FILL: e.g. how many honey varieties'
