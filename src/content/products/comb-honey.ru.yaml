@@ -3,10 +3,10 @@ title: Мёд в сотах
 text: Целая рамка или кусочки сот.
 variants:
   - size: рамка
-    price: null
-badge: none
+    price: 80
 action: cart
 cta: ''
+badge: preorder
 image: ''
 order: 3
 available: true

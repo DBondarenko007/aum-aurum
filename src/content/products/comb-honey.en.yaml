@@ -3,10 +3,10 @@ title: Comb honey
 text: A whole frame or pieces of comb.
 variants:
   - size: frame
-    price: null
-badge: none
+    price: 80
 action: cart
 cta: ''
+badge: preorder
 image: ''
 order: 3
 available: true

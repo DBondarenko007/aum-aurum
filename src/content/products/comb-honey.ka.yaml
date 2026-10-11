@@ -3,10 +3,10 @@ title: თაფლი ფიჭით
 text: მთლიანი ჩარჩო ან ფიჭის ნაჭრები.
 variants:
   - size: ჩარჩო
-    price: null
-badge: none
+    price: 80
 action: cart
 cta: ''
+badge: preorder
 image: ''
 order: 3
 available: true
