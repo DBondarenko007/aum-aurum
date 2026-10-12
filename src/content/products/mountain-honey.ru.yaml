@@ -8,6 +8,8 @@ variants:
     price: 50
   - size: 2 кг
     price: 80
+  - size: 3 кг
+    price: 120
 action: cart
 cta: ''
 badge: none
