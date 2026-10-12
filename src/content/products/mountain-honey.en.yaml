@@ -7,7 +7,7 @@ variants:
   - size: ''
     price: 50
   - size: ''
-    price: 90
+    price: 80
 action: cart
 cta: ''
 badge: none
