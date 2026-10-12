@@ -4,7 +4,9 @@ text: Harvested high in the mountains.
 variants:
   - size: 0.5 kg
     price: 30
-  - price: 50
+  - size: ''
+    price: 50
+  - price: 90
 action: cart
 cta: ''
 badge: none
