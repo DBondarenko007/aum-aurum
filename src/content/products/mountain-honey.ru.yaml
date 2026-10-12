@@ -4,8 +4,6 @@ text: Сбор с высокогорья.
 variants:
   - size: 0,5 кг
     price: 30
-  - size: 1кг
-    price: 50
   - size: 2кг
     price: 90
 action: cart
